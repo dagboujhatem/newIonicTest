@@ -13,7 +13,7 @@ import {
 })
 export class WidgetsDropdownComponent implements OnInit {
   public chart: Array<IChartProps> = [];
-  public dbData? = [];
+  public dbData?;
   public dbData2?;
   public customerCount?;
   public customerHistory? = [];
