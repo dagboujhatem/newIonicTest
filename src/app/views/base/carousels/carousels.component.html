@@ -1,0 +1,104 @@
+<div class="fade-in">
+  <c-row>
+    <c-col sm="6">
+      <c-card>
+        <c-card-header>
+          Carousel
+        </c-card-header>
+        <c-card-body>
+          <c-carousel (itemChange)="onItemChange($event)" [interval]="7000">
+            <c-carousel-inner>
+              <c-carousel-item *ngFor="let slide of slides[0]">
+                <img
+                  [src]="slide.src"
+                  alt="{{slide.title}}"
+                  class="d-block w-100"
+                  loading="lazy"
+                />
+              </c-carousel-item>
+            </c-carousel-inner>
+          </c-carousel>
+        </c-card-body>
+      </c-card>
+    </c-col>
+    <c-col sm="6">
+      <c-card>
+        <c-card-header>
+          Carousel with indicators
+        </c-card-header>
+        <c-card-body>
+          <c-carousel (itemChange)="onItemChange($event)" [interval]="5000" [activeIndex]="1" direction="prev">
+            <c-carousel-indicators></c-carousel-indicators>
+            <c-carousel-inner>
+              <c-carousel-item *ngFor="let slide of slides[0]">
+                <img
+                  [src]="slide.src"
+                  alt="{{slide.title}}"
+                  class="d-block w-100"
+                  loading="lazy"
+                />
+              </c-carousel-item>
+            </c-carousel-inner>
+          </c-carousel>
+        </c-card-body>
+      </c-card>
+    </c-col>
+  </c-row>
+  <c-row>
+    <c-col sm="6">
+      <c-card>
+        <c-card-header>
+          Carousel with custom controls
+        </c-card-header>
+        <c-card-body>
+          <c-carousel (itemChange)="onItemChange($event)" [interval]="0">
+            <c-carousel-inner>
+              <c-carousel-item *ngFor="let slide of slides[0]">
+                <img
+                  [src]="slide.src"
+                  alt="{{slide.title}}"
+                  class="d-block w-100"
+                  loading="lazy"
+                />
+              </c-carousel-item>
+            </c-carousel-inner>
+            <c-carousel-control direction="prev" [tabIndex]="0">
+              <c-icon name="cil-chevron-left" size="3xl"></c-icon>
+            </c-carousel-control>
+            <c-carousel-control direction="next" [tabIndex]="0">
+              <c-icon name="cil-chevron-right" size="3xl"></c-icon>
+            </c-carousel-control>
+          </c-carousel>
+        </c-card-body>
+      </c-card>
+    </c-col>
+    <c-col sm="6">
+      <c-card>
+        <c-card-header>
+          Carousel with captions, controls and indicators
+        </c-card-header>
+        <c-card-body>
+          <c-carousel (itemChange)="onItemChange($event)" [interval]="3000">
+            <c-carousel-indicators></c-carousel-indicators>
+            <c-carousel-inner>
+              <c-carousel-item *ngFor="let slide of slides[1]">
+                <img
+                  src="{{slide.src}}"
+                  alt="{{slide.title}}"
+                  class="d-block w-100"
+                  loading="lazy"
+                />
+                <c-carousel-caption>
+                  <h3>{{slide.title}}</h3>
+                  <p>{{slide.subtitle}}</p>
+                </c-carousel-caption>
+              </c-carousel-item>
+            </c-carousel-inner>
+            <c-carousel-control direction="prev"></c-carousel-control>
+            <c-carousel-control direction="next"></c-carousel-control>
+          </c-carousel>
+        </c-card-body>
+      </c-card>
+    </c-col>
+  </c-row>
+</div>

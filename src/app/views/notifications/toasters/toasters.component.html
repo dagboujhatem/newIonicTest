@@ -1,0 +1,86 @@
+<div class="fade-in">
+  <c-card>
+    <c-card-header>
+      Toaster
+  <!--    <DocsLink name="-Toast"/>-->
+    </c-card-header>
+    <c-card-body>
+      <c-container>
+        <c-row>
+          <c-col sm="12" lg="6">
+            <form cForm [formGroup]="toasterForm">
+              <h5>Add toast with following props:</h5>
+
+              <c-form-check custom variant="checkbox" class="my-2 mt-4">
+                <input cInput type="checkbox" formControlName="autohide" class="custom-control-input" id="autohide">
+                <label cLabel class="custom-control-label" for="autohide">
+                  Toast autohide
+                </label>
+              </c-form-check>
+
+              <c-form-group>
+                <label cLabel for="delay">Delay</label >
+                <input cInput type="number" formControlName="delay" id="delay">
+              </c-form-group>
+
+              <c-form-group class="my-2">
+                <label cLabel>Position</label>
+                <select cSelect formControlName="position">
+                  <option *ngFor="let position of positions" [ngValue]="position">
+                    {{position}}
+                  </option>
+                </select>
+              </c-form-group>
+
+              <c-form-group class="my-2">
+                <label cLabel>Color</label>
+                <select cSelect formControlName="color">
+                  <option *ngFor="let color of colors" [ngValue]="color">
+                    {{color}}
+                  </option>
+                </select>
+              </c-form-group>
+
+              <c-form-check custom variant="checkbox" class="my-2">
+                <input cInput type="checkbox" formControlName="fade" class="custom-control-input" id="fade">
+                <label cLabel class="custom-control-label" for="fade">Fade</label>
+              </c-form-check>
+
+              <c-form-check custom variant="checkbox" class="my-2">
+                <input cInput type="checkbox" formControlName="closeButton" class="custom-control-input" id="close">
+                <label cLabel class="custom-control-label" for="close">Close Button</label>
+              </c-form-check>
+              <hr/>
+              <button cButton class="mfe-1 w-25" color="success" (click)="addToast()">
+                Add toast
+              </button>
+            </form>
+          </c-col>
+          <c-col>
+            <c-toaster position="static">
+              <c-toast [show]="true" [autohide]="false" [fade]="true">
+                <c-toast-header>Toast title</c-toast-header>
+                <c-toast-body>This is a static toast in a static toaster</c-toast-body>
+              </c-toast>
+              <c-toast [show]="true" color="dark" [fade]="true">
+                <c-toast-header [closeButton]="false">Toast title</c-toast-header>
+                <c-toast-body>This is a static toast in a static toaster</c-toast-body>
+              </c-toast>
+              <app-toast-simple [autohide]="false" [show]="true" color="secondary" [title]="'App Toast'" [fade]="true" #at>This is a toast in static positioned App toaster! {{at.index}}</app-toast-simple>
+            </c-toaster>
+            <c-toaster *ngFor="let pos of positions | slice : 1" position="{{pos}}"></c-toaster>
+          </c-col>
+        </c-row>
+      </c-container>
+    </c-card-body>
+  </c-card>
+  <c-card>
+    <c-card-body>
+      <c-row>
+        <c-col>
+          <p>Form value: {{ toasterForm.value | json }}</p>
+        </c-col>
+      </c-row>
+    </c-card-body>
+  </c-card>
+</div>

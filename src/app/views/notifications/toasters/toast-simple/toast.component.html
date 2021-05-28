@@ -1,0 +1,7 @@
+<ng-container>
+  <c-toast-header [closeButton]="closeButton"><i>{{title}}</i></c-toast-header>
+  <c-toast-body #toast [cToastClose]="toast.toast">
+    <div>This is a dynamic toast no {{index}} {{clock}}</div>
+    <ng-content></ng-content>
+  </c-toast-body>
+</ng-container>

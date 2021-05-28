@@ -1,0 +1,24 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../out-tsc/app",
+    "baseUrl": "./",
+    "module": "es2020",
+    "target": "es2015",
+    "types": ["googlemaps"],
+    "paths": {
+      "@angular/*": ["../node_modules/@angular/*"],
+      "@coreui/angular/*": ["../node_modules/@coreui/angular/*"],
+    }
+  },
+  "angularCompilerOptions": {
+    "enableIvy": true,
+    "importHelpers": true
+  },
+  "files": ["main.ts", "polyfills.ts"],
+  "exclude": [
+    "src/**/*.spec.ts",
+    "src/test.ts",
+    "src/environments/environment.prod.ts"
+  ]
+}

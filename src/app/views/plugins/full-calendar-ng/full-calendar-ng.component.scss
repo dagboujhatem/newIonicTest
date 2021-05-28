@@ -1,0 +1,6 @@
+:host-context(.c-dark-theme) {
+  --fc-border-color: var(--dark, #000000);
+  --fc-page-bg-color: var(--light, #000000);
+  --fc-today-bg-color: var(--secondary, #aaaaaa);
+  --fc-list-event-hover-bg-color: var(--dark, #000000);
+}

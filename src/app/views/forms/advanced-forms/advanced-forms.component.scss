@@ -1,0 +1,17 @@
+@import '~ngx-bootstrap/datepicker/bs-datepicker.scss';
+@import './src/scss/vendors/bs-datepicker/datepicker';
+
+@import '~@ng-select/ng-select/scss/default.theme';
+@import './src/scss/vendors/ng-select/ng-select.scss';
+
+:host c-input-group-prepend c-input-group-text c-icon {
+  &:only-child {
+    display: flex;
+  }
+}
+
+:host c-input-group-append c-input-group-text c-icon {
+  &:only-child {
+    display: flex;
+  }
+}

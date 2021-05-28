@@ -1,0 +1,150 @@
+<c-row>
+  <c-col sm="6" lg="3">
+    <c-widget-dropdown
+      color="gradient-primary"
+      header={{dbData.data?.content[0].CustomerCount}}
+      text="Customers"
+    >
+      <c-button-group dropdown>
+        <button cButton color="transparent" class="p-0 dropdown-toggle" dropdownToggle>
+          <c-icon name="cil-settings"></c-icon>
+        </button>
+        <div class="dropdown-menu dropdown-menu-right" *dropdownMenu>
+          <a class="dropdown-item" [routerLink]>Action</a>
+          <a class="dropdown-item" [routerLink]>Another action</a>
+          <a class="dropdown-item" [routerLink]>Something else here</a>
+        </div>
+      </c-button-group>
+      <div slot="footer">
+        <div
+          class="c-chart-wrapper mt-3 mx-3"
+          style="height: 70px;"
+          [@.disabled]="true"
+        >
+          <canvas
+            cNoZoneBaseChart
+            class="chart"
+            height="70"
+            [datasets]="chart[0].data"
+            [labels]="chart[0].labels"
+            [options]="chart[0].options"
+            [colors]="chart[0].colors"
+            [chartType]="chart[0].type"
+          >
+          </canvas>
+        </div>
+      </div>
+    </c-widget-dropdown>
+  </c-col>
+  <c-col sm="6" lg="3">
+    <c-widget-dropdown
+      color="gradient-info"
+      header={{dbData.data?.content[0].FacilityCount}}
+      text="Facilities"
+    >
+      <c-button-group dropdown>
+        <button cButton color="transparent" class="p-0 dropdown-toggle" dropdownToggle>
+          <c-icon name="cil-settings"></c-icon>
+        </button>
+        <div class="dropdown-menu dropdown-menu-right" *dropdownMenu>
+          <a class="dropdown-item" [routerLink]>Action</a>
+          <a class="dropdown-item" [routerLink]>Another action</a>
+          <a class="dropdown-item" [routerLink]>Something else here</a>
+        </div>
+      </c-button-group>
+      <div slot="footer">
+        <div
+          class="c-chart-wrapper mt-3 mx-3"
+          style="height: 70px;"
+          [@.disabled]="true"
+        >
+          <canvas
+            cNoZoneBaseChart
+            class="chart"
+            height="70"
+            [datasets]="chart[1].data"
+            [labels]="chart[1].labels"
+            [options]="chart[1].options"
+            [colors]="chart[1].colors"
+            [chartType]="chart[1].type"
+          >
+          </canvas>
+        </div>
+      </div>
+    </c-widget-dropdown>
+  </c-col>
+  <c-col sm="6" lg="3">
+    <c-widget-dropdown
+      color="gradient-warning"
+      header={{dbData.data?.content[0].BranchCount}}
+      text="Branches"
+    >
+      <c-button-group dropdown>
+        <button cButton color="transparent" class="p-0 dropdown-toggle" dropdownToggle>
+          <c-icon name="cil-settings"></c-icon>
+        </button>
+        <div class="dropdown-menu dropdown-menu-right" *dropdownMenu>
+          <a class="dropdown-item" [routerLink]>Action</a>
+          <a class="dropdown-item" [routerLink]>Another action</a>
+          <a class="dropdown-item" [routerLink]>Something else here</a>
+        </div>
+      </c-button-group>
+      <div slot="footer">
+        <div
+          class="c-chart-wrapper mt-3"
+          style="height: 70px;"
+          [@.disabled]="true"
+        >
+          <canvas
+            cNoZoneBaseChart
+            class="chart"
+            height="70"
+            [datasets]="chart[2].data"
+            [labels]="chart[2].labels"
+            [options]="chart[2].options"
+            [colors]="chart[2].colors"
+            [chartType]="chart[2].type"
+          >
+          </canvas>
+        </div>
+      </div>
+    </c-widget-dropdown>
+  </c-col>
+  <c-col sm="6" lg="3">
+    <c-widget-dropdown
+      color="gradient-danger"
+      header={{dbData.data?.content[0].TotalPayments}}
+      text="Revenue"
+    >
+      <c-button-group dropdown>
+        <button cButton color="transparent" class="p-0 dropdown-toggle" dropdownToggle>
+          <c-icon name="cil-settings"></c-icon>
+        </button>
+        <div class="dropdown-menu dropdown-menu-right" *dropdownMenu>
+          <a class="dropdown-item" [routerLink]>Action</a>
+          <a class="dropdown-item" [routerLink]>Another action</a>
+          <a class="dropdown-item" [routerLink]>Something else here</a>
+        </div>
+      </c-button-group>
+      <div slot="footer">
+        <div
+          class="c-chart-wrapper mt-3 mx-3"
+          style="height: 70px;"
+          [@.disabled]="true"
+        >
+          <canvas
+            cNoZoneBaseChart
+            class="chart"
+            height="70"
+            [datasets]="chart[3].data"
+            [labels]="chart[3].labels"
+            [options]="chart[3].options"
+            [colors]="chart[3].colors"
+            [chartType]="chart[3].type"
+          >
+          </canvas>
+        </div>
+      </div>
+    </c-widget-dropdown>
+  </c-col>
+</c-row>
