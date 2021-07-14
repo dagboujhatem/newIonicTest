@@ -1,7 +1,7 @@
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule, Title } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NgModule } from '@angular/core';
-import { LocationStrategy, HashLocationStrategy } from '@angular/common';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { LocationStrategy, HashLocationStrategy, CommonModule } from '@angular/common';
 
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
@@ -26,11 +26,28 @@ import { EmailLayoutComponent } from './containers';
 import { EmailHeaderComponent } from './containers/email-layout/email-header/email-header.component';
 
 // Import error pages
-import { P404Component } from './views/error/404.component';
-import { P500Component } from './views/error/500.component';
+import { P404Component } from './views/components/error/404.component';
+import { P500Component } from './views/components/error/500.component';
 // Import pages
-import { LoginComponent } from './views/login/login.component';
-import { RegisterComponent } from './views/register/register.component';
+import { LoginComponent } from './views/components/login/login.component';
+import { RegisterComponent } from './views/components/register/register.component';
+import { TranslateCompiler, TranslateLoader, TranslateModule, TranslateService, TranslateStore } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { FormsModule, FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+
+
+// Routing
+
+import { TimepickerModule } from 'ngx-bootstrap/timepicker';
+import { PopoverModule } from 'ngx-bootstrap/popover';
+
+
+export function TranslationLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http);
+}
+
 
 const APP_CONTAINERS = [
   DefaultLayoutComponent,
@@ -64,6 +81,11 @@ import {
   SwitchModule,
   TabsetModule,
   TogglerModule,
+  ToastModule,
+  TextMaskModule,
+  SpinkitModule,
+  SpinnerModule,
+  ModalModule,
 } from '@coreui/angular';
 
 import { IconModule, IconSetModule, IconSetService } from '@coreui/icons-angular';
@@ -74,6 +96,13 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 
 // Import routing module
 import { AppRoutingModule } from './app.routing';
+import { ToasterModule } from 'angular2-toaster';
+import { DataTablesComponent as userComp } from './views/user/data-tables.component';
+import { BasicFormsComponent as userDetailsComp } from './views/user/userDetails/basic-forms.component';
+//import { DataTablesInitModule } from './views/user/data-tables.module';
+import { DataTableModule } from '@pascalhonegger/ng-datatable';
+import { DataFilterPipe } from './views/user/data-tables-filter.pipe';
+import { AppToastComponent as ToastComp } from './services/shared-service/toast-simple/toast.component'
 
 @NgModule({
     imports: [
@@ -100,13 +129,29 @@ import { AppRoutingModule } from './app.routing';
         SwitchModule,
         TabsetModule,
         TogglerModule,
+        ToasterModule,
         PerfectScrollbarModule,
         BsDropdownModule.forRoot(),
         // ToastrModule.forRoot(),
         // ToastContainerModule,
         FormModule,
+        HttpClientModule,
+        TranslateModule.forRoot({
+          loader: {provide: TranslateLoader, useFactory: TranslationLoaderFactory, deps: [HttpClient]}}),
+        //TranslateModule,
+        ToastModule,
+        BsDatepickerModule.forRoot(),
+        CommonModule,
+        ReactiveFormsModule,
+        TimepickerModule,
+        PopoverModule,
+        FormsModule,
+        ModalModule,
+        SpinkitModule,
+        SpinnerModule,
+        DataTableModule
     ],
-  exports: [SharedModule],
+  exports: [SharedModule, BsDatepickerModule],
 
   declarations: [
     AppComponent,
@@ -115,6 +160,10 @@ import { AppRoutingModule } from './app.routing';
     P500Component,
     LoginComponent,
     RegisterComponent,
+    DataFilterPipe,
+    userComp,
+    userDetailsComp,
+    ToastComp
   ],
   providers: [
     {
@@ -122,7 +171,17 @@ import { AppRoutingModule } from './app.routing';
       useClass: HashLocationStrategy,
     },
     IconSetService,
+    FormBuilder,
+    Title,
+    // TranslateService,
+    // {
+    //   provide: TranslateLoader,
+    //   useFactory: TranslationLoaderFactory,
+    //   deps: [HttpClient]
+    // },
+    // TranslateStore,
   ],
   bootstrap: [AppComponent],
+  schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
 })
 export class AppModule {}

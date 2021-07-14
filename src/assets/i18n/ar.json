@@ -1,0 +1,109 @@
+{
+    "Breadcrumb": {
+        "Home": "الرئيسية",
+        "Dashboard": "لوحة القيادة",
+        "FacilityTitle": "منشأة",
+        "FacilityDetails": "تفاصيل المنشأة",
+        "Items": "المنتجات",
+        "ItemsList": "المنتجات",
+        "ItemsDetails": "تفاصيل المنتج"
+    },
+    "direction": "rtl",
+    "Header": {
+        "Links": {
+            "Home": "الرئيسية",
+            "Users": "المستخدمين",
+            "Settings": "الإعدادات"
+        }
+    },
+    "User": {
+        "MainPage": 
+        {
+            "Title": "المنشئات",
+            "SearchBar": "البحث بالأسم",
+            "AddBtn": "جديد",
+            "DetailsBtn": "تفاصيل",
+            "Table": 
+            {
+                "Name": "الأسم",
+                "Email": "البريد الإلكتروني",
+                "Age": "العمر",
+                "City": "المدينة",
+                "Registered": "التاريخ",
+                "Actions": "الأفعال"
+            }
+        },
+        "DetailsPage": 
+        {
+            "BtnAlign": "pull-left",
+            "TextAlign": "pull-right",
+            "RadioAlign": "btnAlign",
+            "Title": "تفاصيل المنشأة",
+            "PrefBtn": "التفضيلات",
+            "SchBtn": "الجدول",
+            "Name": "الإسم",
+            "Mobile": "الإسم العربي",
+            "Email": "الوصف الانجليزي",
+            "CountryCode": "الوصف العربي",
+            "Dob": "خط الطول",
+            "Gender": "خط العرض",
+            "GenderMale": "رفع الصورة",
+            "GenderFemale": "لم يتم رفع صورة",
+            "Status": "الحالة",
+            "StatusActive": "نشط",
+            "StatusInActive": "غير نشط",
+            "PrefLang": "Preffered Language",
+            "PrefLangEnglish": "English",
+            "PrefLangArabic": "Arabic",
+            "VerifiedEmail": "Verified Email",
+            "VerifiedEmailTrue": "True",
+            "VerifiedEmailFalse": "False",
+            "VerifiedMobile": "Verified Mobile",
+            "VerifiedMobileTrue": "True",
+            "VerifiedMobileFalse": "False",
+            "ForcePwd": "Force Password Change",
+            "ForcePwdTrue": "True",
+            "ForcePwdFalse": "False",
+            "UpdateKyc": "Update KYC",
+            "UpdateKycTrue": "True",
+            "UpdateKycFalse": "False",
+            "ImgPH": "لم يتم اختيار صورة",
+            "Img": "الصورة",
+            "SaveBtn": "حفظ",
+            "DeleteBtn": "مسح",
+            "Pref":
+            {
+                "Title": "التفضيلات",
+                "SatOrders": "عدد الطلبات يوم السبت",
+                "SunOrders": "عدد الطلبات يوم الأحد",
+                "MonOrders": "عدد الطلبات يوم الأثنين",
+                "TueOrders": "عدد الطلبات يوم الثلاثاء",
+                "WedOrders": "عدد الطلبات يوم الأربعاء",
+                "ThuOrders": "عدد الطلبات يوم الخميس",
+                "FriOrders": "عدد الطلبات يوم الجمعة",
+                "Carriers": "عدد الناقلات",
+                "PayMethod": "وسائل الدفع المسموحة",
+                "Status": "الحالة",
+                "PayMethodCash": "الدفع النقدي",
+                "PayMethodPOS": "آلة نقطة البيع",
+                "PayMethodBP": "بنفت باي",
+                "StatusActive": "نشط",
+                "StatusInActive": "غير نشط"
+            },
+            "Schedule": 
+            {
+                "Title": "الجدول",
+                "Saturday": "السبت",
+                "Sunday": "الأحد",
+                "Monday": "الأثنين",
+                "Tuesday": "الثلاثاء",
+                "Wednesday": "الأربعاء",
+                "Thursday": "الخميس",
+                "Friday": "الجمعة",
+                "StartTime": "وقت الافتتاح",
+                "EndTime": "وقت الاغلاق",
+                "SaveBtn": "حفظ"
+            }
+        }
+    }
+}

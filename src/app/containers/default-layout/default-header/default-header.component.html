@@ -21,7 +21,11 @@
   </c-header-brand>
   <!-- header links-->
   <ul class="c-header-nav d-md-down-none">
-    <li class="c-header-nav-item px-3">
+    <c-breadcrumb
+    class="border-0 m-0 px-0 px-md-3 c-subheader-nav"
+    cBreadcrumbRouter
+  ></c-breadcrumb>
+    <!-- <li class="c-header-nav-item px-3">
       <a class="c-header-nav-link" [routerLink]="'/dashboard'">Dashboard</a>
     </li>
     <li class="c-header-nav-item px-3">
@@ -29,7 +33,7 @@
     </li>
     <li class="c-header-nav-item px-3">
       <a class="c-header-nav-link" href="#">Settings</a>
-    </li>
+    </li> -->
   </ul>
   <!--theme toggler-->
   <c-toggler title="Toggle Light/Dark Mode" class="ml-auto" id="theme-toggler">
@@ -40,7 +44,7 @@
   </c-toggler>
   <!--header dropdowns-->
   <ul class="c-header-nav">
-    <app-default-header-dropdown-notifications
+    <!-- <app-default-header-dropdown-notifications
       class="d-md-down-none"
     ></app-default-header-dropdown-notifications>
     <app-default-header-dropdown-tasks
@@ -48,24 +52,24 @@
     ></app-default-header-dropdown-tasks>
     <app-default-header-dropdown-messages
       class="d-md-down-none"
-    ></app-default-header-dropdown-messages>
+    ></app-default-header-dropdown-messages> -->
     <app-default-header-dropdown-account></app-default-header-dropdown-account>
   </ul>
   <!--aside toggler-->
-  <c-toggler cSidebarToggle="aside" id="aside-toggler">
+  <!-- <c-toggler cSidebarToggle="aside" id="aside-toggler">
     <button class="c-header-toggler c-header-nav-link" type="button">
       <c-icon name="cilApplicationsSettings" size="lg"></c-icon>
     </button>
-  </c-toggler>
+  </c-toggler> -->
   <!--subheader-->
-  <c-subheader class="justify-content-between px-3">
+  <!-- <c-subheader class="justify-content-between px-3"> -->
     <!--breadcrumbs-->
-    <c-breadcrumb
+    <!-- <c-breadcrumb
       class="border-0 m-0 px-0 px-md-3 c-subheader-nav"
       cBreadcrumbRouter
-    ></c-breadcrumb>
+    ></c-breadcrumb> -->
     <!--subheader links-->
-    <div class="c-subheader-nav d-md-down-none mfe-2">
+    <!-- <div class="c-subheader-nav d-md-down-none mfe-2">
       <a class="c-subheader-nav-link" [routerLink]="'/apps/email'">
         <c-icon name="cil-speech"></c-icon>
       </a>
@@ -77,7 +81,7 @@
         <c-icon name="cil-settings"></c-icon>
         &nbsp;Settings
       </a>
-    </div>
-  </c-subheader>
+    </div> -->
+  <!-- </c-subheader> -->
   <!--</c-header>-->
 </ng-container>

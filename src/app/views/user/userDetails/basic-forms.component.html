@@ -1,0 +1,246 @@
+<router-outlet>
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          <strong class="{{'User.DetailsPage.TextAlign' | translate}}"> {{'User.DetailsPage.Title' | translate}}</strong>
+          <div class="{{'User.DetailsPage.BtnAlign' | translate}}" >
+          <!--  <button (click)="showPref()" class="btn btn-primary btn-xs"><i class="fa fa-sliders"></i> {{'User.DetailsPage.PrefBtn' | translate}}</button>
+            <button (click)="showSchdule()" class="btn btn-primary btn-xs"><i class="fa fa-calendar"></i> {{'User.DetailsPage.SchBtn' | translate}}</button> -->
+          </div>
+        </div>
+        <form action="" [formGroup]="simpleForm" method="post" enctype="multipart/form-data" class="form-horizontal">
+        <div class="card-body">
+            <div class="form-group row">
+              <label class="col-md-4 col-form-label" for="text-input">{{'User.DetailsPage.Name' | translate}} *</label>
+              <div class="col-md-6">
+                <input type="text" id="name" name="name" formControlName="name" class="form-control" required autofocus placeholder="My new User"
+                [ngClass]="{ 'is-invalid': submitted && f.name.errors, 'is-valid': f.name.touched && !f.name.errors }">
+                <div *ngIf="submitted && f['name'].errors" class="invalid-feedback">
+                  <div *ngIf="f['name'].errors.required">Name is required</div>
+                  </div>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-4 col-form-label" for="text-input">{{'User.DetailsPage.Mobile' | translate}} *</label>
+              <div class="col-md-5">
+                <input type="text" id="mobile" name="mobile" class="form-control" formControlName="mobile" required placeholder="33123456"
+                [ngClass]="{ 'is-invalid': submitted && f.mobile.errors, 'is-valid': f.mobile.touched && !f.mobile.errors }">
+                <div *ngIf="submitted && f['mobile'].errors" class="invalid-feedback">
+                  <div *ngIf="f['mobile'].errors.required">Mobile is required</div>
+                  </div>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-4 col-form-label" for="text-input">{{'User.DetailsPage.Email' | translate}} *</label>
+              <div class="col-md-5">
+                <input type="text" id="email" name="email" class="form-control" formControlName="email" required placeholder="example@domain.com"
+                [ngClass]="{ 'is-invalid': submitted && f.email.errors, 'is-valid': f.email.touched && !f.email.errors }">
+                <div *ngIf="submitted && f['email'].errors" class="invalid-feedback">
+                  <div *ngIf="f['email'].errors.required">Email is required</div>
+                  </div>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-4 col-form-label" for="text-input">{{'User.DetailsPage.CountryCode' | translate}} *</label>
+              <div class="col-md-5">
+                <input type="text" id="countryCode" name="countryCode" class="form-control" formControlName="countryCode" required placeholder="BH, SA"
+                [ngClass]="{ 'is-invalid': submitted && f.countryCode.errors, 'is-valid': f.countryCode.touched && !f.countryCode.errors }">
+                <div *ngIf="submitted && f['countryCode'].errors" class="invalid-feedback">
+                  <div *ngIf="f['countryCode'].errors.required">Country Code is required</div>
+                  </div>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-4 col-form-label" for="text-input">{{'User.DetailsPage.Dob' | translate}} *</label>
+              <div class="col-md-5">
+                <input cInput [minDate]="minDate" [maxDate]="maxDate" #dp="bsDatepicker" dateFormat=“dd-MM-yyyy” bsDatepicker [(bsValue)]="bsValue"
+                id="dob" name="dob" class="form-control" formControlName="dob" required placeholder="01-JAN-2021"
+                [ngClass]="{ 'is-invalid': submitted && f.dob.errors, 'is-valid': f.dob.touched && !f.dob.errors }">
+                <div *ngIf="submitted && f['dob'].errors" class="invalid-feedback">
+                  <div *ngIf="f['dob'].errors.required">Dob is required</div>
+                  </div>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-4 col-form-label" for="gender" >{{'User.DetailsPage.Gender' | translate}} *</label>
+              <div class="col-md-5 col-form-label">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" id="maleGender" name="gender" required formControlName="gender"
+                  [checked]="gender=='M' ? true : null" [value]="'M'"
+                  [ngClass]="{ 'is-invalid': submitted && f.gender.errors, 'is-valid': f.gender.touched && !f.gender.errors }">
+                  <label class="form-check-label {{'User.DetailsPage.RadioAlign' | translate}}" for="radio1">
+                    {{'User.DetailsPage.GenderMale' | translate}}
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" id="femaleGender" name="gender" required formControlName="gender"
+                  [checked]="gender=='F' ? true : null" [value]="'F'"
+                  [ngClass]="{ 'is-invalid': submitted && f.gender.errors, 'is-valid': f.gender.touched && !f.gender.errors }">
+                  <label class="form-check-label {{'User.DetailsPage.RadioAlign' | translate}}" for="radio2">
+                    {{'User.DetailsPage.GenderFemale' | translate}}
+                  </label>
+                </div>
+                <div *ngIf="submitted && f['gender'].errors" class="invalid-feedback">
+                  <div *ngIf="f['gender'].errors.required">Gender is required</div>
+                  </div>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-4 col-form-label" for="prefLang" >{{'User.DetailsPage.PrefLang' | translate}} *</label>
+              <div class="col-md-5 col-form-label">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" id="maleprefLang" name="prefLang" required formControlName="prefLang"
+                  [checked]="prefLang=='en' ? true : null" [value]="'en'"
+                  [ngClass]="{ 'is-invalid': submitted && f.prefLang.errors, 'is-valid': f.prefLang.touched && !f.prefLang.errors }">
+                  <label class="form-check-label {{'User.DetailsPage.RadioAlign' | translate}}" for="radio1">
+                    {{'User.DetailsPage.PrefLangEnglish' | translate}}
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" id="femaleprefLang" name="prefLang" required formControlName="prefLang"
+                  [checked]="prefLang=='ar' ? true : null" [value]="'ar'"
+                  [ngClass]="{ 'is-invalid': submitted && f.prefLang.errors, 'is-valid': f.prefLang.touched && !f.prefLang.errors }">
+                  <label class="form-check-label {{'User.DetailsPage.RadioAlign' | translate}}" for="radio2">
+                    {{'User.DetailsPage.PrefLangArabic' | translate}}
+                  </label>
+                </div>
+                <div *ngIf="submitted && f['prefLang'].errors" class="invalid-feedback">
+                  <div *ngIf="f['prefLang'].errors.required">Pref Lang is required</div>
+                  </div>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-4 col-form-label" for="verifiedEmail" >{{'User.DetailsPage.VerifiedEmail' | translate}} *</label>
+              <div class="col-md-5 col-form-label">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" id="verifiedEmailTrue" name="verifiedEmail" required formControlName="verifiedEmail"
+                  [checked]="verifiedEmail=='Y' ? true : null" [value]="'Y'"
+                  [ngClass]="{ 'is-invalid': submitted && f.verifiedEmail.errors, 'is-valid': f.verifiedEmail.touched && !f.verifiedEmail.errors }">
+                  <label class="form-check-label {{'User.DetailsPage.RadioAlign' | translate}}" for="radio1">
+                    {{'User.DetailsPage.VerifiedEmailTrue' | translate}}
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" id="verifiedEmailFalse" name="verifiedEmail" required formControlName="verifiedEmail"
+                  [checked]="verifiedEmail=='N' ? true : null" [value]="'N'"
+                  [ngClass]="{ 'is-invalid': submitted && f.verifiedEmail.errors, 'is-valid': f.verifiedEmail.touched && !f.verifiedEmail.errors }">
+                  <label class="form-check-label {{'User.DetailsPage.RadioAlign' | translate}}" for="radio2">
+                    {{'User.DetailsPage.VerifiedEmailFalse' | translate}}
+                  </label>
+                </div>
+                <div *ngIf="submitted && f['verifiedEmail'].errors" class="invalid-feedback">
+                  <div *ngIf="f['verifiedEmail'].errors.required">Verified Email is required</div>
+                  </div>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-4 col-form-label" for="verifiedMobile" >{{'User.DetailsPage.VerifiedMobile' | translate}} *</label>
+              <div class="col-md-5 col-form-label">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" id="verifiedMobileTrue" name="verifiedMobile" required formControlName="verifiedMobile"
+                  [checked]="verifiedMobile=='Y' ? true : null" [value]="'Y'"
+                  [ngClass]="{ 'is-invalid': submitted && f.verifiedMobile.errors, 'is-valid': f.verifiedMobile.touched && !f.verifiedMobile.errors }">
+                  <label class="form-check-label {{'User.DetailsPage.RadioAlign' | translate}}" for="radio1">
+                    {{'User.DetailsPage.VerifiedMobileTrue' | translate}}
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" id="verifiedMobileFalse" name="verifiedMobile" required formControlName="verifiedMobile"
+                  [checked]="verifiedMobile=='N' ? true : null" [value]="'N'"
+                  [ngClass]="{ 'is-invalid': submitted && f.verifiedMobile.errors, 'is-valid': f.verifiedMobile.touched && !f.verifiedMobile.errors }">
+                  <label class="form-check-label {{'User.DetailsPage.RadioAlign' | translate}}" for="radio2">
+                    {{'User.DetailsPage.VerifiedMobileFalse' | translate}}
+                  </label>
+                </div>
+                <div *ngIf="submitted && f['verifiedMobile'].errors" class="invalid-feedback">
+                  <div *ngIf="f['verifiedMobile'].errors.required">Verified Mobile is required</div>
+                  </div>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-4 col-form-label" for="forcePwd" >{{'User.DetailsPage.ForcePwd' | translate}} *</label>
+              <div class="col-md-5 col-form-label">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" id="forcePwdTrue" name="forcePwd" required formControlName="forcePwd"
+                  [checked]="forcePwd=='Y' ? true : null" [value]="'Y'"
+                  [ngClass]="{ 'is-invalid': submitted && f.forcePwd.errors, 'is-valid': f.forcePwd.touched && !f.forcePwd.errors }">
+                  <label class="form-check-label {{'User.DetailsPage.RadioAlign' | translate}}" for="radio1">
+                    {{'User.DetailsPage.ForcePwdTrue' | translate}}
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" id="forcePwdFalse" name="forcePwd" required formControlName="forcePwd"
+                  [checked]="forcePwd=='N' ? true : null" [value]="'N'"
+                  [ngClass]="{ 'is-invalid': submitted && f.forcePwd.errors, 'is-valid': f.forcePwd.touched && !f.forcePwd.errors }">
+                  <label class="form-check-label {{'User.DetailsPage.RadioAlign' | translate}}" for="radio2">
+                    {{'User.DetailsPage.ForcePwdFalse' | translate}}
+                  </label>
+                </div>
+                <div *ngIf="submitted && f['forcePwd'].errors" class="invalid-feedback">
+                  <div *ngIf="f['forcePwd'].errors.required">Force Password is required</div>
+                  </div>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-4 col-form-label" for="updateKyc" >{{'User.DetailsPage.UpdateKyc' | translate}} *</label>
+              <div class="col-md-5 col-form-label">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" id="updateKycTrue" name="updateKyc" required formControlName="updateKyc"
+                  [checked]="updateKyc=='Y' ? true : null" [value]="'Y'"
+                  [ngClass]="{ 'is-invalid': submitted && f.updateKyc.errors, 'is-valid': f.updateKyc.touched && !f.updateKyc.errors }">
+                  <label class="form-check-label {{'User.DetailsPage.RadioAlign' | translate}}" for="radio1">
+                    {{'User.DetailsPage.UpdateKycTrue' | translate}}
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" id="updateKycFalse" name="updateKyc" required formControlName="updateKyc"
+                  [checked]="updateKyc=='N' ? true : null" [value]="'N'"
+                  [ngClass]="{ 'is-invalid': submitted && f.updateKyc.errors, 'is-valid': f.updateKyc.touched && !f.updateKyc.errors }">
+                  <label class="form-check-label {{'User.DetailsPage.RadioAlign' | translate}}" for="radio2">
+                    {{'User.DetailsPage.UpdateKycFalse' | translate}}
+                  </label>
+                </div>
+                <div *ngIf="submitted && f['updateKyc'].errors" class="invalid-feedback">
+                  <div *ngIf="f['updateKyc'].errors.required">Update KYC is required</div>
+                  </div>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-4 col-form-label" for="status" >{{'User.DetailsPage.Status' | translate}} *</label>
+              <div class="col-md-5 col-form-label">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" id="activeStatus" name="status" required formControlName="status"
+                  [checked]="status=='A' ? true : null" [value]="'A'"
+                  [ngClass]="{ 'is-invalid': submitted && f.status.errors, 'is-valid': f.status.touched && !f.status.errors }">
+                  <label class="form-check-label {{'User.DetailsPage.RadioAlign' | translate}}" for="radio1">
+                    {{'User.DetailsPage.StatusActive' | translate}}
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" id="inactiveStatus" name="status" required formControlName="status"
+                  [checked]="status=='I' ? true : null" [value]="'I'"
+                  [ngClass]="{ 'is-invalid': submitted && f.status.errors, 'is-valid': f.status.touched && !f.status.errors }">
+                  <label class="form-check-label {{'User.DetailsPage.RadioAlign' | translate}}" for="radio2">
+                    {{'User.DetailsPage.StatusInActive' | translate}}
+                  </label>
+                </div>
+                <div *ngIf="submitted && f['status'].errors" class="invalid-feedback">
+                  <div *ngIf="f['status'].errors.required">Status is required</div>
+                  </div>
+              </div>
+            </div>
+        </div>
+        <div class="card-footer">
+          <button type="submit" (click)="submitDB(this.mfData)" class="btn btn-sm btn-primary float-right"><i class="cil-save"></i> {{'User.DetailsPage.SaveBtn' | translate}}</button>
+          <button type="submit" (click)="submitDB(this.mfData)" class="btn btn-sm btn-danger"><i class="cil-user-x"></i> {{'User.DetailsPage.DeleteBtn' | translate}}</button>
+        </div>
+      </form>
+      </div>
+    </div>
+  </div><!--/.row-->
+</div>
+<toaster-container [toasterconfig]="toasterconfig"></toaster-container>
+<app-toast title="test2"></app-toast>
+</router-outlet>

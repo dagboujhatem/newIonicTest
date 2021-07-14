@@ -7,6 +7,23 @@ export const navItems: INavData[] = [
     icon: 'cil-speedometer',
     badge: {
       variant: 'info',
+      text: '',
+    },
+  },
+  {
+    name: 'Users',
+    url: '/users',
+    icon: 'cil-drop',
+  },
+];
+
+export const navComponentItems: INavData[] = [
+  {
+    name: 'Dashboard',
+    url: '/dashboard',
+    icon: 'cil-speedometer',
+    badge: {
+      variant: 'info',
       text: 'NEW',
     },
   },

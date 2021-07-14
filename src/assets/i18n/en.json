@@ -1,0 +1,111 @@
+{
+    "Breadcrumb": {
+        "Home": "Home",
+        "Dashboard": "Dashboard",
+        "FacilityTitle": "User",
+        "FacilityDetails": "Details",
+        "Items": "Items",
+        "ItemsList": "Items",
+        "ItemsDetails": "Items Details"
+    },
+    "direction": "ltr",
+    "Header": {
+        "Links": {
+            "Home": "Home",
+            "Users": "Users",
+            "Settings": "Settings"
+        }
+    },
+    "User": {
+        "MainPage": 
+        {
+            "Title": "User",
+            "SearchBar": "Search by name",
+            "AddBtn": "New",
+            "DetailsBtn": "Details",
+            "Table": 
+            {
+                "Name": "Name",
+                "Email": "Email",
+                "Age": "Age",
+                "City": "City",
+                "Registered": "Registered",
+                "Actions": "Actions"
+            }
+        },
+        "DetailsPage": 
+        {
+            "BtnAlign": "pull-right",
+            "TextAlign": "pull-left",
+            "RadioAlign": "btnAlign",
+            "Title": "User Details",
+            "PrefBtn": "Preferences",
+            "SchBtn": "Schedule",
+            "Name": "Name",
+            "Mobile": "Mobile",
+            "Email": "Email",
+            "CountryCode": "Country Code",
+            "Dob": "Date of Birth",
+            "Gender": "Gender",
+            "GenderMale": "Male",
+            "GenderFemale": "Female",
+            "Status": "Status",
+            "StatusActive": "Active",
+            "StatusInActive": "In-active",
+            "PrefLang": "Preffered Language",
+            "PrefLangEnglish": "English",
+            "PrefLangArabic": "Arabic",
+            "VerifiedEmail": "Verified Email",
+            "VerifiedEmailTrue": "True",
+            "VerifiedEmailFalse": "False",
+            "VerifiedMobile": "Verified Mobile",
+            "VerifiedMobileTrue": "True",
+            "VerifiedMobileFalse": "False",
+            "ForcePwd": "Force Password Change",
+            "ForcePwdTrue": "True",
+            "ForcePwdFalse": "False",
+            "UpdateKyc": "Update KYC",
+            "UpdateKycTrue": "True",
+            "UpdateKycFalse": "False",
+            "ImgUpload": "Upload Image",
+            "ImgSelect": "No image selected",
+            "Img": "Image",
+            "ImgPH": "No image selected",
+            "SaveBtn": "Save",
+            "DeleteBtn": "Delete",
+            "Pref": 
+            {
+                "Title": "Preferences",
+                "SatOrders": "Saturday Orders Per Day",
+                "SunOrders": "Sunday Orders Per Day",
+                "MonOrders": "Monday Orders Per Day",
+                "TueOrders": "Tuesday Orders Per Day",
+                "WedOrders": "Wednesday Orders Per Day",
+                "ThuOrders": "Thursday Orders Per Day",
+                "FriOrders": "Friday Orders Per Day",
+                "Carriers": "No of Carriers",
+                "PayMethod": "Accpeted Payment Method",
+                "Status": "Status",
+                "PayMethodCash": "Cash",
+                "PayMethodPOS": "POS Machine",
+                "PayMethodBP": "BenefitPay",
+                "StatusActive": "Active",
+                "StatusInActive": "In-active"
+            },
+            "Schedule": 
+            {
+                "Title": "Schedule",
+                "Saturday": "Saturday",
+                "Sunday": "Sunday",
+                "Monday": "Monday",
+                "Tuesday": "Tuesday",
+                "Wednesday": "Wednesday",
+                "Thursday": "Thursday",
+                "Friday": "Friday",
+                "StartTime": "Start Time",
+                "EndTime": "End Time",
+                "SaveBtn": "Save"
+            }
+        }
+    }
+}

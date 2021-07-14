@@ -1,0 +1,8 @@
+<ng-container *ngIf="show">
+  <c-toaster>
+    <c-toast [show]="true" [autohide]="true" [fade]="true">
+      <c-toast-header>{{title}}</c-toast-header>
+      <c-toast-body>{{description}}</c-toast-body>
+    </c-toast>
+  </c-toaster>
+</ng-container>

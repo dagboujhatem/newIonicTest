@@ -1,6 +1,7 @@
 import { Component, HostBinding } from '@angular/core';
 
-import { navItems } from './_nav';
+import { navItems, navComponentItems } from './_nav';
+import { environment } from '../../../environments/environment'
 
 @Component({
   selector: 'app-dashboard',
@@ -10,6 +11,8 @@ export class DefaultLayoutComponent {
   @HostBinding('class.c-app') cAppClass = true;
 
   public navItems = navItems;
+  public navComponentItems = navComponentItems;
+  public env = environment;
 
   public perfectScrollbarConfig = {
     suppressScrollX: true,

@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 // import { ChartsModule } from 'ng2-charts';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
@@ -41,10 +41,11 @@ import { WidgetsModule } from '../widgets/widgets.module';
     SharedModule,
     WidgetModule,
     WidgetsModule,
-    HttpClientModule
+    HttpClientModule,
   ],
   declarations: [
     DashboardComponent
-  ]
+  ],
+  schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
 })
 export class DashboardModule { }

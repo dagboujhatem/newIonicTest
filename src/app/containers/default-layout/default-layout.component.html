@@ -3,16 +3,16 @@
   <c-sidebar-brand
     [routerLink]="null"
     [brandFull]="{
-      src: 'assets/img/brand/coreui-pro-angular-white.svg',
-      width: 190,
+      src: 'assets/img/lamenu.png',
+      width: 146,
       height: 46,
-      alt: 'CoreUI Logo'
+      alt: 'Lamenu'
     }"
     [brandMinimized]="{
-      src: 'assets/img/brand/coreui-signet-white.svg',
+      src: 'assets/favicon.ico',
       width: 46,
       height: 46,
-      alt: 'CoreUI Logo'
+      alt: 'Lamenu'
     }"
   >
   </c-sidebar-brand>
@@ -22,11 +22,17 @@
     [disabled]="sidebar?.minimized"
     dropdownMode="closeInactive"
   ></c-sidebar-nav>
+  <c-sidebar-nav
+  [navItems]="navComponentItems"
+  [perfectScrollbar]="perfectScrollbarConfig"
+  [disabled]="sidebar?.minimized"
+  dropdownMode="closeInactive"
+  *ngIf="!env.production"
+  ></c-sidebar-nav>
   <c-sidebar-minimizer cSidebarMinimize="sidebar"></c-sidebar-minimizer>
 </c-sidebar>
-
 <!--aside-->
-<c-sidebar
+<!-- <c-sidebar
   id="aside"
   #aside="cSidebar"
   [aside]="true"
@@ -36,17 +42,17 @@
   [show]="false"
   [breakpoint]="false"
   [mobile]="'xl'"
->
+> -->
 <!--  cOutClick-->
   <!--aside internal toggler-->
-  <c-toggler cSidebarToggle="aside">
+  <!-- <c-toggler cSidebarToggle="aside">
     <button [class]="'c-sidebar-close'" type="button">
       <c-icon name="cil-x"></c-icon>
     </button>
   </c-toggler>
   <!--aside content-->
-  <app-default-aside></app-default-aside>
-</c-sidebar>
+  <!-- <app-default-aside></app-default-aside> --> 
+<!-- </c-sidebar> -->
 
 <!--main-->
 <c-wrapper>
@@ -63,15 +69,15 @@
   </c-body>
   <c-footer>
     <div>
-      <a href="https://coreui.io/pro/angular/" target="_blank">
-        CoreUI
+      <a href="https://lamenu.io" target="_blank">
+        Lamenu
       </a>
-      <span> &copy; 2021 creativeLabs</span>
+      <span> &copy; 2020 Scopx</span>
     </div>
     <div class="mfs-auto">
       Powered by
-      <a href="https://coreui.io/pro/angular" target="_blank">
-        <span> CoreUI v3 for Angular</span>
+      <a href="https://scopx.com/" target="_blank">
+        <span> ScopX</span>
       </a>
     </div>
   </c-footer>
