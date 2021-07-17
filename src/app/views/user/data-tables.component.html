@@ -2,14 +2,15 @@
 <div class="fade-in">
   <c-card>
     <c-card-header>
-      Users
+      <strong>
+        Users
+      </strong> 
       <c-card-header-actions>
         <a
           href="https://github.com/mariuszfoltak/angular2-datatable"
           target="_blank"
           class="card-header-action"
         >
-          <small class="text-muted">docs</small>
         </a>
       </c-card-header-actions>
     </c-card-header>
@@ -32,7 +33,7 @@
       </c-row>
       <table
         class="table table-striped table-hover table-responsive-lg"
-        [mfData]="dbData.data.content | dataFilter: filterQuery"
+        [mfData]="dbData?.content | dataFilter: filterQuery"
         #mf="mfDataTable"
         [mfRowsOnPage]="10"
       >
@@ -177,4 +178,5 @@
     </ng-template>
   </c-modal>
 </div>
+<app-toast></app-toast>
 </router-outlet>

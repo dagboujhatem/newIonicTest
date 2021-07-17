@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, OnInit, Renderer2, ViewChildren, ViewEncapsulation,QueryList } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnInit, Renderer2, ViewChild, ViewEncapsulation,QueryList } from '@angular/core';
 import { ITableData, DataTablesService } from './data-tables.service';
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -7,6 +7,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { Title } from '@angular/platform-browser';
 import { SpinkitComponent } from '@coreui/angular/lib/spinkit/spinkit.component';
 import { AppToastComponent as ToastComp } from '../../services/shared-service/toast-simple/toast.component'
+import { HttpService } from '../../services/http-service/http.service'
+import { ModalDirective } from 'ngx-bootstrap/modal';
 
 @Component({
   selector: 'app-data-tables',
@@ -30,6 +32,7 @@ export class DataTablesComponent {
   // //   timeout: 5000
   // // });
 
+  @ViewChild(ToastComp) toastComp: ToastComp;
 
   title = 'ng';
   langs = ['en', 'ar'];
@@ -47,7 +50,7 @@ export class DataTablesComponent {
     }
   }
 
-  constructor(private dataTableService: DataTablesService, public translateService: TranslateService, public titleService: Title, public router: Router, public route: ActivatedRoute, private http: HttpClient) {
+  constructor(private dataTableService: DataTablesService, public translateService: TranslateService, public titleService: Title, public router: Router, public route: ActivatedRoute, private http: HttpClient, private httpService: HttpService) {
     //this.toasterService = toasterService;
     this.isLoading = true;
     this.getUsers();
@@ -64,10 +67,9 @@ export class DataTablesComponent {
 
   public async getUsers()
   {
-    let headers = new Headers();
-    headers.append('Content-Type','application/json');
-    
-    return await this.http.post<any>('http://192.168.64.2/Lamenu-Admin-API/public/getUsers/', {headers: headers}).toPromise()
+
+    //his.httpService.post('/getUsers', '', '');
+    return await this.httpService.post('getUsers', '', '')
     .then(
       data => {
         setTimeout(() => {
@@ -76,8 +78,24 @@ export class DataTablesComponent {
               }, 1500);
       },
       error => {console.log(error)},
-    );
+    ).catch();
+
+
+    // let headers = new Headers();
+    // headers.append('Content-Type','application/json');
+    
+    // return await this.http.post<any>('http://192.168.64.2/Lamenu-Admin-API/public/getUsers/', {headers: headers}).toPromise()
+    // .then(
+    //   data => {
+    //     setTimeout(() => {
+    //             this.isLoading = false;
+    //             this.dbData = data; 
+    //           }, 1500);
+    //   },
+    //   error => {console.log(error)},
+    // );
   }
+  @ViewChild('dangerModal', {static: false}) public dangerModal: ModalDirective;
 
   public toInt(num: string) {
     return +num;
@@ -100,17 +118,16 @@ export class DataTablesComponent {
     this.router.navigate(['details'], {state: {data: data}, relativeTo: this.route});
   }
   public add() {
-    this.router.navigate(['details'], {state: {createData: ''},relativeTo: this.route});
+    this.router.navigate(['details'], {state: {createData: ''}, relativeTo: this.route});
   }
-  public delete(content: object) {
-    let headers = new Headers();
-    headers.append('Content-Type','application/json');
-    this.http.post<any>('http://192.168.64.2/Lamenu-Admin-API/public/deleteUser/', {content, headers: headers})
-    .subscribe(
-      data =>  window.location.reload(),
-      error => {//this.dangerModal.hide();//this.showError('An error has occured, please check missing and try again');
-    },
-    );
-   //this.dangerModal.hide();
+  public async delete(content: object) {
+    return await this.httpService.post('deleteUser', '', '')
+    .then(
+      data => {window.location.reload()},
+      error => {
+        this.dangerModal.hide();
+        this.toastComp.doShow("Error", 'An error has occured, please try again later');
+      }
+    ).catch();
   }
 }

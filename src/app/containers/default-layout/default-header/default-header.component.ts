@@ -10,7 +10,9 @@ export class DefaultHeaderComponent extends HeaderComponent implements OnInit {
     super();
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.toggleTheme();
+  }
 
   toggleTheme() {
     this.classToggler.toggle('.c-app', 'c-dark-theme');

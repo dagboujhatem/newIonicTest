@@ -10,6 +10,7 @@ import { ValidationFormsService } from './validation-forms.service';
 import { ValidatorFn, ValidationErrors } from '@angular/forms';
 import { ToasterComponent, ToasterPosition } from '@coreui/angular';
 import { AppToastComponent as ToastComp } from '../../../services/shared-service/toast-simple/toast.component'
+import { HttpService } from '../../../services/http-service/http.service'
 
 @Component({
   selector: 'app-toasters',
@@ -30,33 +31,11 @@ export class BasicFormsComponent {
 
 // Timepicker
 
-public hstep: number = 1;
-public mstep: number = 15;
-public ismeridian: boolean = true;
-public isEnabled: boolean = true;
+  public isEnabled: boolean = true;
 
-public mytime: Date = new Date();
-public mytime2: Date = new Date();
-public mytime3: Date = new Date();
-public mytime4: Date = new Date();
-public mytime5: Date = new Date();
-public mytime6: Date = new Date();
-public mytime7: Date = new Date();
-public mytime8: Date = new Date();
-public mytime9: Date = new Date();
-public mytime10: Date = new Date();
-public mytime11: Date = new Date();
-public mytime12: Date = new Date();
-public mytime13: Date = new Date();
-public mytime14: Date = new Date();
-
-public options: any = {
-  hstep: [1, 2, 3],
-  mstep: [1, 5, 10, 15, 25, 30]
-};
 
   public mfData? : object = {};
-  public categories?  = [];
+  public userType?  = [];
   isUpdate: boolean = false;
   dbUrl?: string;
   name: string;
@@ -111,7 +90,7 @@ public options: any = {
   public paddingStyle: Object = { 'padding-right': '20px'};
 
 
-  constructor(private router: Router, private http: HttpClient, public route: ActivatedRoute, toasterService: ToasterService,private fb: FormBuilder,public vf: ValidationFormsService) {
+  constructor(private router: Router, private http: HttpClient, public route: ActivatedRoute, toasterService: ToasterService,private fb: FormBuilder,public vf: ValidationFormsService, public httpService: HttpService) {
     //if (localStorage.getItem('currentUser') === null) {this.router.navigateByUrl('/login');}
     if (localStorage.getItem('lang') === "ar") {this.toasterconfig = new ToasterConfig({tapToDismiss: true, timeout: 5000, positionClass: 'toast-top-left'});}
     this.toasterService = toasterService;
@@ -153,7 +132,7 @@ public options: any = {
       this.updateKyc = '';
       this.status = '';
     }
-    //this.getCategories();
+    this.getUserTypes();
     this.createForm();
   }
 
@@ -305,8 +284,6 @@ public options: any = {
     this.submitted = true;
     var fd = new FormData();
 
-
-
     // stop here if form is invalid
     if (this.simpleForm.invalid) {
       var msg = "";
@@ -328,18 +305,18 @@ public options: any = {
       }
       else if (this.simpleForm.controls['dob'].invalid)
       {
-        msg = "Invalid Start Time"
+        msg = "Invalid Date of Birth"
       }
       else if (this.simpleForm.controls['gender'].invalid)
       {
-        msg = "Invalid End Time"
+        msg = "Invalid Gender"
       }
       else
       {
-        msg = 'An error has occured, please check missing and try again';
+        msg = 'An error has occured, please check missing fields and try again';
       }
       this.toastComp.doShow("Error", msg);
-      //this.showError(msg);
+      this.toastComp.doShow("Error", "Check Invalid Fields: " + this.findInvalidControls());
       //this.showError("Check Invalid Fields: " + this.findInvalidControls());
       return;
     }
@@ -377,11 +354,10 @@ public options: any = {
     let headers = new Headers();
     headers.append('Content-Type','application/json');
 
-
     this.http.post<any>(this.dbUrl, fd)
     .subscribe(
       data => {if (this.isUpdate) {this.showSuccess('Event updated');} else {this.showSuccess('Event added')}},
-      error => {if (this.isUpdate) {this.isError = true;this.showError('An error has occured in db, please check missing and try again');console.log(error);} else {this.isError = true;this.showError('An error has occured in db, please check missing and try again');console.log(error);}},
+      error => {if (this.isUpdate) {this.isError = true;this.toastComp.doShow('Error', 'An error has occured in db, please check missing and try again');console.log(error);} else {this.isError = true;this.toastComp.doShow('Error', 'An error has occured in db, please check missing and try again');console.log(error);}},
     );
     //this.showSuccess();
      
@@ -390,15 +366,13 @@ public options: any = {
 
     //this.router.navigate(['basic-forms'], {state: {data: data}, relativeTo: this.route});
   }
-  public getCategories()
+  public getUserTypes()
   {
-    let headers = new Headers();
-    headers.append('Content-Type','application/json');
-    this.http.post<any>('https://pangaeaclub.net/database.php/getCategories', {headers: headers})
-    .subscribe(
-      data => {this.categories = [...data]},
-      error => {if (this.isUpdate) {this.isError = true;this.showError('An error has occured, please check missing and try again')} else {this.isError = true;this.showError('An error has occured, please check missing and try again')}},
-    );
+    this.httpService.post('getUserType', '', '')
+    .then(
+      data => {this.userType = [...data]},
+      error => {if (this.isUpdate) {this.isError = true;this.toastComp.doShow('Error', 'An error has occured, please check missing and try again')} else {this.isError = true;this.toastComp.doShow('Error', 'An error has occured, please check missing and try again')}},
+    ).catch();
   }
 
   async delay(ms: number) {
@@ -423,24 +397,5 @@ public options: any = {
     this.iconCollapse = this.isCollapsed ? 'icon-arrow-down' : 'icon-arrow-up';
   }
 
-
-  public toggleMode(): void {
-    this.ismeridian = !this.ismeridian;
-  }
-
-  public update(): void {
-    const d = new Date();
-    d.setHours(14);
-    d.setMinutes(0);
-    this.mytime = d;
-  }
-
-  public changed(): void {
-    console.log('Time changed to: ' + this.mytime);
-  }
-
-  public clear(): void {
-    this.mytime = void 0;
-  }
 
 }
