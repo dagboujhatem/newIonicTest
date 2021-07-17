@@ -46,10 +46,6 @@ export class HttpService {
     });
   }
 
-
-
-
-
   responseBodyHandler(res) {
     return new Promise<any>(async (resolve, reject) => {
       if (res.result && res.result.isSuccess) {
