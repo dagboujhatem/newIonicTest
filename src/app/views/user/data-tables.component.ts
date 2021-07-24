@@ -67,7 +67,6 @@ export class DataTablesComponent {
 
   public async getUsers()
   {
-
     //his.httpService.post('/getUsers', '', '');
     return await this.httpService.post('getUsers', '', '')
     .then(
