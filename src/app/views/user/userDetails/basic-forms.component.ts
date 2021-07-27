@@ -35,22 +35,22 @@ export class BasicFormsComponent {
 
 
   public mfData? : object = {};
-  public userType?  = [];
+  public userTypes?;
   isUpdate: boolean = false;
-  dbUrl?: string;
+  dbFunction?: string;
   name: string;
   mobile: string;
   email: string;
   countryCode: string;
-  dob: string;
+  dob: Date;
   country: string;
   status: string;
   gender: string;
-  prefLang: string;
+  preferredLanguage: string;
   verifiedEmail: string;
   verifiedMobile: string;
-  forcePwd: string;
-  updateKyc: string;
+  forceChangePasswordFlag: string;
+  updateKYCFlag: string;
   longitude: string;
   latitude: string;
   fromDate: string;
@@ -75,6 +75,7 @@ export class BasicFormsComponent {
   uploadedBrochure: File;
   isShowPref: boolean;
   isShowSchd: boolean;
+  userType?: string;
 
   isError: boolean = false;
 
@@ -101,35 +102,37 @@ export class BasicFormsComponent {
     if(this.router.getCurrentNavigation().extras.state?.createData == null)
     {
       this.isUpdate = true;
-      this.dbUrl = 'http://192.168.64.2/Lamenu-Admin-API/public/updateUser';
+      this.dbFunction = 'updateUser';
       this.mfData = this.router.getCurrentNavigation().extras.state?.data;
+      this.userType = this.mfData['type'];
       this.name = this.mfData['name'];
       this.email = this.mfData['email'];
       this.mobile = this.mfData['mobile'];
       this.countryCode = this.mfData['countryCode'];
-      this.dob = this.mfData['dob'];
+      this.dob = new Date(this.mfData['dob']);
       this.gender = this.mfData['gender'];
-      this.prefLang = this.mfData['preferredLanguage'];
+      this.preferredLanguage = this.mfData['preferredLanguage'];
       this.verifiedEmail = this.mfData['verifiedEmail'];
       this.verifiedMobile = this.mfData['verifiedMobile'];
-      this.forcePwd = this.mfData['forceChangePasswordFlag'];
-      this.updateKyc = this.mfData['updateKYCFlag'];
+      this.forceChangePasswordFlag = this.mfData['forceChangePasswordFlag'];
+      this.updateKYCFlag = this.mfData['updateKYCFlag'];
       this.status = this.mfData['status'];
     }
     else
     {
-      this.dbUrl = 'http://192.168.64.2/Lamenu-Admin-API/public/addUser';
+      this.dbFunction = '/addUser';
+      this.userType = null;
       this.name = '';
       this.mobile = '';
       this.email = '';
       this.countryCode = '';
-      this.dob = '';
+      this.dob = new Date();
       this.gender = '';
-      this.prefLang = '';
+      this.preferredLanguage = '';
       this.verifiedEmail = '';
       this.verifiedMobile = '';
-      this.forcePwd = '';
-      this.updateKyc = '';
+      this.forceChangePasswordFlag = '';
+      this.updateKYCFlag = '';
       this.status = '';
     }
     this.getUserTypes();
@@ -148,17 +151,18 @@ export class BasicFormsComponent {
   // Validators.pattern('^[0-9]{4}[\/][1-9]|1[012][\/][0-9]{2}$')]
   createForm() {
     this.simpleForm = this.fb.group({
+      userType: [this.userType, [Validators.required]],
       name: [this.name, [Validators.required]],
       mobile: [this.mobile, [Validators.required]],
       email: [this.email, [Validators.required]],
       countryCode: [this.countryCode, [Validators.required]],
-      dob: [this.dob, [Validators.required]],
-      gender: [this.gender, [Validators.required, Validators.maxLength(2)]],
-      prefLang: [this.prefLang, [Validators.required]],
+      dob: [this.dob],
+      gender: [this.gender],
+      preferredLanguage: [this.preferredLanguage, [Validators.required]],
       verifiedEmail: [this.verifiedEmail, [Validators.required]],
       verifiedMobile: [this.verifiedMobile, [Validators.required]],
-      forcePwd: [this.forcePwd, [Validators.required]],
-      updateKyc: [this.updateKyc, [Validators.required]],
+      forceChangePasswordFlag: [this.forceChangePasswordFlag, [Validators.required]],
+      updateKYCFlag: [this.updateKYCFlag, [Validators.required]],
       status: [this.status, [Validators.required]],
     }, { });
   }
@@ -166,9 +170,9 @@ export class BasicFormsComponent {
   get f() { return this.simpleForm.controls; }
 
 
-  showSuccess(msg) {
+  async showSuccess(msg) {
 
-    this.toasterService.pop('success', 'Success', msg);
+    await this.toastComp.doShow('Success', msg);
 
     if (this.isUpdate && !this.isError)
     {
@@ -323,42 +327,56 @@ export class BasicFormsComponent {
 
 
     // TODO: Use EventEmitter with form value
-    this.mfData['categoryId'] = this.f['categoryId'].value
+    this.mfData['userType'] = this.f['userType'].value
     this.mfData['name'] = this.f['name'].value
     this.mfData['mobile'] = this.f['mobile'].value
     this.mfData['email'] = this.f['email'].value
     this.mfData['countryCode'] = this.f['countryCode'].value
     this.mfData['dob'] = this.f['dob'].value
     this.mfData['gender'] = this.f['gender'].value
-    this.mfData['prefLang'] = this.f['prefLang'].value
+    this.mfData['preferredLanguage'] = this.f['preferredLanguage'].value
     this.mfData['verifiedEmail'] = this.f['verifiedEmail'].value
     this.mfData['verifiedMobile'] = this.f['verifiedMobile'].value
-    this.mfData['forcePwd'] = this.f['forcePwd'].value
-    this.mfData['updateKyc'] = this.f['updateKyc'].value
+    this.mfData['forceChangePasswordFlag'] = this.f['forceChangePasswordFlag'].value
+    this.mfData['updateKYCFlag'] = this.f['updateKYCFlag'].value
     this.mfData['status'] = this.f['status'].value
 
+    let formattedDob = new Date(this.mfData['dob']).toISOString().toString().substr(0, 10);
+
+    fd.append('userType',this.mfData['userType']);
     fd.append('id',this.mfData['id']);
     fd.append('name',this.mfData['name']);
+    fd.append('email',this.mfData['email']);
+    fd.append('password',this.mfData['password']);
+    fd.append('salt',this.mfData['salt']);
     fd.append('mobile',this.mfData['mobile']);
     fd.append('countryCode',this.mfData['countryCode']);
-    fd.append('dob',this.mfData['dob']);
+    fd.append('dob',formattedDob);
     fd.append('gender',this.mfData['gender']);
-    fd.append('prefLang',this.mfData['prefLang']);
+    fd.append('preferredLanguage',this.mfData['preferredLanguage']);
     fd.append('verifiedEmail',this.mfData['verifiedEmail']);
     fd.append('verifiedMobile',this.mfData['verifiedMobile']);
-    fd.append('forcePwd',this.mfData['forcePwd']);
-    fd.append('updateKyc',this.mfData['updateKyc']);
+    fd.append('forceChangePasswordFlag',this.mfData['forceChangePasswordFlag']);
+    fd.append('updateKYCFlag',this.mfData['updateKYCFlag']);
     fd.append('status',this.mfData['status']);
 
 
     let headers = new Headers();
     headers.append('Content-Type','application/json');
 
-    this.http.post<any>(this.dbUrl, fd)
-    .subscribe(
-      data => {if (this.isUpdate) {this.showSuccess('Event updated');} else {this.showSuccess('Event added')}},
+    this.httpService.post(this.dbFunction, fd, '')
+    .then(
+      data => {
+              if (this.isUpdate) {this.showSuccess('User updated');} else {this.showSuccess('User added')}
+      },
       error => {if (this.isUpdate) {this.isError = true;this.toastComp.doShow('Error', 'An error has occured in db, please check missing and try again');console.log(error);} else {this.isError = true;this.toastComp.doShow('Error', 'An error has occured in db, please check missing and try again');console.log(error);}},
-    );
+    ).catch();
+
+    // this.http.post<any>(this.dbFunction, fd)
+    // .subscribe(
+    //   data => {if (this.isUpdate) {this.showSuccess('User updated');} else {this.showSuccess('User added')}},
+    //   error => {if (this.isUpdate) {this.isError = true;this.toastComp.doShow('Error', 'An error has occured in db, please check missing and try again');console.log(error);} else {this.isError = true;this.toastComp.doShow('Error', 'An error has occured in db, please check missing and try again');console.log(error);}},
+    // );
     //this.showSuccess();
      
     //this.http.headers.post['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8';
@@ -370,7 +388,7 @@ export class BasicFormsComponent {
   {
     this.httpService.post('getUserType', '', '')
     .then(
-      data => {this.userType = [...data]},
+      data => {this.userTypes = data},
       error => {if (this.isUpdate) {this.isError = true;this.toastComp.doShow('Error', 'An error has occured, please check missing and try again')} else {this.isError = true;this.toastComp.doShow('Error', 'An error has occured, please check missing and try again')}},
     ).catch();
   }

@@ -12,6 +12,19 @@
         </div>
         <form action="" [formGroup]="simpleForm" method="post" enctype="multipart/form-data" class="form-horizontal">
         <div class="card-body">
+          <div class="form-group row">
+            <label class="col-md-4 col-form-label" for="userTypes">Type</label>
+            <div class="col-md-6">
+              <select class="form-control" id="userType" name="userType" formControlName="userType" required
+              [ngClass]="{ 'is-invalid': submitted && f.userType.errors, 'is-valid': f.userType.touched && !f.userType.errors }">
+              <option style="color: grey;" [value]="null" [selected]="true">--Select Type--</option>
+              <option class="form-control" [selected]="uType.type==userType ? true : null" *ngFor="let uType of userTypes.content" [value]="uType.type">{{ uType.type }}</option>
+              </select>
+              <div *ngIf="submitted && f['userType'] == null" class="invalid-feedback">
+                <div *ngIf="f['userType'] == null">Type is required</div>
+              </div>
+            </div>
+          </div>
             <div class="form-group row">
               <label class="col-md-4 col-form-label" for="text-input">{{'User.DetailsPage.Name' | translate}} *</label>
               <div class="col-md-6">
@@ -55,7 +68,7 @@
             <div class="form-group row">
               <label class="col-md-4 col-form-label" for="text-input">{{'User.DetailsPage.Dob' | translate}} *</label>
               <div class="col-md-5">
-                <input cInput [minDate]="minDate" [maxDate]="maxDate" #dp="bsDatepicker" dateFormat=“dd-MM-yyyy” bsDatepicker [(bsValue)]="bsValue"
+                <input cInput #dp="bsDatepicker" bsDatepicker [(bsValue)]="dob"
                 id="dob" name="dob" class="form-control" formControlName="dob" required placeholder="01-JAN-2021"
                 [ngClass]="{ 'is-invalid': submitted && f.dob.errors, 'is-valid': f.dob.touched && !f.dob.errors }">
                 <div *ngIf="submitted && f['dob'].errors" class="invalid-feedback">
@@ -88,26 +101,26 @@
               </div>
             </div>
             <div class="form-group row">
-              <label class="col-md-4 col-form-label" for="prefLang" >{{'User.DetailsPage.PrefLang' | translate}} *</label>
+              <label class="col-md-4 col-form-label" for="preferredLanguage" >{{'User.DetailsPage.preferredLanguage' | translate}} *</label>
               <div class="col-md-5 col-form-label">
                 <div class="form-check">
-                  <input class="form-check-input" type="radio" id="maleprefLang" name="prefLang" required formControlName="prefLang"
-                  [checked]="prefLang=='en' ? true : null" [value]="'en'"
-                  [ngClass]="{ 'is-invalid': submitted && f.prefLang.errors, 'is-valid': f.prefLang.touched && !f.prefLang.errors }">
+                  <input class="form-check-input" type="radio" id="malepreferredLanguage" name="preferredLanguage" required formControlName="preferredLanguage"
+                  [checked]="preferredLanguage=='en' ? true : null" [value]="'en'"
+                  [ngClass]="{ 'is-invalid': submitted && f.preferredLanguage.errors, 'is-valid': f.preferredLanguage.touched && !f.preferredLanguage.errors }">
                   <label class="form-check-label {{'User.DetailsPage.RadioAlign' | translate}}" for="radio1">
-                    {{'User.DetailsPage.PrefLangEnglish' | translate}}
+                    {{'User.DetailsPage.preferredLanguageEnglish' | translate}}
                   </label>
                 </div>
                 <div class="form-check">
-                  <input class="form-check-input" type="radio" id="femaleprefLang" name="prefLang" required formControlName="prefLang"
-                  [checked]="prefLang=='ar' ? true : null" [value]="'ar'"
-                  [ngClass]="{ 'is-invalid': submitted && f.prefLang.errors, 'is-valid': f.prefLang.touched && !f.prefLang.errors }">
+                  <input class="form-check-input" type="radio" id="femalepreferredLanguage" name="preferredLanguage" required formControlName="preferredLanguage"
+                  [checked]="preferredLanguage=='ar' ? true : null" [value]="'ar'"
+                  [ngClass]="{ 'is-invalid': submitted && f.preferredLanguage.errors, 'is-valid': f.preferredLanguage.touched && !f.preferredLanguage.errors }">
                   <label class="form-check-label {{'User.DetailsPage.RadioAlign' | translate}}" for="radio2">
-                    {{'User.DetailsPage.PrefLangArabic' | translate}}
+                    {{'User.DetailsPage.preferredLanguageArabic' | translate}}
                   </label>
                 </div>
-                <div *ngIf="submitted && f['prefLang'].errors" class="invalid-feedback">
-                  <div *ngIf="f['prefLang'].errors.required">Pref Lang is required</div>
+                <div *ngIf="submitted && f['preferredLanguage'].errors" class="invalid-feedback">
+                  <div *ngIf="f['preferredLanguage'].errors.required">Pref Lang is required</div>
                   </div>
               </div>
             </div>
@@ -160,50 +173,50 @@
               </div>
             </div>
             <div class="form-group row">
-              <label class="col-md-4 col-form-label" for="forcePwd" >{{'User.DetailsPage.ForcePwd' | translate}} *</label>
+              <label class="col-md-4 col-form-label" for="forceChangePasswordFlag" >{{'User.DetailsPage.forceChangePasswordFlag' | translate}} *</label>
               <div class="col-md-5 col-form-label">
                 <div class="form-check">
-                  <input class="form-check-input" type="radio" id="forcePwdTrue" name="forcePwd" required formControlName="forcePwd"
-                  [checked]="forcePwd=='Y' ? true : null" [value]="'Y'"
-                  [ngClass]="{ 'is-invalid': submitted && f.forcePwd.errors, 'is-valid': f.forcePwd.touched && !f.forcePwd.errors }">
+                  <input class="form-check-input" type="radio" id="forceChangePasswordFlagTrue" name="forceChangePasswordFlag" required formControlName="forceChangePasswordFlag"
+                  [checked]="forceChangePasswordFlag=='Y' ? true : null" [value]="'Y'"
+                  [ngClass]="{ 'is-invalid': submitted && f.forceChangePasswordFlag.errors, 'is-valid': f.forceChangePasswordFlag.touched && !f.forceChangePasswordFlag.errors }">
                   <label class="form-check-label {{'User.DetailsPage.RadioAlign' | translate}}" for="radio1">
-                    {{'User.DetailsPage.ForcePwdTrue' | translate}}
+                    {{'User.DetailsPage.forceChangePasswordFlagTrue' | translate}}
                   </label>
                 </div>
                 <div class="form-check">
-                  <input class="form-check-input" type="radio" id="forcePwdFalse" name="forcePwd" required formControlName="forcePwd"
-                  [checked]="forcePwd=='N' ? true : null" [value]="'N'"
-                  [ngClass]="{ 'is-invalid': submitted && f.forcePwd.errors, 'is-valid': f.forcePwd.touched && !f.forcePwd.errors }">
+                  <input class="form-check-input" type="radio" id="forceChangePasswordFlagFalse" name="forceChangePasswordFlag" required formControlName="forceChangePasswordFlag"
+                  [checked]="forceChangePasswordFlag=='N' ? true : null" [value]="'N'"
+                  [ngClass]="{ 'is-invalid': submitted && f.forceChangePasswordFlag.errors, 'is-valid': f.forceChangePasswordFlag.touched && !f.forceChangePasswordFlag.errors }">
                   <label class="form-check-label {{'User.DetailsPage.RadioAlign' | translate}}" for="radio2">
-                    {{'User.DetailsPage.ForcePwdFalse' | translate}}
+                    {{'User.DetailsPage.forceChangePasswordFlagFalse' | translate}}
                   </label>
                 </div>
-                <div *ngIf="submitted && f['forcePwd'].errors" class="invalid-feedback">
-                  <div *ngIf="f['forcePwd'].errors.required">Force Password is required</div>
+                <div *ngIf="submitted && f['forceChangePasswordFlag'].errors" class="invalid-feedback">
+                  <div *ngIf="f['forceChangePasswordFlag'].errors.required">Force Password is required</div>
                   </div>
               </div>
             </div>
             <div class="form-group row">
-              <label class="col-md-4 col-form-label" for="updateKyc" >{{'User.DetailsPage.UpdateKyc' | translate}} *</label>
+              <label class="col-md-4 col-form-label" for="updateKYCFlag" >{{'User.DetailsPage.updateKYCFlag' | translate}} *</label>
               <div class="col-md-5 col-form-label">
                 <div class="form-check">
-                  <input class="form-check-input" type="radio" id="updateKycTrue" name="updateKyc" required formControlName="updateKyc"
-                  [checked]="updateKyc=='Y' ? true : null" [value]="'Y'"
-                  [ngClass]="{ 'is-invalid': submitted && f.updateKyc.errors, 'is-valid': f.updateKyc.touched && !f.updateKyc.errors }">
+                  <input class="form-check-input" type="radio" id="updateKYCFlagTrue" name="updateKYCFlag" required formControlName="updateKYCFlag"
+                  [checked]="updateKYCFlag=='Y' ? true : null" [value]="'Y'"
+                  [ngClass]="{ 'is-invalid': submitted && f.updateKYCFlag.errors, 'is-valid': f.updateKYCFlag.touched && !f.updateKYCFlag.errors }">
                   <label class="form-check-label {{'User.DetailsPage.RadioAlign' | translate}}" for="radio1">
-                    {{'User.DetailsPage.UpdateKycTrue' | translate}}
+                    {{'User.DetailsPage.updateKYCFlagTrue' | translate}}
                   </label>
                 </div>
                 <div class="form-check">
-                  <input class="form-check-input" type="radio" id="updateKycFalse" name="updateKyc" required formControlName="updateKyc"
-                  [checked]="updateKyc=='N' ? true : null" [value]="'N'"
-                  [ngClass]="{ 'is-invalid': submitted && f.updateKyc.errors, 'is-valid': f.updateKyc.touched && !f.updateKyc.errors }">
+                  <input class="form-check-input" type="radio" id="updateKYCFlagFalse" name="updateKYCFlag" required formControlName="updateKYCFlag"
+                  [checked]="updateKYCFlag=='N' ? true : null" [value]="'N'"
+                  [ngClass]="{ 'is-invalid': submitted && f.updateKYCFlag.errors, 'is-valid': f.updateKYCFlag.touched && !f.updateKYCFlag.errors }">
                   <label class="form-check-label {{'User.DetailsPage.RadioAlign' | translate}}" for="radio2">
-                    {{'User.DetailsPage.UpdateKycFalse' | translate}}
+                    {{'User.DetailsPage.updateKYCFlagFalse' | translate}}
                   </label>
                 </div>
-                <div *ngIf="submitted && f['updateKyc'].errors" class="invalid-feedback">
-                  <div *ngIf="f['updateKyc'].errors.required">Update KYC is required</div>
+                <div *ngIf="submitted && f['updateKYCFlag'].errors" class="invalid-feedback">
+                  <div *ngIf="f['updateKYCFlag'].errors.required">Update KYC is required</div>
                   </div>
               </div>
             </div>

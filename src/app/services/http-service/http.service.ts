@@ -19,8 +19,8 @@ export class HttpService {
     return new Promise<any>(async (resolve, reject) => {
         if (!environment.production) { console.log('[ %cHTTP POST', 'font-weight: bold', '] Call to', fun); }
         // if (loading) { await this.sharedSrv.loadingPresent(); }
-        const bodyData = JSON.stringify(param);
-        this.httpClient.post(BASE_URL + fun + '/', bodyData, httpOptions)
+        const bodyData = param;
+        this.httpClient.post(BASE_URL + fun + '/', bodyData)
         .subscribe(async res => {
           const data: any = res;
           console.log(data);
@@ -38,6 +38,7 @@ export class HttpService {
         async err => {
           // if (loading) { await this.sharedSrv.loadingDismiss(); }
           if (!environment.production) {
+            console.log('HttpClient Data: ' , param);
             console.log('HttpClient Error: ' , err);
             console.log('HttpClient Error: ' , err.error);
           }
