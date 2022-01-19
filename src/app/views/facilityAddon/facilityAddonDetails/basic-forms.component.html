@@ -1,0 +1,96 @@
+<router-outlet>
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          <strong class="{{'Addon.DetailsPage.TextAlign' | translate}}"> {{'Addon.DetailsPage.Title' | translate}}</strong>
+          <div class="{{'Addon.DetailsPage.BtnAlign' | translate}}" >
+          <!--  <button (click)="showPref()" class="btn btn-primary btn-xs"><i class="fa fa-sliders"></i> {{'Addon.DetailsPage.PrefBtn' | translate}}</button>
+            <button (click)="showSchdule()" class="btn btn-primary btn-xs"><i class="fa fa-calendar"></i> {{'Addon.DetailsPage.SchBtn' | translate}}</button> -->
+          </div>
+        </div>
+        <form action="" [formGroup]="simpleForm" method="post" enctype="multipart/form-data" class="form-horizontal">
+        <div class="card-body">
+            <div class="form-group row">
+              <label class="col-md-4 col-form-label" for="text-input">{{'Addon.DetailsPage.nameEn' | translate}} *</label>
+              <div class="col-md-6">
+                <input type="text" id="nameEn" name="nameEn" formControlName="nameEn" class="form-control" required autofocus placeholder="Rackets"
+                [ngClass]="{ 'is-invalid': submitted && f.nameEn.errors, 'is-valid': f.nameEn.touched && !f.nameEn.errors }">
+                <div *ngIf="submitted && f['nameEn'].errors" class="invalid-feedback">
+                  <div *ngIf="f['nameEn'].errors.required">English Name is required</div>
+                  </div>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-4 col-form-label" for="text-input">{{'Addon.DetailsPage.nameAr' | translate}} *</label>
+              <div class="col-md-6">
+                <input type="text" id="nameAr" name="nameAr" formControlName="nameAr" class="form-control" required autofocus placeholder="مضارب"
+                [ngClass]="{ 'is-invalid': submitted && f.nameAr.errors, 'is-valid': f.nameAr.touched && !f.nameAr.errors }">
+                <div *ngIf="submitted && f['nameAr'].errors" class="invalid-feedback">
+                  <div *ngIf="f['nameAr'].errors.required">Arabic Name is required</div>
+                  </div>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-4 col-form-label" for="text-input">{{'Addon.DetailsPage.price' | translate}} *</label>
+              <div class="col-md-6">
+                <input type="text" id="price" name="price" formControlName="price" class="form-control" required autofocus placeholder="3"
+                [ngClass]="{ 'is-invalid': submitted && f.price.errors, 'is-valid': f.price.touched && !f.price.errors }">
+                <div *ngIf="submitted && f['price'].errors" class="invalid-feedback">
+                  <div *ngIf="f['price'].errors.required">Price is required</div>
+                  </div>
+              </div>
+            </div> 
+            <div class="form-group row">
+              <label class="col-md-4 col-form-label" for="text-input">{{'Addon.DetailsPage.ccy' | translate}} *</label>
+              <div class="col-md-6">
+                <input type="text" id="ccy" name="ccy" formControlName="ccy" class="form-control" required autofocus placeholder="BHD"
+                [ngClass]="{ 'is-invalid': submitted && f.ccy.errors, 'is-valid': f.ccy.touched && !f.ccy.errors }">
+                <div *ngIf="submitted && f['ccy'].errors" class="invalid-feedback">
+                  <div *ngIf="f['ccy'].errors.required">Currency is required</div>
+                  </div>
+              </div>
+            </div> 
+            <div class="form-group row">
+              <label class="col-md-4 col-form-label" for="status" >{{'Addon.DetailsPage.Status' | translate}} *</label>
+              <div class="col-md-5 col-form-label">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" id="status" name="status" required formControlName="status"
+                  [checked]="status=='A' ? true : null" [value]="'A'"
+                  [ngClass]="{ 'is-invalid': submitted && f.status.errors, 'is-valid': f.status.touched && !f.status.errors }">
+                  <label class="form-check-label {{'Addon.DetailsPage.RadioAlign' | translate}}" for="radio1">
+                    {{'Addon.DetailsPage.StatusActive' | translate}}
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" id="status" name="status" required formControlName="status"
+                  [checked]="status=='I' ? true : null" [value]="'I'"
+                  [ngClass]="{ 'is-invalid': submitted && f.status.errors, 'is-valid': f.status.touched && !f.status.errors }">
+                  <label class="form-check-label {{'Addon.DetailsPage.RadioAlign' | translate}}" for="radio2">
+                    {{'Addon.DetailsPage.StatusInActive' | translate}}
+                  </label>
+                </div>
+                <div *ngIf="submitted && f['status'].errors" class="invalid-feedback">
+                  <div *ngIf="f['status'].errors.required">Status is required</div>
+                  </div>
+              </div>
+            </div>
+        </div>
+        <div class="card-footer">
+          <button cButton color="success" class="btn btn-sm float-right mfe-1 customBtn" (click)="saveAddon()" [disabled]="isLoading">
+            <span [hidden]="isLoading"><c-icon name="cil-save" size="sm"></c-icon> {{'Addon.DetailsPage.SaveBtn' | translate}}</span>
+            <c-spinner size="sm" role="status" [hidden]="!isLoading"></c-spinner>
+          </button>
+          <br>
+          <!-- <button type="submit" (click)="submitDB(this.mfData)" class="btn btn-sm btn-primary float-right"><i class="cil-save"></i> {{'Addon.DetailsPage.SaveBtn' | translate}}</button>
+          <button type="submit" (click)="submitDB(this.mfData)" class="btn btn-sm btn-danger"><i class="cil-user-x"></i> {{'Addon.DetailsPage.DeleteBtn' | translate}}</button> -->
+        </div>
+      </form>
+      </div>
+    </div>
+  </div><!--/.row-->
+</div>
+<!-- <toaster-container [toasterconfig]="toasterconfig"></toaster-container> -->
+<app-toast></app-toast>
+</router-outlet>

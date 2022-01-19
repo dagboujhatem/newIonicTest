@@ -1,4 +1,5 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';  
 import { FormsModule } from '@angular/forms';
 // import { ChartsModule } from 'ng2-charts';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
@@ -6,7 +7,6 @@ import { ButtonsModule } from 'ngx-bootstrap/buttons';
 
 import { DashboardComponent } from './dashboard.component';
 import { DashboardRoutingModule } from './dashboard-routing.module';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 import {
   CalloutModule,
@@ -25,6 +25,7 @@ import { WidgetsModule } from '../widgets/widgets.module';
 
 @NgModule({
   imports: [
+    CommonModule,
     FormsModule,
     DashboardRoutingModule,
     // ChartsModule,
@@ -40,12 +41,10 @@ import { WidgetsModule } from '../widgets/widgets.module';
     ChartModule,
     SharedModule,
     WidgetModule,
-    WidgetsModule,
-    HttpClientModule,
+    WidgetsModule
   ],
   declarations: [
     DashboardComponent
-  ],
-  schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
+  ]
 })
 export class DashboardModule { }

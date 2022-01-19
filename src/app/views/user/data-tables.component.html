@@ -55,21 +55,6 @@
               </mfDefaultSorter>
             </th>
             <th style="width: 10%;">
-              <mfDefaultSorter by="email" #sortEmail>
-                Email
-                <span
-                  *ngIf="sortEmail.isSortedByMeAsc"
-                  class="cil-arrow-top"
-                  aria-hidden="true"
-                ></span>
-                <span
-                  *ngIf="sortEmail.isSortedByMeDesc"
-                  class="cil-arrow-bottom"
-                  aria-hidden="true"
-                ></span>
-              </mfDefaultSorter>
-            </th>
-            <th style="width: 10%;">
               <mfDefaultSorter by="mobile" #sortMobile>
                 Mobile
                 <span
@@ -85,15 +70,15 @@
               </mfDefaultSorter>
             </th>
             <th style="width: 10%;">
-              <mfDefaultSorter by="type" #sortType>
-                Type
+              <mfDefaultSorter by="email" #sortEmail>
+                Country
                 <span
-                  *ngIf="sortType.isSortedByMeAsc"
+                  *ngIf="sortEmail.isSortedByMeAsc"
                   class="cil-arrow-top"
                   aria-hidden="true"
                 ></span>
                 <span
-                  *ngIf="sortType.isSortedByMeDesc"
+                  *ngIf="sortEmail.isSortedByMeDesc"
                   class="cil-arrow-bottom"
                   aria-hidden="true"
                 ></span>
@@ -114,7 +99,7 @@
                 ></span>
               </mfDefaultSorter>
             </th>
-            <th style="width: 10%;">
+            <th style="width: 10%; text-align: right; padding-right: 8%;">
               <mfDefaultSorter by="regDate" #sortActions>
                 Actions
                 <span
@@ -133,7 +118,7 @@
         </thead>
         <tbody>
           <tr [hidden]="!isLoading">
-            <td colspan="6">
+            <td colspan="7">
               <div [hidden]="!isLoading">
                 <c-spinkit name="fold"></c-spinkit>
               </div>
@@ -141,13 +126,13 @@
           </tr>
           <tr *ngFor="let item of mf.data;index as i;">
             <td>{{ item.name }}</td>
-            <td>{{ item.email }}</td>
             <td>{{ item.mobile }}</td>
-            <td>{{ item.type }}</td>
-            <td>{{ item.logDate | date }}</td>
+            <td>{{ item.country_code }}</td>
+            <td>{{ item.log_date }}</td>
             <td>
-              <button style="margin-right: 1px;" (click)="showEdit(item)" class="btn btn-outline-info btn-xs"><i class="cil-pencil"></i>  {{''}}</button>
-              <button ng-click="delete($i)" class="btn btn-danger mr-1" data-toggle="modal" (click)="dangerModal.show();currentIndex = i;"><i class="cil-user-x"></i> </button>
+              <button style="margin-right: 1px;" (click)="showEdit(item)" class="btn btn-outline-info btn-xs"><i class="cil-pencil"></i>  {{'Edit'}}</button> 
+               &nbsp;
+              <button class="btn btn-danger mr-1" data-toggle="modal" (click)="dangerModal.show();currentIndex = i;"><i class="cil-user-x"></i> {{'Delete'}} </button>
               <!--<button ng-click="delete($i)" class="btn btn-danger mr-1" data-toggle="modal" (click)="dangerModal.show();currentIndex = 0;">Delete</button> -->
             </td>
             <!--            <td>{{ getDate(item.regDate) }}</td>-->
@@ -155,7 +140,7 @@
         </tbody>
         <tfoot>
           <tr>
-            <td colspan="6">
+            <td colspan="7">
               <mfBootstrapPaginator
                 [rowsOnPageSet]="[5, 10, 15]"
               ></mfBootstrapPaginator>
@@ -174,7 +159,7 @@
     </ng-template>
     <ng-template #modalFooter>
       <button class="btn" cButton color="secondary" (click)="dangerModal.hide()">Close</button>
-      <button class="btn btn-danger mr-1" (click)="delete(mf.data[currentIndex])" cButton color="danger">Delete user</button>
+      <button class="btn btn-danger mr-1" (click)="deleteUser(mf.data[currentIndex].id)" cButton color="danger">Delete user</button>
     </ng-template>
   </c-modal>
 </div>

@@ -1,0 +1,146 @@
+<router-outlet>
+<div *ngIf="route.children.length === 0" class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          <strong class="{{'Court.DetailsPage.TextAlign' | translate}}"> {{'Court.DetailsPage.Title' | translate}}</strong>
+          <div class="{{'Court.DetailsPage.BtnAlign' | translate}}" >
+          <!--  <button (click)="showPref()" class="btn btn-primary btn-xs"><i class="fa fa-sliders"></i> {{'Court.DetailsPage.PrefBtn' | translate}}</button>
+            <button (click)="showSchdule()" class="btn btn-primary btn-xs"><i class="fa fa-calendar"></i> {{'Court.DetailsPage.SchBtn' | translate}}</button> -->
+          </div>
+        </div>
+        <form action="" [formGroup]="simpleForm" method="post" enctype="multipart/form-data" class="form-horizontal">
+        <div class="card-body">
+            <div class="form-group row">
+              <label class="col-md-4 col-form-label" for="text-input">{{'Court.DetailsPage.nameEn' | translate}} *</label>
+              <div class="col-md-6">
+                <input type="text" id="nameEn" name="nameEn" formControlName="nameEn" class="form-control" required autofocus placeholder="North Court"
+                [ngClass]="{ 'is-invalid': submitted && f.nameEn.errors, 'is-valid': f.nameEn.touched && !f.nameEn.errors }">
+                <div *ngIf="submitted && f['nameEn'].errors" class="invalid-feedback">
+                  <div *ngIf="f['nameEn'].errors.required">English Name is required</div>
+                  </div>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-4 col-form-label" for="text-input">{{'Court.DetailsPage.nameAr' | translate}} *</label>
+              <div class="col-md-6">
+                <input type="text" id="nameAr" name="nameAr" formControlName="nameAr" class="form-control" required autofocus placeholder="الملعب الشمالي"
+                [ngClass]="{ 'is-invalid': submitted && f.nameAr.errors, 'is-valid': f.nameAr.touched && !f.nameAr.errors }">
+                <div *ngIf="submitted && f['nameAr'].errors" class="invalid-feedback">
+                  <div *ngIf="f['nameAr'].errors.required">Arabic Name is required</div>
+                  </div>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-4 col-form-label" for="text-input">{{'Court.DetailsPage.size' | translate}} *</label>
+              <div class="col-md-6">
+                <input type="text" id="size" name="size" formControlName="size" class="form-control" required autofocus placeholder="2x2"
+                [ngClass]="{ 'is-invalid': submitted && f.size.errors, 'is-valid': f.size.touched && !f.size.errors }">
+                <div *ngIf="submitted && f['size'].errors" class="invalid-feedback">
+                  <div *ngIf="f['size'].errors.required">Size is required</div>
+                  </div>
+              </div>
+            </div> 
+            <div class="form-group row">
+              <label class="col-md-4 col-form-label" for="text-input">{{'Court.DetailsPage.backgroundColor' | translate}} *</label>
+              <div class="col-md-6">
+                <input type="text" id="backgroundColor" name="backgroundColor" formControlName="backgroundColor" class="form-control" required autofocus placeholder="green"
+                [ngClass]="{ 'is-invalid': submitted && f.backgroundColor.errors, 'is-valid': f.backgroundColor.touched && !f.backgroundColor.errors }">
+                <div *ngIf="submitted && f['backgroundColor'].errors" class="invalid-feedback">
+                  <div *ngIf="f['backgroundColor'].errors.required">Background Color is required</div>
+                  </div>
+              </div>
+            </div> 
+            <div class="form-group row">
+              <label class="col-md-4 col-form-label" for="text-input">{{'Court.DetailsPage.price30min' | translate}} *</label>
+              <div class="col-md-6">
+                <input type="text" id="price30min" name="price30min" formControlName="price30min" class="form-control" required autofocus placeholder="30"
+                [ngClass]="{ 'is-invalid': submitted && f.price30min.errors, 'is-valid': f.price30min.touched && !f.price30min.errors }">
+                <div *ngIf="submitted && f['price30min'].errors" class="invalid-feedback">
+                  <div *ngIf="f['price30min'].errors.required">Price is required</div>
+                  </div>
+              </div>
+            </div> 
+            <div class="form-group row">
+              <label class="col-md-4 col-form-label" for="text-input">{{'Court.DetailsPage.price60min' | translate}} *</label>
+              <div class="col-md-6">
+                <input type="text" id="price60min" name="price60min" formControlName="price60min" class="form-control" required autofocus placeholder="30"
+                [ngClass]="{ 'is-invalid': submitted && f.price60min.errors, 'is-valid': f.price60min.touched && !f.price60min.errors }">
+                <div *ngIf="submitted && f['price60min'].errors" class="invalid-feedback">
+                  <div *ngIf="f['price60min'].errors.required">Price is required</div>
+                  </div>
+              </div>
+            </div> 
+            <div class="form-group row">
+              <label class="col-md-4 col-form-label" for="text-input">{{'Court.DetailsPage.price90min' | translate}} *</label>
+              <div class="col-md-6">
+                <input type="text" id="price90min" name="price90min" formControlName="price90min" class="form-control" required autofocus placeholder="30"
+                [ngClass]="{ 'is-invalid': submitted && f.price90min.errors, 'is-valid': f.price90min.touched && !f.price90min.errors }">
+                <div *ngIf="submitted && f['price90min'].errors" class="invalid-feedback">
+                  <div *ngIf="f['price90min'].errors.required">Price is required</div>
+                  </div>
+              </div>
+            </div> 
+            <div class="form-group row">
+              <label class="col-md-4 col-form-label" for="text-input">{{'Court.DetailsPage.price120min' | translate}} *</label>
+              <div class="col-md-6">
+                <input type="text" id="price120min" name="price120min" formControlName="price120min" class="form-control" required autofocus placeholder="30"
+                [ngClass]="{ 'is-invalid': submitted && f.price120min.errors, 'is-valid': f.price120min.touched && !f.price120min.errors }">
+                <div *ngIf="submitted && f['price120min'].errors" class="invalid-feedback">
+                  <div *ngIf="f['price120min'].errors.required">Price is required</div>
+                  </div>
+              </div>
+            </div> 
+            <div class="form-group row">
+              <label class="col-md-4 col-form-label" for="text-input">{{'Court.DetailsPage.ccy' | translate}} *</label>
+              <div class="col-md-6">
+                <input type="text" id="ccy" name="ccy" formControlName="ccy" class="form-control" required autofocus placeholder="BHD"
+                [ngClass]="{ 'is-invalid': submitted && f.ccy.errors, 'is-valid': f.ccy.touched && !f.ccy.errors }">
+                <div *ngIf="submitted && f['ccy'].errors" class="invalid-feedback">
+                  <div *ngIf="f['ccy'].errors.required">Currency is required</div>
+                  </div>
+              </div>
+            </div> 
+            <div class="form-group row">
+              <label class="col-md-4 col-form-label" for="status" >{{'Court.DetailsPage.Status' | translate}} *</label>
+              <div class="col-md-5 col-form-label">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" id="status" name="status" required formControlName="status"
+                  [checked]="status=='A' ? true : null" [value]="'A'"
+                  [ngClass]="{ 'is-invalid': submitted && f.status.errors, 'is-valid': f.status.touched && !f.status.errors }">
+                  <label class="form-check-label {{'Court.DetailsPage.RadioAlign' | translate}}" for="radio1">
+                    {{'Court.DetailsPage.StatusActive' | translate}}
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" id="status" name="status" required formControlName="status"
+                  [checked]="status=='I' ? true : null" [value]="'I'"
+                  [ngClass]="{ 'is-invalid': submitted && f.status.errors, 'is-valid': f.status.touched && !f.status.errors }">
+                  <label class="form-check-label {{'Court.DetailsPage.RadioAlign' | translate}}" for="radio2">
+                    {{'Court.DetailsPage.StatusInActive' | translate}}
+                  </label>
+                </div>
+                <div *ngIf="submitted && f['status'].errors" class="invalid-feedback">
+                  <div *ngIf="f['status'].errors.required">Status is required</div>
+                  </div>
+              </div>
+            </div>
+        </div>
+        <div class="card-footer">
+          <button cButton color="success" class="btn btn-sm float-right mfe-1 customBtn" (click)="saveCourt()" [disabled]="isLoading">
+            <span [hidden]="isLoading"><c-icon name="cil-save" size="sm"></c-icon> {{'Court.DetailsPage.SaveBtn' | translate}}</span>
+            <c-spinner size="sm" role="status" [hidden]="!isLoading"></c-spinner>
+          </button>
+          <br>
+          <!-- <button type="submit" (click)="submitDB(this.mfData)" class="btn btn-sm btn-primary float-right"><i class="cil-save"></i> {{'Court.DetailsPage.SaveBtn' | translate}}</button> -->
+          <!-- <button type="submit" (click)="submitDB(this.mfData)" class="btn btn-sm btn-danger"><i class="cil-user-x"></i> {{'Court.DetailsPage.DeleteBtn' | translate}}</button> -->
+        </div>
+      </form>
+      </div>
+    </div>
+  </div><!--/.row-->
+</div>
+<!-- <toaster-container [toasterconfig]="toasterconfig"></toaster-container> -->
+<app-toast></app-toast>
+</router-outlet>

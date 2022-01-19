@@ -1,7 +1,7 @@
 <div class="fade-in">
   <c-card>
     <c-card-header>
-      FullCalendar <c-badge color="info">CoreUI Pro Integration</c-badge>
+      Bookings <c-badge color="info">Padel</c-badge>
       <c-card-header-actions>
         <a
           href="https://fullcalendar.io/docs/angular"
@@ -14,6 +14,19 @@
     </c-card-header>
     <c-card-body>
       <full-calendar [options]="calendarOptions" #calendar></full-calendar>
+      <button data-toggle="modal" (click)="openEventModal.show()"> Get Events</button>
     </c-card-body>
   </c-card>
+  <c-modal #openEventModal color="danger">
+    <ng-template #modalHeader>
+      <h4 class="c-modal-title">Delete user</h4>
+    </ng-template>
+    <ng-template #modalBody>
+      <p>Are you sure you want to delete this user?</p>
+    </ng-template>
+    <ng-template #modalFooter>
+      <button class="btn" cButton color="secondary" (click)="dangerModal.hide()">Close</button>
+      <button class="btn btn-danger mr-1" (click)="delete(mf.data[currentIndex])" cButton color="danger">Delete user</button>
+    </ng-template>
+  </c-modal>
 </div>

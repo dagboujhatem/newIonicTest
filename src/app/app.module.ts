@@ -36,12 +36,19 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { FormsModule, FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
-
-
+import { FullCalendarModule } from '@fullcalendar/angular'; // the main connector. must go first
+import dayGridPlugin from '@fullcalendar/daygrid'; // a plugin
+import timeGridPlugin from '@fullcalendar/timegrid';
+import listPlugin from '@fullcalendar/list';
+import interactionPlugin, { Draggable } from '@fullcalendar/interaction';
+import * as bootstrap from "bootstrap";
+import * as $ from "jquery";
+import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
+import resourceTimeGridPlugin from '@fullcalendar/resource-timegrid';
 // Routing
 
 import { TimepickerModule } from 'ngx-bootstrap/timepicker';
-import { PopoverModule } from 'ngx-bootstrap/popover';
+//import { PopoverModule } from 'ngx-bootstrap/popover';
 
 
 export function TranslationLoaderFactory(http: HttpClient) {
@@ -89,6 +96,7 @@ import {
 } from '@coreui/angular';
 
 import { IconModule, IconSetModule, IconSetService } from '@coreui/icons-angular';
+import { DlDateTimeDateModule, DlDateTimePickerModule } from 'angular-bootstrap-datetimepicker';
 
 // 3rd party
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
@@ -97,12 +105,35 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 // Import routing module
 import { AppRoutingModule } from './app.routing';
 import { ToasterModule } from 'angular2-toaster';
+import { DataTablesComponent as bookingComp } from './views/booking/data-tables.component';
+import { BasicFormsComponent as bookingDetailsComp } from './views/booking/bookingDetails/basic-forms.component';
 import { DataTablesComponent as userComp } from './views/user/data-tables.component';
 import { BasicFormsComponent as userDetailsComp } from './views/user/userDetails/basic-forms.component';
+import { DataTablesComponent as facilityAddonComp } from './views/facilityAddon/data-tables.component';
+import { BasicFormsComponent as facilityAddonDetailsComp } from './views/facilityAddon/facilityAddonDetails/basic-forms.component';
+import { FullCalendarNgComponent as calendarComp } from './views/calendar/data-tables.component';
 //import { DataTablesInitModule } from './views/user/data-tables.module';
 import { DataTableModule } from '@pascalhonegger/ng-datatable';
-import { DataFilterPipe } from './views/user/data-tables-filter.pipe';
+import { DataFilterPipe } from './views/booking/data-tables-filter.pipe';
 import { AppToastComponent as ToastComp } from './services/shared-service/toast-simple/toast.component'
+import { DataTablesComponent as ownerComp } from './views/owner/data-tables.component';
+import { BasicFormsComponent as ownerDetailsComp } from './views/owner/ownerDetails/basic-forms.component';
+import { DataTablesComponent as courtComp } from './views/court/data-tables.component';
+import { BasicFormsComponent as courtDetailsComp } from './views/court/courtDetails/basic-forms.component';
+import { DataTablesComponent as paymentComp } from './views/payment/data-tables.component';
+import { BasicFormsComponent as paymentDetailsComp } from './views/payment/paymentDetails/basic-forms.component';
+import { ChangePasswordComponent as changePasswordComp } from './views/change-password/change-password.component';
+import { ToastrModule } from 'ngx-toastr';
+
+FullCalendarModule.registerPlugins([
+  // register FullCalendar plugins
+  dayGridPlugin,
+  interactionPlugin,
+  listPlugin,
+  timeGridPlugin,
+  resourceTimelinePlugin,
+  resourceTimeGridPlugin
+]);
 
 @NgModule({
     imports: [
@@ -129,7 +160,7 @@ import { AppToastComponent as ToastComp } from './services/shared-service/toast-
         SwitchModule,
         TabsetModule,
         TogglerModule,
-        ToasterModule,
+        //ToasterModule,
         PerfectScrollbarModule,
         BsDropdownModule.forRoot(),
         // ToastrModule.forRoot(),
@@ -143,13 +174,17 @@ import { AppToastComponent as ToastComp } from './services/shared-service/toast-
         BsDatepickerModule.forRoot(),
         CommonModule,
         ReactiveFormsModule,
-        TimepickerModule,
-        PopoverModule,
+        TimepickerModule.forRoot(),
+        //PopoverModule,
         FormsModule,
         ModalModule,
         SpinkitModule,
         SpinnerModule,
-        DataTableModule
+        DataTableModule,
+        DlDateTimeDateModule, 
+        DlDateTimePickerModule,
+        FullCalendarModule,
+        ToastrModule.forRoot(),
     ],
   exports: [SharedModule, BsDatepickerModule],
 
@@ -161,9 +196,21 @@ import { AppToastComponent as ToastComp } from './services/shared-service/toast-
     LoginComponent,
     RegisterComponent,
     DataFilterPipe,
+    bookingComp,
+    bookingDetailsComp,
+    calendarComp,
+    ToastComp,
     userComp,
     userDetailsComp,
-    ToastComp
+    facilityAddonComp,
+    facilityAddonDetailsComp,
+    ownerComp,
+    ownerDetailsComp,
+    courtComp,
+    courtDetailsComp,
+    paymentComp,
+    paymentDetailsComp,
+    changePasswordComp
   ],
   providers: [
     {

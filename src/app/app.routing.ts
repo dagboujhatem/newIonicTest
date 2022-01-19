@@ -7,8 +7,21 @@ import { P404Component } from './views/components/error/404.component';
 import { P500Component } from './views/components/error/500.component';
 import { LoginComponent } from './views/components/login/login.component';
 import { RegisterComponent } from './views/components/register/register.component';
+import { DataTablesComponent as bookingComp } from './views/booking/data-tables.component';
+import { BasicFormsComponent as bookingDetailComp } from './views/booking/bookingDetails/basic-forms.component';
 import { DataTablesComponent as userComp } from './views/user/data-tables.component';
 import { BasicFormsComponent as userDetailComp } from './views/user/userDetails/basic-forms.component';
+import { FullCalendarNgComponent as calendarComp } from './views/calendar/data-tables.component';
+import { DataTablesComponent as facilityAddonComp } from './views/facilityAddon/data-tables.component';
+import { BasicFormsComponent as facilityAddonDetailsComp } from './views/facilityAddon/facilityAddonDetails/basic-forms.component';
+import { DataTablesComponent as ownerComp } from './views/owner/data-tables.component';
+import { BasicFormsComponent as ownerDetailsComp } from './views/owner/ownerDetails/basic-forms.component';
+import { DataTablesComponent as courtComp } from './views/court/data-tables.component';
+import { BasicFormsComponent as courtDetailsComp } from './views/court/courtDetails/basic-forms.component';
+import { DataTablesComponent as paymentComp } from './views/payment/data-tables.component';
+import { BasicFormsComponent as paymentDetailsComp } from './views/payment/paymentDetails/basic-forms.component';
+import { ChangePasswordComponent as changePasswordComp } from './views/change-password/change-password.component';
+
 
 export const routes: Routes = [
   {
@@ -35,6 +48,13 @@ export const routes: Routes = [
     component: LoginComponent,
     data: {
       title: 'Login Page',
+    },
+  },
+  {
+    path: 'change-password',
+    component: changePasswordComp,
+    data: {
+      title: 'Change Password',
     },
   },
   {
@@ -72,7 +92,61 @@ export const routes: Routes = [
           ),
       },
       {
-        path: 'users',
+        path: 'dashboard2',
+        loadChildren: () =>
+          import('./views/dashboard2/dashboard.module').then(
+            (m) => m.DashboardModule
+          ),
+      },
+      {
+        path: 'calendar',
+        component: calendarComp,
+        data: {
+          title: 'Calendar',
+        },
+      },
+      {
+        path: 'booking',
+        component: bookingComp,
+        data: {
+          title: 'Bookings',
+        },
+        // loadChildren: () =>
+        //   import('./views/user/data-tables.module').then((m) => m.DataTablesInitModule),
+      },
+      {
+        path: 'booking/details',
+        component: bookingDetailComp,
+        data: {
+          title: 'Booking Details'
+        },
+        // loadChildren: () =>
+        // import('./views/user/userDetails/basic-forms.module').then(
+        //   (m) => m.BasicFormsModule
+        // ),
+      },
+      {
+        path: 'facilityAddon',
+        component: facilityAddonComp,
+        data: {
+          title: 'Addon',
+        },
+        // loadChildren: () =>
+        //   import('./views/user/data-tables.module').then((m) => m.DataTablesInitModule),
+      },
+      {
+        path: 'facilityAddon/details',
+        component: facilityAddonDetailsComp,
+        data: {
+          title: 'Addon Details'
+        },
+        // loadChildren: () =>
+        // import('./views/user/userDetails/basic-forms.module').then(
+        //   (m) => m.BasicFormsModule
+        // ),
+      },
+      {
+        path: 'user',
         component: userComp,
         data: {
           title: 'Users',
@@ -81,16 +155,83 @@ export const routes: Routes = [
         //   import('./views/user/data-tables.module').then((m) => m.DataTablesInitModule),
       },
       {
-        path: 'users/details',
+        path: 'user/details',
         component: userDetailComp,
         data: {
-          title: 'Details'
+          title: 'User Details'
         },
         // loadChildren: () =>
         // import('./views/user/userDetails/basic-forms.module').then(
         //   (m) => m.BasicFormsModule
         // ),
       },
+      {
+        path: 'owner',
+        component: ownerComp,
+        data: {
+          title: 'Owners',
+        },
+        // loadChildren: () =>
+        //   import('./views/user/data-tables.module').then((m) => m.DataTablesInitModule),
+      },
+      {
+        path: 'owner/details',
+        component: ownerDetailsComp,
+        data: {
+          title: 'Owner Details'
+        },
+        // loadChildren: () =>
+        // import('./views/user/userDetails/basic-forms.module').then(
+        //   (m) => m.BasicFormsModule
+        // ),
+      },
+      {
+        path: 'court',
+        component: courtComp,
+        data: {
+          title: 'Courts',
+        },
+        children: [
+          {
+            path: 'details',
+            component: courtDetailsComp,
+            data: {
+              title: 'Court Details'
+            },
+          }
+        ]
+      },
+      {
+        path: 'payment',
+        component: paymentComp,
+        data: {
+          title: 'Payments',
+        },
+        // loadChildren: () =>
+        //   import('./views/user/data-tables.module').then((m) => m.DataTablesInitModule),
+      },
+      {
+        path: 'payment/details',
+        component: paymentDetailsComp,
+        data: {
+          title: 'Payment Details'
+        },
+        // loadChildren: () =>
+        // import('./views/user/userDetails/basic-forms.module').then(
+        //   (m) => m.BasicFormsModule
+        // ),
+      },
+      // {
+      //   path: 'court/details',
+      //   component: courtDetailsComp,
+      //   data: {
+      //     title: 'Court Details'
+      //   },
+      //   // loadChildren: () =>
+      //   // import('./views/user/userDetails/basic-forms.module').then(
+      //   //   (m) => m.BasicFormsModule
+      //   // ),
+      // },
       {
         path: 'theme',
         loadChildren: () =>

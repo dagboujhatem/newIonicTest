@@ -6,9 +6,16 @@
 @import "~@coreui/icons/css/brand.min.css";
 @import "~@coreui/icons/css/free.min.css";
 @import "~@coreui/chartjs";
+@import '~bootstrap/dist/css/bootstrap.min.css';
+@import '~open-iconic/font/css/open-iconic-bootstrap.css';
+@import '~ngx-bootstrap/datepicker/bs-datepicker.scss';
+@import './src/scss/vendors/bs-datepicker/datepicker';
 
 // Some temp fixes
 @import "fixes";
 
 // If you want to add something do it here
 @import "custom";
+
+// regular style toast
+@import '~ngx-toastr/toastr';

@@ -1,0 +1,108 @@
+<router-outlet>
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          <strong class="{{'Owner.DetailsPage.TextAlign' | translate}}"> {{'Owner.DetailsPage.Title' | translate}}</strong>
+          <div class="{{'Owner.DetailsPage.BtnAlign' | translate}}" >
+          <!--  <button (click)="showPref()" class="btn btn-primary btn-xs"><i class="fa fa-sliders"></i> {{'Owner.DetailsPage.PrefBtn' | translate}}</button>
+            <button (click)="showSchdule()" class="btn btn-primary btn-xs"><i class="fa fa-calendar"></i> {{'Owner.DetailsPage.SchBtn' | translate}}</button> -->
+          </div>
+        </div>
+        <form action="" [formGroup]="simpleForm" method="post" enctype="multipart/form-data" class="form-horizontal">
+        <div class="card-body">
+            <div class="form-group row">
+              <label class="col-md-4 col-form-label" for="text-input">{{'Owner.DetailsPage.name' | translate}} *</label>
+              <div class="col-md-6">
+                <input type="text" id="name" name="name" formControlName="name" class="form-control" required autofocus placeholder="Name"
+                [ngClass]="{ 'is-invalid': submitted && f.name.errors, 'is-valid': f.name.touched && !f.name.errors }">
+                <div *ngIf="submitted && f['name'].errors" class="invalid-feedback">
+                  <div *ngIf="f['name'].errors.required">Name is required</div>
+                  </div>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-4 col-form-label" for="text-input">{{'Owner.DetailsPage.mobile' | translate}} *</label>
+              <div class="col-md-5">
+                <input type="text" id="mobile" name="mobile" class="form-control" formControlName="mobile" required placeholder="97333123456"
+                [ngClass]="{ 'is-invalid': submitted && f.mobile.errors, 'is-valid': f.mobile.touched && !f.mobile.errors }">
+                <div *ngIf="submitted && f['mobile'].errors" class="invalid-feedback">
+                  <div *ngIf="f['mobile'].errors.required">Mobile is required</div>
+                  </div>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-4 col-form-label" for="text-input">{{'Owner.DetailsPage.language' | translate}} *</label>
+              <div class="col-md-5">
+                <input type="text" id="language" name="language" class="form-control" formControlName="language" required placeholder="en"
+                [ngClass]="{ 'is-invalid': submitted && f.language.errors, 'is-valid': f.language.touched && !f.language.errors }">
+                <div *ngIf="submitted && f['language'].errors" class="invalid-feedback">
+                  <div *ngIf="f['language'].errors.required">Language is required</div>
+                  </div>
+              </div>
+            </div>      
+            <div class="form-group row">
+              <label class="col-md-4 col-form-label" for="text-input">{{'Owner.DetailsPage.country_code' | translate}} *</label>
+              <div class="col-md-5">
+                <input type="text" id="country_code" name="country_code" class="form-control" formControlName="country_code" required placeholder="BH"
+                [ngClass]="{ 'is-invalid': submitted && f.country_code.errors, 'is-valid': f.country_code.touched && !f.country_code.errors }">
+                <div *ngIf="submitted && f['country_code'].errors" class="invalid-feedback">
+                  <div *ngIf="f['country_code'].errors.required">Country Code is required</div>
+                  </div>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-4 col-form-label" for="text-input">{{'Owner.DetailsPage.unique_id_value' | translate}} *</label>
+              <div class="col-md-5">
+                <input type="text" id="unique_id_value" name="unique_id_value" class="form-control" formControlName="unique_id_value" required placeholder="123456789">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-4 col-form-label" for="text-input">{{'Owner.DetailsPage.iban' | translate}} *</label>
+              <div class="col-md-5">
+                <input type="text" id="iban" name="iban" class="form-control" formControlName="iban" required placeholder="BH28FIBH01000156731001">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-4 col-form-label" for="status" >{{'Owner.DetailsPage.Status' | translate}} *</label>
+              <div class="col-md-5 col-form-label">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" id="status" name="status" required formControlName="status"
+                  [checked]="status=='A' ? true : null" [value]="'A'"
+                  [ngClass]="{ 'is-invalid': submitted && f.status.errors, 'is-valid': f.status.touched && !f.status.errors }">
+                  <label class="form-check-label {{'Owner.DetailsPage.RadioAlign' | translate}}" for="radio1">
+                    {{'Owner.DetailsPage.StatusActive' | translate}}
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" id="status" name="status" required formControlName="status"
+                  [checked]="status=='I' ? true : null" [value]="'I'"
+                  [ngClass]="{ 'is-invalid': submitted && f.status.errors, 'is-valid': f.status.touched && !f.status.errors }">
+                  <label class="form-check-label {{'Owner.DetailsPage.RadioAlign' | translate}}" for="radio2">
+                    {{'Owner.DetailsPage.StatusInActive' | translate}}
+                  </label>
+                </div>
+                <div *ngIf="submitted && f['status'].errors" class="invalid-feedback">
+                  <div *ngIf="f['status'].errors.required">Status is required</div>
+                  </div>
+              </div>
+            </div>
+        </div>
+        <div class="card-footer">
+          <button cButton color="success" class="btn btn-sm float-right mfe-1 customBtn" (click)="saveOwner()" [disabled]="isLoading">
+            <span [hidden]="isLoading"><c-icon name="cil-save" size="sm"></c-icon> {{'Owner.DetailsPage.SaveBtn' | translate}}</span>
+            <c-spinner size="sm" role="status" [hidden]="!isLoading"></c-spinner>
+          </button>
+          <br>
+          <!-- <button type="submit" (click)="submitDB(this.mfData)" class="btn btn-sm btn-primary float-right"><i class="cil-save"></i> {{'Owner.DetailsPage.SaveBtn' | translate}}</button>
+          <button type="submit" (click)="submitDB(this.mfData)" class="btn btn-sm btn-danger"><i class="cil-user-x"></i> {{'Owner.DetailsPage.DeleteBtn' | translate}}</button> -->
+        </div>
+      </form>
+      </div>
+    </div>
+  </div><!--/.row-->
+</div>
+<!-- <toaster-container [toasterconfig]="toasterconfig"></toaster-container> -->
+<app-toast></app-toast>
+</router-outlet>

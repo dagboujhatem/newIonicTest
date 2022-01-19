@@ -1,26 +1,35 @@
 <!--sidebar-->
 <c-sidebar #sidebar="cSidebar" id="sidebar" unfoldable="unfoldable">
-  <c-sidebar-brand
+  <img class="logo" src="assets/img/logo.png" />
+  <!-- <c-sidebar-brand
     [routerLink]="null"
     [brandFull]="{
-      src: 'assets/img/lamenu.png',
-      width: 146,
-      height: 46,
-      alt: 'Lamenu'
+      src: 'assets/img/logo.png',
+      width: 126,
+      height: 50,
+      alt: 'Arena Club'
     }"
     [brandMinimized]="{
-      src: 'assets/favicon.ico',
+      src: 'assets/img/logoICO.ico',
       width: 46,
       height: 46,
-      alt: 'Lamenu'
+      alt: 'Arena Club'
     }"
   >
-  </c-sidebar-brand>
+  </c-sidebar-brand> -->
   <c-sidebar-nav
     [navItems]="navItems"
     [perfectScrollbar]="perfectScrollbarConfig"
     [disabled]="sidebar?.minimized"
     dropdownMode="closeInactive"
+    *ngIf="!isStaff"
+  ></c-sidebar-nav>
+  <c-sidebar-nav
+  [navItems]="navStaffItems"
+  [perfectScrollbar]="perfectScrollbarConfig"
+  [disabled]="sidebar?.minimized"
+  dropdownMode="closeInactive"
+  *ngIf="isStaff"
   ></c-sidebar-nav>
   <c-sidebar-nav
   [navItems]="navComponentItems"
@@ -69,10 +78,10 @@
   </c-body>
   <c-footer>
     <div>
-      <a href="https://lamenu.io" target="_blank">
-        Lamenu
+      <a href="https://arenaclub.io" target="_blank">
+        Arena Club
       </a>
-      <span> &copy; 2020 Scopx</span>
+      <span> &copy; 2021</span>
     </div>
     <div class="mfs-auto">
       Powered by

@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../../environments/environment';
 
+const BASE_URL = environment.BASE_URL;
 import {
   DashboardChartsData,
   IChartProps,
@@ -33,7 +35,7 @@ export class WidgetsDropdownComponent implements OnInit {
   {
     let headers = new Headers();
     headers.append('Content-Type','application/json');
-    this.http.post<any>('http://192.168.64.2/Lamenu-Admin-API/public/getDashboard/', {headers: headers})
+    this.http.post<any>(BASE_URL + 'getDashboard/', {headers: headers})
     .subscribe(
       data => {this.dbData = data;},
       error => {console.log(error)},
@@ -43,7 +45,7 @@ export class WidgetsDropdownComponent implements OnInit {
   {
     let headers = new Headers();
     headers.append('Content-Type','application/json');
-    this.http.post<any>('http://192.168.64.2/Lamenu-Admin-API/public/getDashboardStats/', {headers: headers})
+    this.http.post<any>(BASE_URL + 'getDashboardStats/', {headers: headers})
     .subscribe(
       data => {
         this.dbData2 = data;  

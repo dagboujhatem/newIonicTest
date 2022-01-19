@@ -5,5 +5,6 @@
 
 export const environment = {
   production: false,
-  BASE_URL: 'http://192.168.64.2/Lamenu-Admin-API/public/'
+  //BASE_URL: 'http://192.168.64.2/Padel-API/public/'
+  BASE_URL: 'https://tapi.arenaclub.io/Padel-API/public/'
 };

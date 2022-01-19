@@ -6,7 +6,6 @@ import { Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
 import { ToasterComponent, ToasterPosition } from '@coreui/angular';
-import { AppToastComponent } from './toast-simple/toast.component';
 
 export enum Colors {
   '' = '',
@@ -46,6 +45,9 @@ export class SharedService {
 
   @ViewChildren(ToasterComponent) viewChildren!: QueryList<ToasterComponent>;
 
+  constructor() {}
+
+
   ngOnInit(): void {
     this.formChanges = this.toasterForm.valueChanges.pipe(filter(e => e.autohide !== this.autohide));
     this.formChanges.subscribe(e => {
@@ -58,14 +60,4 @@ export class SharedService {
     });
   }
 
-  addToast() {
-    const formValues = this.toasterForm.value;
-    const toasterPosition = this.viewChildren.filter(item => item.position === this.toasterForm.value.position);
-    toasterPosition.forEach((item) => {
-      const title = `Toast ${formValues.color} ${formValues.position}`;
-      const {...options} = {...formValues, title };
-      const componentRef = item.addToast(AppToastComponent, options);
-      componentRef.instance['closeButton'] = options.closeButton;
-    });
-  }
 }

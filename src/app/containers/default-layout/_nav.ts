@@ -11,9 +11,51 @@ export const navItems: INavData[] = [
     },
   },
   {
+    name: 'Calendar',
+    url: '/calendar',
+    icon: 'cil-columns',
+  },
+  {
+    name: 'Bookings',
+    url: '/booking',
+    icon: 'cil-bookmark',
+  },
+  {
+    name: 'Courts',
+    url: '/court',
+    icon: 'cil-tennis-ball',
+  },
+  {
+    name: 'Addon',
+    url: '/facilityAddon',
+    icon: 'cil-layers',
+  },
+  {
     name: 'Users',
-    url: '/users',
-    icon: 'cil-drop',
+    url: '/user',
+    icon: 'cil-user',
+  },
+  // {
+  //   name: 'Owners',
+  //   url: '/owner',
+  //   icon: 'cil-group',
+  // },
+  {
+    name: 'Payments',
+    url: '/payment',
+    icon: 'cil-money',
+  },
+];
+export const navStaffItems: INavData[] = [
+  {
+    name: 'Calendar',
+    url: '/calendar',
+    icon: 'cil-columns',
+  },
+  {
+    name: 'Bookings',
+    url: '/booking',
+    icon: 'cil-bookmark',
   },
 ];
 

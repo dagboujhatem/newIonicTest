@@ -1,0 +1,592 @@
+<router-outlet>
+<div class="animated fadeIn" [hidden]="isLoading">
+  <form action="" *ngIf="this.simpleForm.controls['court']" [formGroup]="simpleForm" method="post" enctype="multipart/form-data" class="form-horizontal">
+  <div class="row" >
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          <strong class="{{'Booking.DetailsPage.TextAlign' | translate}}"> {{'Booking.DetailsPage.Title' | translate}}</strong>
+          <div class="{{'Booking.DetailsPage.BtnAlign' | translate}}" >
+          <!--  <button (click)="showPref()" class="btn btn-primary btn-xs"><i class="fa fa-sliders"></i> {{'Booking.DetailsPage.PrefBtn' | translate}}</button>
+            <button (click)="showSchdule()" class="btn btn-primary btn-xs"><i class="fa fa-calendar"></i> {{'Booking.DetailsPage.SchBtn' | translate}}</button> -->
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="form-group row">
+            <label class="col-md-4 col-form-label" for="courts">Court</label>
+            <div class="col-md-6">
+              <select class="form-control" #court id="court" name="court" (change)="updateCourtId(court.value)" formControlName="court" required
+              [ngClass]="{ 'is-invalid': submitted && f.court.errors, 'is-valid': f.court.touched && !f.court.errors }">
+              <option style="color: grey;" [value]="null" [selected]="true">--Select Court--</option>
+              <option class="form-control" [selected]="crt.id==court ? true : null" *ngFor="let crt of courts?.content" [value]="crt.id">{{ crt.nameEn }}</option>
+              </select>
+              <div *ngIf="submitted && f['court'] == null" class="invalid-feedback">
+                <div *ngIf="f['court'] == null">Court is required</div>
+              </div>
+            </div>
+          </div>
+            <div class="form-group row">
+              <label class="col-md-4 col-form-label" for="text-input">{{'Booking.DetailsPage.customerName' | translate}} *</label>
+              <div class="col-md-6">
+                <input type="text" id="customerName" name="customerName" formControlName="customerName" class="form-control" required placeholder=""
+                [ngClass]="{ 'is-invalid': submitted && f.customerName.errors, 'is-valid': f.customerName.touched && !f.customerName.errors }">
+                <div *ngIf="submitted && f['customerName'].errors" class="invalid-feedback">
+                  <div *ngIf="f['customerName'].errors.required">Customer Name is required</div>
+                  </div>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-4 col-form-label" for="text-input">{{'Booking.DetailsPage.customerMobile' | translate}} *</label>
+              <div class="col-md-5">
+                <input type="text" id="customerMobile" name="customerMobile" class="form-control" formControlName="customerMobile" required placeholder="36666093"
+                [ngClass]="{ 'is-invalid': submitted && f.customerMobile.errors, 'is-valid': f.customerMobile.touched && !f.customerMobile.errors }">
+                <div *ngIf="submitted && f['customerMobile'].errors" class="invalid-feedback">
+                  <div *ngIf="f['customerMobile'].errors.required">Customer Mobile is required</div>
+                  </div>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-4 col-form-label" for="text-input">{{'Booking.DetailsPage.customerCountryCode' | translate}} *</label>
+              <div class="col-md-5">
+                <input type="text" id="customerCountryCode" name="customerCountryCode" class="form-control" formControlName="customerCountryCode" required placeholder="973"
+                [ngClass]="{ 'is-invalid': submitted && f.customerCountryCode.errors, 'is-valid': f.customerCountryCode.touched && !f.customerCountryCode.errors }">
+                <div *ngIf="submitted && f['customerCountryCode'].errors" class="invalid-feedback">
+                  <div *ngIf="f['customerCountryCode'].errors.required">Country Code is required</div>
+                  </div>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-4 col-form-label" for="text-input">{{'Booking.DetailsPage.notes' | translate}}</label>
+              <div class="col-md-5">
+                <textarea type="text" id="notes" name="notes" class="form-control" formControlName="notes" placeholder=""
+                [ngClass]="{ 'is-invalid': submitted && f.notes.errors, 'is-valid': f.notes.touched && !f.notes.errors }"> 
+                </textarea>
+                <div *ngIf="submitted && f['notes'].errors" class="invalid-feedback">
+                  <div *ngIf="f['notes'].errors.required">Notes is required</div>
+                  </div>
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col">
+              <label for="startTime" class="col-form-label">Start Time</label>
+                <timepicker name="startTime" id="startTime" [formControl]="simpleForm.controls['startTime']"
+                [hourStep]="1"
+                [minuteStep]="30"
+                (ngModelChange)="updatePrice()"
+                [showMeridian]="false"> </timepicker>
+              </div>
+              <div class="col">
+                <label for="endTime" class="col-form-label">End Time</label>
+                  <timepicker name="endTime" id="endTime" [formControl]="simpleForm.controls['endTime']"
+                  [hourStep]="1"
+                  [minuteStep]="30"
+                  (ngModelChange)="updatePrice()"
+                  [showMeridian]="false"> </timepicker>
+                </div>
+            </div>
+
+            <!-- REOCCUR COMMENT START -->
+            <!-- <div class="form-group row">
+              <label class="col-md-4 col-form-label" for="gender" >{{'Booking.DetailsPage.isReoccur' | translate}} *</label>
+              <div class="col-md-5 col-form-label">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" (change)="updateReoccur()" id="Reoccur" name="isReoccur" required formControlName="isReoccur"
+                  [checked]="isReoccur=='1' ? true : null" [value]="'1'"
+                  [ngClass]="{ 'is-invalid': submitted && f.isReoccur.errors, 'is-valid': f.isReoccur.touched && !f.isReoccur.errors }">
+                  <label class="form-check-label {{'Booking.DetailsPage.RadioAlign' | translate}}" for="radio1">
+                    {{'Booking.DetailsPage.Yes' | translate}}
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" (change)="updateReoccur()" id="notReoccur" name="isReoccur" required formControlName="isReoccur"
+                  [checked]="isReoccur=='0' ? true : null" [value]="'0'"
+                  [ngClass]="{ 'is-invalid': submitted && f.isReoccur.errors, 'is-valid': f.isReoccur.touched && !f.isReoccur.errors }">
+                  <label class="form-check-label {{'Booking.DetailsPage.RadioAlign' | translate}}" for="radio2">
+                    {{'Booking.DetailsPage.No' | translate}}
+                  </label>
+                </div>
+                <div *ngIf="submitted && f['isReoccur'].errors" class="invalid-feedback">
+                  <div *ngIf="f['isReoccur'].errors.required">Gender is required</div>
+                  </div>
+              </div>
+            </div>
+            <div class="container">
+              
+              <div *ngIf="bookingReOccur" class="form-group row">
+                <div class="col-md-4" style="margin-left: 5%;">
+                  <label for="bookingReOccurDays" class="col-form-label">Day</label>
+                  <select cSelect custom formControlName="bookingReOccurDays" id="bookingReOccurDays" name="bookingReOccurDays" required>
+                    <option [disabled]="true" [selected]="true">Please select</option>
+                    <option class="form-control" value="0" [selected]="selectedReoccurDay=='0' ? true : null">Sunday</option>
+                    <option class="form-control" value="1" [selected]="selectedReoccurDay=='1' ? true : null">Monday</option>
+                    <option class="form-control" value="2" [selected]="selectedReoccurDay=='2' ? true : null">Tuesday</option>
+                    <option class="form-control" value="3" [selected]="selectedReoccurDay=='3' ? true : null">Wednesday</option>
+                    <option class="form-control" value="4" [selected]="selectedReoccurDay=='4' ? true : null">Thursday</option>
+                    <option class="form-control" value="5" [selected]="selectedReoccurDay=='5' ? true : null">Friday</option>
+                    <option class="form-control" value="6" [selected]="selectedReoccurDay=='6' ? true : null">Saturday</option>
+                  </select>
+                </div>
+                <div class="col-md-3">
+                  <label for="bookingReOccurInstance" class="col-form-label">No. Instances</label>
+                  <input type="text" name="bookingReOccurInstance" (keyup)="updatePrice()" class="form-control" formControlName="bookingReOccurInstance" id="bookingReOccurInstance">
+                </div>
+                <div *ngIf="bookingReOccur" class="col-md-3">
+                  <label for="bookingTotalWithReoocur" class="col-form-label">Full total</label>
+                  <input type="text" name="bookingTotalWithReoocur" class="form-control" formControlName="bookingTotalWithReoocur" id="bookingTotalWithReoocur">
+                </div>
+              </div>
+            </div> -->
+            <!-- REOCCUR COMMENT END -->
+
+            <div class="form-group row">
+              <label class="col-md-4 col-form-label" for="text-input">{{'Booking.DetailsPage.bookingDate' | translate}} *</label>
+              <div class="col-md-5">
+                <input cInput #dp="bsDatepicker" bsDatepicker [(bsValue)]="bookingDate"
+                id="bookingDate" name="bookingDate" class="form-control" formControlName="bookingDate" required placeholder="">
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label class="col-md-4 col-form-label" for="gender" >{{'Booking.DetailsPage.cancelled' | translate}} *</label>
+              <div class="col-md-5 col-form-label">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" id="cancelled" (change)="updateCancelled()" name="cancelled" required formControlName="cancelled"
+                  [checked]="cancelled=='1' ? true : null" [value]="'1'">
+                  <label class="form-check-label {{'Booking.DetailsPage.RadioAlign' | translate}}" for="radio1">
+                    {{'Booking.DetailsPage.Yes' | translate}}
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" id="notCancelled" (change)="updateCancelled()" name="cancelled" required formControlName="cancelled"
+                  [checked]="cancelled=='0' ? true : null" [value]="'0'">
+                  <label class="form-check-label {{'Booking.DetailsPage.RadioAlign' | translate}}" for="radio2">
+                    {{'Booking.DetailsPage.No' | translate}}
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="cancelled=='1'" class="form-group row">
+              <label class="col-md-4 col-form-label" for="text-input">{{'Booking.DetailsPage.cancelledDate' | translate}} *</label>
+              <div class="col-md-5">
+                <input cInput #dp="bsDatepicker" bsDatepicker [(bsValue)]="cancelledDate"
+                id="cancelledDate" name="cancelledDate" class="form-control" formControlName="cancelledDate" required placeholder="01-JAN-2021">
+              </div>
+            </div>
+        </div>
+        <div class="card-footer">
+          <button type="submit" [disabled]="!simpleForm.dirty" (click)="updateBooking()" class="btn btn-sm btn-primary float-right"><i class="cil-save"></i> {{'Booking.DetailsPage.SaveBtn' | translate}}</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <strong class="{{'Booking.DetailsPage.TextAlign' | translate}}"> {{'Booking.DetailsPage.AddonTitle' | translate}}</strong>
+          <div class="{{'Booking.DetailsPage.BtnAlign' | translate}}" >
+          <!--  <button (click)="showPref()" class="btn btn-primary btn-xs"><i class="fa fa-sliders"></i> {{'Booking.DetailsPage.PrefBtn' | translate}}</button>
+            <button (click)="showSchdule()" class="btn btn-primary btn-xs"><i class="fa fa-calendar"></i> {{'Booking.DetailsPage.SchBtn' | translate}}</button> -->
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="form-group row align-items-end">
+            <div class="col-md-6">
+              <label for="addon" class="col-form-label">Addons</label>
+              <select class="form-control" (change)="updateAddon()" id="addon" name="addon" formControlName="addon">
+              <option style="color: grey;" [value]="null" [selected]="true" disabled>Select Addon</option>
+              <option class="form-control" [selected]="ad.id==addon ? true : null" *ngFor="let ad of bookingAddons.content" [value]="ad.id + '|' + ad.nameEn + '|' + ad.price">{{ ad.nameEn + ' ' + ad.price + ' ' + ad.ccy}}</option>
+              </select>
+            </div>
+  
+            <div class="col-md-3">
+              <label for="bookingAddonInstances" class="col-form-label">No.</label>
+              <input type="text" name="bookingAddonInstances" class="form-control" formControlName="bookingAddonInstances" id="bookingAddonInstances">
+            </div>
+  
+            <div class="col-md-2">
+              <label for="bookingAddonInstances" class="col-form-label">&nbsp;</label>
+              <button class="btn btn-primary mr-1" (click)="addAddon()" name="addonBtn" id="addonBtn" [disabled]="!isAddonBtn" cButton color="primary">Add</button>
+            </div>
+  
+          </div>
+  
+            <div class="form-group row" *ngIf="bookingAddonsArray?.length" style="margin-bottom: -10%;">
+              <div class="col-lg-12">
+                <table class="table table-striped" #mf="mfDataTable" [mfData]="bookingAddonsArray" [mfRowsOnPage]="3">
+                  <thead>
+                    <tr>
+                      <th scope="col">Name</th>
+                      <th scope="col">Count</th>
+                      <th scope="col">Price</th>
+                      <th scope="col">Remove</th>
+                    </tr>
+                  </thead>
+                    <tbody>
+                      <tr *ngFor="let adm of mf.data;">
+                        <td>{{adm.name}}</td>
+                        <td>{{adm.count}}</td>
+                        <td>{{adm.price}}</td>
+                        <td><button class="btn-sm btn-danger" (click)="removeAddon(adm.id)" cButton color="danger"><i class="cil-delete"></i></button></td>
+                      </tr>
+                    </tbody>
+                    <tfoot>
+                      <tr>
+                        <td colspan="4">
+                          <mfBootstrapPaginator></mfBootstrapPaginator>
+                        </td>
+                      </tr>
+                    </tfoot>
+                </table>
+              </div>
+            </div>
+        </div>
+        <div class="card-footer">
+          <button type="submit" [disabled]="!simpleForm.dirty" (click)="updateBooking()" class="btn btn-sm btn-primary float-right"><i class="cil-save"></i> {{'Booking.DetailsPage.SaveBtn' | translate}}</button>
+          <!-- <button type="submit" (click)="submitDB(this.mfData)" class="btn btn-sm btn-primary float-right"><i class="cil-save"></i> {{'Booking.DetailsPage.SaveBtn' | translate}}</button>
+          <button type="submit" (click)="submitDB(this.mfData)" class="btn btn-sm btn-danger"><i class="cil-user-x"></i> {{'Booking.DetailsPage.DeleteBtn' | translate}}</button> -->
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <c-card>
+        <c-card-header>
+          <strong>
+            Payments
+          </strong> 
+          <c-card-header-actions>
+            <a
+              href="https://github.com/mariuszfoltak/angular2-datatable"
+              target="_blank"
+              class="card-header-action"
+            >
+            </a>
+          </c-card-header-actions>
+        </c-card-header>
+        <c-card-body>
+          <c-row class="mb-3">
+            <c-col md="4" >
+              <div class="input-group">
+                <div class="input-group-prepend">
+                </div>
+              </div>
+            </c-col>
+          </c-row>
+          <table
+            class="table table-striped table-hover table-responsive-lg"
+            [mfData]="this.trnData"
+            #mf2="mfDataTable"
+            [mfRowsOnPage]="10"
+          >
+            <thead>
+              <tr>
+                <th style="width: 5%;">
+                  <mfDefaultSorter by="payStatus" #sortPayStatus>
+                    Channel
+                    <span
+                      *ngIf="sortPayStatus.isSortedByMeAsc"
+                      class="cil-arrow-top"
+                      aria-hidden="true"
+                    ></span>
+                    <span
+                      *ngIf="sortPayStatus.isSortedByMeDesc"
+                      class="cil-arrow-bottom"
+                      aria-hidden="true"
+                    ></span>
+                  </mfDefaultSorter>
+                </th>
+                <th style="width: 5%;">
+                  <mfDefaultSorter by="payStatus" #sortPayStatus>
+                    Total Amount
+                    <span
+                      *ngIf="sortPayStatus.isSortedByMeAsc"
+                      class="cil-arrow-top"
+                      aria-hidden="true"
+                    ></span>
+                    <span
+                      *ngIf="sortPayStatus.isSortedByMeDesc"
+                      class="cil-arrow-bottom"
+                      aria-hidden="true"
+                    ></span>
+                  </mfDefaultSorter>
+                </th>
+                <th style="width: 15%;">
+                  <mfDefaultSorter by="month" #sortMonth>
+                    Payment Date
+                    <span
+                      *ngIf="sortMonth.isSortedByMeAsc"
+                      class="cil-arrow-top"
+                      aria-hidden="true"
+                    ></span>
+                    <span
+                      *ngIf="sortMonth.isSortedByMeDesc"
+                      class="cil-arrow-bottom"
+                      aria-hidden="true"
+                    ></span>
+                  </mfDefaultSorter>
+                </th>
+                <th style="width: 15%;">
+                  <mfDefaultSorter by="month" #sortMonth>
+                    Actions
+                    <span
+                      *ngIf="sortMonth.isSortedByMeAsc"
+                      class="cil-arrow-top"
+                      aria-hidden="true"
+                    ></span>
+                    <span
+                      *ngIf="sortMonth.isSortedByMeDesc"
+                      class="cil-arrow-bottom"
+                      aria-hidden="true"
+                    ></span>
+                  </mfDefaultSorter>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr [hidden]="!isLoading">
+                <td colspan="3">
+                  <div [hidden]="!isLoading">
+                    <c-spinkit name="fold"></c-spinkit>
+                  </div>
+                </td>
+              </tr>
+              <tr *ngFor="let item of mf2.data;index as i;">
+                <td>{{ item.nameEn }}</td>
+                <td>{{ item.amount + ' ' + item.ccy }}</td>
+                <td>{{ item.paidDate | date:'dd/MM/yyyy hh:mm:ss a' }}</td>
+                <td *ngIf="item.paymentChannel != 'ONLINE'"><button class="btn-sm btn-danger" (click)="dangerModal.show();selectedId = item.id" cButton color="danger"><i class="cil-delete"></i></button></td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="4">
+                  <mfBootstrapPaginator
+                    [rowsOnPageSet]="[5, 10, 15]"
+                  ></mfBootstrapPaginator>
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </c-card-body>
+        <c-card-footer>
+          <button type="submit" (click)="addNewPaymentModal.show();" class="btn btn-sm btn-primary float-right"><i class="cil-plus"></i> {{'Booking.DetailsPage.AddNewPayBtn' | translate}}</button>
+        </c-card-footer>
+      </c-card>
+      <div class="card">
+        <div class="card-header">
+          <strong class="{{'Booking.DetailsPage.TextAlign' | translate}}"> {{'Booking.DetailsPage.PaymentTitle' | translate}}</strong>
+          <div class="{{'Booking.DetailsPage.BtnAlign' | translate}}" >
+          <!--  <button (click)="showPref()" class="btn btn-primary btn-xs"><i class="fa fa-sliders"></i> {{'Booking.DetailsPage.PrefBtn' | translate}}</button>
+            <button (click)="showSchdule()" class="btn btn-primary btn-xs"><i class="fa fa-calendar"></i> {{'Booking.DetailsPage.SchBtn' | translate}}</button> -->
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="form-group row">
+            <label class="col-md-4 col-form-label" for="text-input">{{'Booking.DetailsPage.subTotalPrice' | translate}}</label>
+            <div class="col-md-5">
+              <input type="text" id="subTotalPrice" name="subTotalPrice" class="form-control" formControlName="subTotalPrice" required placeholder="0"
+              [ngClass]="{ 'is-invalid': submitted && f.subTotalPrice.errors, 'is-valid': f.subTotalPrice.touched && !f.subTotalPrice.errors }">
+              <div *ngIf="submitted && f['subTotalPrice'].errors" class="invalid-feedback">
+                <div *ngIf="f['subTotalPrice'].errors.required">SubTotalPrice is required</div>
+                </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-4 col-form-label" for="text-input">{{'Booking.DetailsPage.addon' | translate}}</label>
+            <div class="col-md-5">
+              <input type="text" id="bookingAddon" name="bookingAddon" class="form-control" formControlName="bookingAddon" required placeholder="0"
+              [ngClass]="{ 'is-invalid': submitted && f.bookingAddon.errors, 'is-valid': f.bookingAddon.touched && !f.bookingAddon.errors }">
+              <div *ngIf="submitted && f['bookingAddon'].errors" class="invalid-feedback">
+                <div *ngIf="f['bookingAddon'].errors.required">Booking Addon is required</div>
+                </div>
+            </div>
+          </div>            
+          <div class="form-group row">
+            <label class="col-md-4 col-form-label" for="text-input">{{'Booking.DetailsPage.tax' | translate}}</label>
+            <div class="col-md-5">
+              <input type="text" id="tax" name="tax" class="form-control" formControlName="tax" required placeholder="0"
+              [ngClass]="{ 'is-invalid': submitted && f.tax.errors, 'is-valid': f.tax.touched && !f.tax.errors }">
+              <div *ngIf="submitted && f['tax'].errors" class="invalid-feedback">
+                <div *ngIf="f['tax'].errors.required">Tax is required</div>
+                </div>
+            </div>
+          </div>            
+          <div class="form-group row">
+            <label class="col-md-4 col-form-label" for="text-input">{{'Booking.DetailsPage.totalPrice' | translate}}</label>
+            <div class="col-md-5">
+              <input type="text" id="totalPrice" name="totalPrice" class="form-control" formControlName="totalPrice" required placeholder="0"
+              [ngClass]="{ 'is-invalid': submitted && f.totalPrice.errors, 'is-valid': f.totalPrice.touched && !f.totalPrice.errors }">
+              <div *ngIf="submitted && f['totalPrice'].errors" class="invalid-feedback">
+                <div *ngIf="f['totalPrice'].errors.required">Total Price is required</div>
+                </div>
+            </div>
+          </div>
+          <h5>---------------------------------------------</h5>
+          <div class="form-group row">
+            <label class="col-md-4 col-form-label" for="text-input">New {{'Booking.DetailsPage.subTotalPrice' | translate}}</label>
+            <div class="col-md-5">
+              <input type="text" id="newBookingPrice" name="newBookingPrice" class="form-control" formControlName="newBookingPrice" required placeholder="0"
+              [ngClass]="{ 'is-invalid': submitted && f.newBookingPrice.errors, 'is-valid': f.newBookingPrice.touched && !f.newBookingPrice.errors }">
+              <div *ngIf="submitted && f['newBookingPrice'].errors" class="invalid-feedback">
+                <div *ngIf="f['newBookingPrice'].errors.required">newBookingPrice is required</div>
+                </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-4 col-form-label" for="text-input">New {{'Booking.DetailsPage.addon' | translate}}</label>
+            <div class="col-md-5">
+              <input type="text" id="newBookingAddon" name="newBookingAddon" class="form-control" formControlName="newBookingAddon" required placeholder="0"
+              [ngClass]="{ 'is-invalid': submitted && f.newBookingAddon.errors, 'is-valid': f.newBookingAddon.touched && !f.newBookingAddon.errors }">
+              <div *ngIf="submitted && f['newBookingAddon'].errors" class="invalid-feedback">
+                <div *ngIf="f['newBookingAddon'].errors.required">Booking Addon is required</div>
+                </div>
+            </div>
+          </div>            
+          <div class="form-group row">
+            <label class="col-md-4 col-form-label" for="text-input">New {{'Booking.DetailsPage.tax' | translate}}</label>
+            <div class="col-md-5">
+              <input type="text" id="newBookingVAT" name="newBookingVAT" class="form-control" formControlName="newBookingVAT" required placeholder="0"
+              [ngClass]="{ 'is-invalid': submitted && f.newBookingVAT.errors, 'is-valid': f.newBookingVAT.touched && !f.newBookingVAT.errors }">
+              <div *ngIf="submitted && f['newBookingVAT'].errors" class="invalid-feedback">
+                <div *ngIf="f['newBookingVAT'].errors.required">newBookingVAT is required</div>
+                </div>
+            </div>
+          </div>            
+          <div class="form-group row">
+            <label class="col-md-4 col-form-label" for="text-input">New {{'Booking.DetailsPage.totalPrice' | translate}}</label>
+            <div class="col-md-5">
+              <input type="text" id="newBookingTotal" name="newBookingTotal" class="form-control" formControlName="newBookingTotal" required placeholder="0"
+              [ngClass]="{ 'is-invalid': submitted && f.newBookingTotal.errors, 'is-valid': f.newBookingTotal.touched && !f.newBookingTotal.errors }">
+              <div *ngIf="submitted && f['newBookingTotal'].errors" class="invalid-feedback">
+                <div *ngIf="f['newBookingTotal'].errors.required">Total Price is required</div>
+                </div>
+            </div>
+          </div>
+          <h5>---------------------------------------------</h5>
+          <div class="form-group row">
+            <label class="col-md-4 col-form-label" for="text-input">{{'Booking.DetailsPage.paidAmount' | translate}}</label>
+            <div class="col-md-5">
+              <input type="text" id="paidAmount" name="paidAmount" class="form-control" formControlName="paidAmount" required placeholder="0"
+              [ngClass]="{ 'is-invalid': submitted && f.paidAmount.errors, 'is-valid': f.paidAmount.touched && !f.paidAmount.errors }">
+              <div *ngIf="submitted && f['paidAmount'].errors" class="invalid-feedback">
+                <div *ngIf="f['paidAmount'].errors.required">Paid Amount is required</div>
+                </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-4 col-form-label" for="text-input">{{'Booking.DetailsPage.totalRemainingAmount' | translate}}</label>
+            <div class="col-md-5">
+              <input type="text" id="totalRemainingAmount" name="totalRemainingAmount" class="form-control" formControlName="totalRemainingAmount" placeholder="0"
+              [ngClass]="{ 'is-invalid': submitted && f.totalRemainingAmount.errors, 'is-valid': f.totalRemainingAmount.touched && !f.totalRemainingAmount.errors }">
+              <div *ngIf="submitted && f['totalRemainingAmount'].errors" class="invalid-feedback">
+                <div *ngIf="f['totalRemainingAmount'].errors.required">Amount is required</div>
+                </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-4 col-form-label" for="text-input">{{'Booking.DetailsPage.ccy' | translate}}</label>
+            <div class="col-md-5">
+              <input type="text" id="ccy" name="ccy" class="form-control" formControlName="ccy" required placeholder="BHD"
+              [ngClass]="{ 'is-invalid': submitted && f.ccy.errors, 'is-valid': f.ccy.touched && !f.ccy.errors }">
+              <div *ngIf="submitted && f['ccy'].errors" class="invalid-feedback">
+                <div *ngIf="f['ccy'].errors.required">Currency is required</div>
+                </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-4 col-form-label" for="text-input">{{'Booking.DetailsPage.paymentStatus' | translate}}</label>
+            <div class="col-md-5">
+              <input type="text" id="paymentStatus" name="paymentStatus" class="form-control" formControlName="paymentStatus" required placeholder=""
+              [ngClass]="{ 'is-invalid': submitted && f.paymentStatus.errors, 'is-valid': f.paymentStatus.touched && !f.paymentStatus.errors }">
+              <div *ngIf="submitted && f['paymentStatus'].errors" class="invalid-feedback">
+                <div *ngIf="f['paymentStatus'].errors.required">Payment Status is required</div>
+                </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-4 col-form-label" for="text-input">{{'Booking.DetailsPage.paidDate' | translate}}</label>
+            <div class="col-md-5">
+              <input cInput #dp="bsDatepicker" bsDatepicker [(bsValue)]="paidDate"
+              id="paidDate" name="paidDate" class="form-control" formControlName="paidDate" required placeholder=""
+              [ngClass]="{ 'is-invalid': submitted && f.paidDate.errors, 'is-valid': f.paidDate.touched && !f.paidDate.errors }">
+              <div *ngIf="submitted && f['paidDate'].errors" class="invalid-feedback">
+                <div *ngIf="f['paidDate'].errors.required">Paid date is required</div>
+                </div>
+            </div>
+          </div>
+
+          <!-- <div class="form-group row">
+            <div class="col-md-4">
+              <br>
+              <label for="paymentMethod" class="col-form-label">Payment Method</label>
+              <select class="form-control" (change)="updateSelectedPayment($event.target.value)" id="paymentMethod" name="paymentMethod" formControlName="paymentMethod" required
+              [ngClass]="{ 'is-invalid': submitted && f.paymentMethod.errors, 'is-valid': f.paymentMethod.touched && !f.paymentMethod.errors }">
+              <option style="color: grey;" [value]='null' [selected]="true">--Select Payment--</option>
+              <option class="form-control" [selected]="pmt.id==paymentMethod ? true : null" *ngFor="let pmt of paymentMethods.content" [value]="pmt.code">{{ pmt.nameEn }}</option>
+              </select>
+            </div>
+          </div> -->
+        </div>
+        <div class="card-footer">
+          <!-- <button type="submit" (click)="submitDB(this.mfData)" class="btn btn-sm btn-primary float-right"><i class="cil-save"></i> {{'Booking.DetailsPage.SaveBtn' | translate}}</button>
+          <button type="submit" (click)="submitDB(this.mfData)" class="btn btn-sm btn-danger"><i class="cil-user-x"></i> {{'Booking.DetailsPage.DeleteBtn' | translate}}</button> -->
+        </div>
+      </div>
+    </div>
+  </div><!--/.row-->
+
+
+  <!-- Delete Transaction Modal-->
+  <c-modal #dangerModal color="danger">
+    <ng-template #modalHeader>
+      <h4 class="c-modal-title">Delete Payment</h4>
+    </ng-template>
+    <ng-template #modalBody>
+      <p>Are you sure you want to delete this payment?</p>
+    </ng-template>
+    <ng-template #modalFooter>
+      <button class="btn" cButton color="secondary" (click)="dangerModal.hide()">Close</button>
+      <button class="btn btn-danger mr-1" (click)="deleteTransaction(selectedId)" cButton color="danger">Delete Payment</button>
+    </ng-template>
+  </c-modal>
+
+  <!-- Add new payement modal-->
+  <c-modal #addNewPaymentModal color="primary">
+    <ng-template #modalHeader>
+      <h4 class="c-modal-title">Add Payment</h4>
+    </ng-template>
+    <ng-template #modalBody>
+      <div class="form-group row">
+        <div class="col-md-6">
+          <label class="col-form-label" for="text-input">{{'Booking.DetailsPage.paidOfflineAmount' | translate}}</label>
+            <input type="text" id="paidOfflineAmount" name="paidOfflineAmount" class="form-control" formControlName="paidOfflineAmount" required placeholder=""
+            [ngClass]="{ 'is-invalid': submitted && f.paidOfflineAmount.errors, 'is-valid': f.paidOfflineAmount.touched && !f.paidOfflineAmount.errors }">
+            <div *ngIf="submitted && f['paidOfflineAmount'].errors" class="invalid-feedback">
+              <div *ngIf="f['paidOfflineAmount'].errors.required">Paid Offline Amount is required</div>
+              </div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="col-md-8">
+          <br>
+          <label for="paymentMethod" class="col-form-label">Payment Method</label>
+          <select class="form-control" (change)="updateSelectedPayment($event.target.value)" id="paymentMethod" name="paymentMethod" formControlName="paymentMethod" required
+          [ngClass]="{ 'is-invalid': submitted && f.paymentMethod.errors, 'is-valid': f.paymentMethod.touched && !f.paymentMethod.errors }">
+          <option style="color: grey;" [value]='null' [selected]="true">--Select Payment--</option>
+          <option class="form-control" [selected]="pmt.id==paymentMethod ? true : null" *ngFor="let pmt of paymentMethods.content" [value]="pmt.code">{{ pmt.nameEn }}</option>
+          </select>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template #modalFooter>
+      <button class="btn" cButton color="secondary" (click)="addNewPaymentModal.hide()">Close</button>
+      <button class="btn btn-primary mr-1" (click)="addNewPayment()" cButton color="primary">Add Payment</button>
+    </ng-template>
+  </c-modal>
+  </form>
+</div>
+
+<!-- Loading Spinner-->
+<div [hidden]="!isLoading">
+  <c-spinkit name="fold"></c-spinkit>
+</div>
+
+<!-- <toaster-container [toasterconfig]="toasterconfig"></toaster-container> -->
+<app-toast></app-toast>
+</router-outlet>

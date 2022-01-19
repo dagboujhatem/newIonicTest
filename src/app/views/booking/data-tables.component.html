@@ -1,0 +1,294 @@
+<router-outlet>
+<div class="fade-in">
+  <c-card>
+    <c-card-header>
+      <strong>
+        Bookings
+      </strong> 
+      <c-card-header-actions>
+        <a
+          href="https://github.com/mariuszfoltak/angular2-datatable"
+          target="_blank"
+          class="card-header-action"
+        >
+        </a>
+      </c-card-header-actions>
+    </c-card-header>
+    <c-card-body>
+      <c-row class="mb-3">
+        <c-col md="4" >
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><i class="cil-search"></i></span>
+            </div>
+            <input cInput
+              [(ngModel)]="filterQuery"
+              placeholder="Search by name"
+            />
+          </div>
+        </c-col>
+        <div class="col" style="float:right; margin-right: 50px;">
+          <button (click)="add()" class="btn btn-primary btn-xs float-right"><i class="cil-bookmark"></i> {{'Booking.MainPage.AddBtn' | translate}}</button>
+        </div>
+      </c-row>
+      <table
+        class="table table-striped table-hover table-responsive-lg"
+        [mfData]="dbData?.content | dataFilter: filterQuery"
+        #mf="mfDataTable"
+        [mfRowsOnPage]="10"
+      >
+        <thead>
+          <tr>
+            <th style="width: 15%;">
+              <mfDefaultSorter by="name" #sortName>
+                Name
+                <span
+                  *ngIf="sortName.isSortedByMeAsc"
+                  class="cil-arrow-top"
+                  aria-hidden="true"
+                ></span>
+                <span
+                  *ngIf="sortName.isSortedByMeDesc"
+                  class="cil-arrow-bottom"
+                  aria-hidden="true"
+                ></span>
+              </mfDefaultSorter>
+            </th>
+            <th style="width: 10%;">
+              <mfDefaultSorter by="mobile" #sortMobile>
+                Mobile
+                <span
+                  *ngIf="sortMobile.isSortedByMeAsc"
+                  class="cil-arrow-top"
+                  aria-hidden="true"
+                ></span>
+                <span
+                  *ngIf="sortMobile.isSortedByMeDesc"
+                  class="cil-arrow-bottom"
+                  aria-hidden="true"
+                ></span>
+              </mfDefaultSorter>
+            </th>
+            <th style="width: 10%;">
+              <mfDefaultSorter by="email" #sortEmail>
+                Court
+                <span
+                  *ngIf="sortEmail.isSortedByMeAsc"
+                  class="cil-arrow-top"
+                  aria-hidden="true"
+                ></span>
+                <span
+                  *ngIf="sortEmail.isSortedByMeDesc"
+                  class="cil-arrow-bottom"
+                  aria-hidden="true"
+                ></span>
+              </mfDefaultSorter>
+            </th>
+            <th style="width: 5%;">
+              <mfDefaultSorter by="type" #sortType>
+                Duration
+                <span
+                  *ngIf="sortType.isSortedByMeAsc"
+                  class="cil-arrow-top"
+                  aria-hidden="true"
+                ></span>
+                <span
+                  *ngIf="sortType.isSortedByMeDesc"
+                  class="cil-arrow-bottom"
+                  aria-hidden="true"
+                ></span>
+              </mfDefaultSorter>
+            </th>
+            <th style="width: 5%;">
+              <mfDefaultSorter by="type" #sortPrice>
+                Price
+                <span
+                  *ngIf="sortPrice.isSortedByMeAsc"
+                  class="cil-arrow-top"
+                  aria-hidden="true"
+                ></span>
+                <span
+                  *ngIf="sortPrice.isSortedByMeDesc"
+                  class="cil-arrow-bottom"
+                  aria-hidden="true"
+                ></span>
+              </mfDefaultSorter>
+            </th>
+            <th style="width: 10%;">
+              <mfDefaultSorter by="stDate" #stDate>
+                Start Time
+                <span
+                  *ngIf="stDate.isSortedByMeAsc"
+                  class="cil-arrow-top"
+                  aria-hidden="true"
+                ></span>
+                <span
+                  *ngIf="stDate.isSortedByMeDesc"
+                  class="cil-arrow-bottom"
+                  aria-hidden="true"
+                ></span>
+              </mfDefaultSorter>
+            </th>
+            <th style="width: 10%;">
+              <mfDefaultSorter by="endDate" #endDate>
+                End Time
+                <span
+                  *ngIf="endDate.isSortedByMeAsc"
+                  class="cil-arrow-top"
+                  aria-hidden="true"
+                ></span>
+                <span
+                  *ngIf="endDate.isSortedByMeDesc"
+                  class="cil-arrow-bottom"
+                  aria-hidden="true"
+                ></span>
+              </mfDefaultSorter>
+            </th>
+            <th style="width: 5%;">
+              <mfDefaultSorter by="sortPay" #sortPay>
+                Payment Method
+                <span
+                  *ngIf="sortPay.isSortedByMeAsc"
+                  class="cil-arrow-top"
+                  aria-hidden="true"
+                ></span>
+                <span
+                  *ngIf="sortPay.isSortedByMeDesc"
+                  class="cil-arrow-bottom"
+                  aria-hidden="true"
+                ></span>
+              </mfDefaultSorter>
+            </th>
+            <th style="width: 5%;">
+              <mfDefaultSorter by="sortChannel" #sortChannel>
+                Channel
+                <span
+                  *ngIf="sortChannel.isSortedByMeAsc"
+                  class="cil-arrow-top"
+                  aria-hidden="true"
+                ></span>
+                <span
+                  *ngIf="sortChannel.isSortedByMeDesc"
+                  class="cil-arrow-bottom"
+                  aria-hidden="true"
+                ></span>
+              </mfDefaultSorter>
+            </th>
+            <th style="width: 5%;">
+              <mfDefaultSorter by="sortPStatus" #sortPStatus>
+                Pay Status
+                <span
+                  *ngIf="sortPStatus.isSortedByMeAsc"
+                  class="cil-arrow-top"
+                  aria-hidden="true"
+                ></span>
+                <span
+                  *ngIf="sortPStatus.isSortedByMeDesc"
+                  class="cil-arrow-bottom"
+                  aria-hidden="true"
+                ></span>
+              </mfDefaultSorter>
+            </th>
+            <th style="width: 5%;">
+              <mfDefaultSorter by="sortCancelled" #sortCancelled>
+                Status
+                <span
+                  *ngIf="sortCancelled.isSortedByMeAsc"
+                  class="cil-arrow-top"
+                  aria-hidden="true"
+                ></span>
+                <span
+                  *ngIf="sortCancelled.isSortedByMeDesc"
+                  class="cil-arrow-bottom"
+                  aria-hidden="true"
+                ></span>
+              </mfDefaultSorter>
+            </th>
+            <th style="width: 10%;">
+              <mfDefaultSorter by="bkDate" #bkDate>
+                Booked On
+                <span
+                  *ngIf="bkDate.isSortedByMeAsc"
+                  class="cil-arrow-top"
+                  aria-hidden="true"
+                ></span>
+                <span
+                  *ngIf="bkDate.isSortedByMeDesc"
+                  class="cil-arrow-bottom"
+                  aria-hidden="true"
+                ></span>
+              </mfDefaultSorter>
+            </th>
+            <th style="width: 10%; text-align: right; padding-right: 8%;">
+              <mfDefaultSorter by="actions" #sortActions>
+                Actions
+                <span
+                  *ngIf="sortActions.isSortedByMeAsc"
+                  class="cil-arrow-top"
+                  aria-hidden="true"
+                ></span>
+                <span
+                  *ngIf="sortActions.isSortedByMeDesc"
+                  class="cil-arrow-bottom"
+                  aria-hidden="true"
+                ></span>
+              </mfDefaultSorter>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr [hidden]="!isLoading">
+            <td colspan="12">
+              <div [hidden]="!isLoading">
+                <c-spinkit name="fold"></c-spinkit>
+              </div>
+            </td>
+          </tr>
+          <tr *ngFor="let item of mf.data;index as i;">
+            <td>{{ item.customerName }}</td>
+            <td>{{ "+" + item.customerCountryCode + "-" + item.customerMobile }}</td>
+            <td>{{ item.courtName }}</td>
+            <td>{{ item.TimeSlot + " mins" }}</td>
+            <td>{{ item.totalPrice + " " + item.ccy }}</td>
+            <td>{{ item.startTime }}</td>
+            <td>{{ item.endTime }}</td>
+            <td>{{ item.paymentMethod }}</td>
+            <td>{{ item.channel }}</td>
+            <td>{{ item.paymentStatus }}</td>
+            <td>{{ item.cancelledStatus }}</td>
+            <td>{{ item.log_date }}</td>
+            <td style="text-align: right;">
+              <button style="margin-right: 1px;" (click)="showEdit(item)" class="btn btn-outline-info btn-xs"><i class="cil-pencil"></i>  {{'Edit'}}</button>
+               &nbsp;
+              <!--<button ng-click="delete($i)" class="btn btn-danger mr-1" data-toggle="modal" (click)="dangerModal.show();currentIndex = 0;">Delete</button> -->
+            </td>
+            <!--            <td>{{ getDate(item.regDate) }}</td>-->
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="12">
+              <mfBootstrapPaginator
+                [rowsOnPageSet]="[5, 10, 15]"
+              ></mfBootstrapPaginator>
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+    </c-card-body>
+  </c-card>
+<c-modal #dangerModal color="danger">
+    <ng-template #modalHeader>
+      <h4 class="c-modal-title">Delete booking</h4>
+    </ng-template>
+    <ng-template #modalBody>
+      <p>Are you sure you want to delete this booking?</p>
+    </ng-template>
+    <ng-template #modalFooter>
+      <button class="btn" cButton color="secondary" (click)="dangerModal.hide()">Close</button>
+      <button class="btn btn-danger mr-1" (click)="deleteBooking(mf.data[currentIndex].id)" cButton color="danger">Delete booking</button>
+    </ng-template>
+  </c-modal>
+</div>
+<app-toast></app-toast>
+</router-outlet>

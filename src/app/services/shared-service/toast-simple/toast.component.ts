@@ -11,6 +11,7 @@ import {
 } from '@angular/core';
 
 import { ToastComponent, ToasterService, ToastModule } from '@coreui/angular';
+
 @Component({
   selector: 'app-toast',
   templateUrl: './toast.component.html',

@@ -1,1 +1,30 @@
 // Here you can add other styles
+.error-msg{
+    color: #ff0000;
+    font-weight: bold;
+    min-height: 21px;
+}
+
+.customBtn
+{
+    margin-bottom: 12px;
+}
+
+.logo {
+    width: 85%;
+    padding: 25px 0;
+    -o-object-fit: cover;
+    object-fit: cover;
+    align-self: center;
+}
+
+.loading-container {
+    text-align: center;
+    min-height: 70vh;
+    padding: 100px;
+}
+
+
+.fc .fc-event-title {
+    font-weight: bold !important;
+}

@@ -4,7 +4,7 @@ import { element } from 'protractor';
 
 import { HttpClient } from '@angular/common/http';
 import { HttpErrorResponse } from '@angular/common/http';
-import { ToasterModule, ToasterService, ToasterConfig } from 'angular2-toaster';
+//import { ToasterModule, ToasterService, ToasterConfig } from 'angular2-toaster';
 import { FormGroup, FormBuilder, Validators, FormControl, AbstractControl, FormGroupName} from '@angular/forms';
 import { ValidationFormsService } from './validation-forms.service';
 import { ValidatorFn, ValidationErrors } from '@angular/forms';
@@ -12,12 +12,15 @@ import { ToasterComponent, ToasterPosition } from '@coreui/angular';
 import { AppToastComponent as ToastComp } from '../../../services/shared-service/toast-simple/toast.component'
 import { HttpService } from '../../../services/http-service/http.service'
 
+import { ToastrService } from 'ngx-toastr';
+import { LocalInterfaceService } from '../../../services/local-inteface-service/local-interface.service';
+
 @Component({
-  selector: 'app-toasters',
+  //selector: 'app-toasters',
   templateUrl: 'basic-forms.component.html',
-  styleUrls: ['../../../../scss/vendors/toastr/toastr.scss', "../../../../../node_modules/ngx-bootstrap/datepicker/bs-datepicker.css",],
-  encapsulation: ViewEncapsulation.None,
-  providers: [ ToasterService, ValidationFormsService ]
+  styleUrls: ["../../../../../node_modules/ngx-bootstrap/datepicker/bs-datepicker.css",],
+  //encapsulation: ViewEncapsulation.None,
+  providers: [ ValidationFormsService ]
 })
 
 
@@ -35,47 +38,18 @@ export class BasicFormsComponent {
 
 
   public mfData? : object = {};
-  public userTypes?;
+  public courts?;
+  public users?;
   isUpdate: boolean = false;
   dbFunction?: string;
   name: string;
   mobile: string;
-  email: string;
-  countryCode: string;
-  dob: Date;
-  country: string;
-  status: string;
+  country_code: string;
   gender: string;
-  preferredLanguage: string;
-  verifiedEmail: string;
-  verifiedMobile: string;
-  forceChangePasswordFlag: string;
-  updateKYCFlag: string;
-  longitude: string;
-  latitude: string;
-  fromDate: string;
-  toDate: string;
-  startTime: string;
-  endTime: string;
-  weather: string;
-  ccy: string;
-  price: string;
-  airport: string;
-  Accommodation: string;
-  neededTools: string;
-  neededToolsAr: string;
-  providedTools: string;
-  providedToolsAr: string;
-  totalChairs: string;
-  availableChairs: string;
-  categoryId?: number;
-  imageUrl: string;
-  brouchureUrl: string;
-  uploadedImage: File;
-  uploadedBrochure: File;
-  isShowPref: boolean;
-  isShowSchd: boolean;
-  userType?: string;
+  dob: Date;
+  language: string;
+  status: string;
+  public isLoading = false;
 
   isError: boolean = false;
 
@@ -83,64 +57,58 @@ export class BasicFormsComponent {
   submitted = false;
   formErrors: any;
 
-  private toasterService: ToasterService;
-  public toasterconfig: ToasterConfig = new ToasterConfig({tapToDismiss: true, timeout: 5000});
+  //private toasterService: ToasterService;
+  //public toasterconfig: ToasterConfig = new ToasterConfig({tapToDismiss: true, timeout: 5000});
   
   @ViewChild(ToastComp) toastComp: ToastComp;
 
   public paddingStyle: Object = { 'padding-right': '20px'};
 
 
-  constructor(private router: Router, private http: HttpClient, public route: ActivatedRoute, toasterService: ToasterService,private fb: FormBuilder,public vf: ValidationFormsService, public httpService: HttpService) {
+  constructor(
+    private router: Router, 
+    private http: HttpClient, 
+    public route: ActivatedRoute,
+    private fb: FormBuilder,
+    public vf: ValidationFormsService, 
+    public httpService: HttpService,
+    private toastr: ToastrService,
+    private localInterfaceSrv: LocalInterfaceService
+    ) {
     //if (localStorage.getItem('currentUser') === null) {this.router.navigateByUrl('/login');}
-    if (localStorage.getItem('lang') === "ar") {this.toasterconfig = new ToasterConfig({tapToDismiss: true, timeout: 5000, positionClass: 'toast-top-left'});}
-    this.toasterService = toasterService;
+    if (localStorage.getItem('lang') === "ar") {
+      //this.toasterconfig = new ToasterConfig({tapToDismiss: true, timeout: 5000, positionClass: 'toast-top-left'});
+    }
+    //this.toasterService = toasterService;
     this.formErrors = this.vf.errorMessages;
-    this.isShowPref = false;
-    this.isShowSchd = false;
 
     if(this.router.getCurrentNavigation().extras.state?.createData == null)
     {
       this.isUpdate = true;
-      this.dbFunction = 'updateUser';
+      this.dbFunction = 'updateUsersTable';
       this.mfData = this.router.getCurrentNavigation().extras.state?.data;
-      this.userType = this.mfData['type'];
       this.name = this.mfData['name'];
-      this.email = this.mfData['email'];
       this.mobile = this.mfData['mobile'];
-      this.countryCode = this.mfData['countryCode'];
-      this.dob = new Date(this.mfData['dob']);
+      this.country_code = this.mfData['country_code'];
       this.gender = this.mfData['gender'];
-      this.preferredLanguage = this.mfData['preferredLanguage'];
-      this.verifiedEmail = this.mfData['verifiedEmail'];
-      this.verifiedMobile = this.mfData['verifiedMobile'];
-      this.forceChangePasswordFlag = this.mfData['forceChangePasswordFlag'];
-      this.updateKYCFlag = this.mfData['updateKYCFlag'];
+      this.dob = new Date(this.mfData['dob']);
+      this.language = this.mfData['language'];
       this.status = this.mfData['status'];
     }
     else
     {
-      this.dbFunction = '/addUser';
-      this.userType = null;
+      this.dbFunction = '/addBooking';
       this.name = '';
       this.mobile = '';
-      this.email = '';
-      this.countryCode = '';
-      this.dob = new Date();
+      this.country_code = '';
       this.gender = '';
-      this.preferredLanguage = '';
-      this.verifiedEmail = '';
-      this.verifiedMobile = '';
-      this.forceChangePasswordFlag = '';
-      this.updateKYCFlag = '';
+      this.dob = new Date();
+      this.language = '';
       this.status = '';
     }
-    this.getUserTypes();
     this.createForm();
   }
 
-
-  
   isCollapsed: boolean = false;
   iconCollapse: string = 'icon-arrow-up';
 
@@ -151,28 +119,21 @@ export class BasicFormsComponent {
   // Validators.pattern('^[0-9]{4}[\/][1-9]|1[012][\/][0-9]{2}$')]
   createForm() {
     this.simpleForm = this.fb.group({
-      userType: [this.userType, [Validators.required]],
       name: [this.name, [Validators.required]],
       mobile: [this.mobile, [Validators.required]],
-      email: [this.email, [Validators.required]],
-      countryCode: [this.countryCode, [Validators.required]],
+      country_code: [this.country_code, [Validators.required]],
+      gender: [this.gender, [Validators.required]],
       dob: [this.dob],
-      gender: [this.gender],
-      preferredLanguage: [this.preferredLanguage, [Validators.required]],
-      verifiedEmail: [this.verifiedEmail, [Validators.required]],
-      verifiedMobile: [this.verifiedMobile, [Validators.required]],
-      forceChangePasswordFlag: [this.forceChangePasswordFlag, [Validators.required]],
-      updateKYCFlag: [this.updateKYCFlag, [Validators.required]],
-      status: [this.status, [Validators.required]],
+      language: [this.language],
+      status: [this.status],
     }, { });
   }
-  
   get f() { return this.simpleForm.controls; }
 
 
   async showSuccess(msg) {
 
-    await this.toastComp.doShow('Success', msg);
+    await this.toastr.success(msg, 'Success');
 
     if (this.isUpdate && !this.isError)
     {
@@ -186,91 +147,10 @@ export class BasicFormsComponent {
     {
       this.delay(2000).then(any=>{
         this.router.navigate(['../'], {relativeTo: this.route}).then(() => {
-          window.location.reload();
+          //window.location.reload();
         });;
       });  
     }
-  }
-
-  showError(msg) {
-    this.toasterService.pop('error', 'Error', msg);
-  }
-
-  uploadFile(event) {
-    let files = event.target.files;
-    const reader = new FileReader();
-    if (files.length > 0) {
-      this.uploadedImage = files[0]; // You will see the file
-      reader.readAsDataURL(this.uploadedImage);
-      reader.onload = (_event) => { 
-        this.imageUrl = reader.result.toString().replace('../pangaea/', ''); 
-    }
-    }
-
-  }
-  uploadFileBrochure(event) {
-    let files = event.target.files;
-    const reader = new FileReader();
-    if (files.length > 0) {
-      this.uploadedBrochure = files[0]; // You will see the file
-      reader.readAsDataURL(this.uploadedBrochure);
-      reader.onload = (_event) => { 
-        this.brouchureUrl = reader.result.toString().replace('../pangaea/', ''); 
-    }
-    }
-
-  }
-  public showEdit()
-  {
-    //this.router.navigate(['facility'], {state: {data: ''}, relativeTo: this.route});
-    // if (this.editFlag == true)
-    // {
-    //   this.editFlag = false;
-    // }
-    // if (this.editFlag == false)
-    // {
-    //   this.editFlag = true;
-    // }
-    // this.myDivRef.nativeElement.scrollIntoView({behavior: "smooth", block: "start" });
-  }
-  public showPref()
-  {
-    if (this.isShowPref)
-    {
-      this.isShowPref = false;
-    }
-    else 
-    {
-      this.isShowSchd = false;
-      this.isShowPref = true;
-    }
-    //this.router.navigate(['FacilityPreferences'], {state: {data: ''}, relativeTo: this.route});
-  }
-  public showSchdule()
-  {
-    if (this.isShowSchd)
-    {
-      this.isShowSchd = false;
-    }
-    else 
-    {
-      this.isShowPref = false;
-      this.isShowSchd = true;
-    }
-    //this.router.navigate(['FacilityPreferences'], {state: {data: ''}, relativeTo: this.route});
-  }
-  public showPayment()
-  {
-    //this.router.navigate(['facility'], {state: {data: ''}, relativeTo: this.route});
-    // if (this.editFlag == true)
-    // {
-    //   this.editFlag = false;
-    // }
-    // if (this.editFlag == false)
-    // {
-    //   this.editFlag = true;
-    // }
-    // this.myDivRef.nativeElement.scrollIntoView({behavior: "smooth", block: "start" });
   }
 
   public findInvalidControls() {
@@ -282,6 +162,48 @@ export class BasicFormsComponent {
         }
     }
     return invalid;
+}
+
+saveUser = () => {
+  return new Promise<any>(async (resolve, reject) => {
+    this.isLoading = true;
+    const fields = {
+      userId: this.mfData['id'],
+      name: this.f['name'].value,
+      mobile: this.f['mobile'].value,
+      country_code: this.f['country_code'].value,
+      gender: this.f['gender'].value,
+      dob: this.f['dob'].value,
+      language: this.f['language'].value,
+      status: this.f['status'].value,
+    };
+    if (this.isUpdate) 
+    {
+      this.localInterfaceSrv.updateUser(fields)
+      .then(async res => {
+        resolve(res);
+        this.showSuccess('User Updated');
+      })
+      .catch(err => { 
+        reject(err); 
+        this.toastr.error(err.description, "Error");
+      })
+      .finally(() => this.isLoading = false);
+    } 
+    else 
+    {
+      this.localInterfaceSrv.addUser(fields)
+      .then(async res => {
+        resolve(res);
+        this.showSuccess('User Added');
+      })
+      .catch(err => { 
+        reject(err); 
+        this.toastr.error(err.description, "Error");
+      })
+      .finally(() => this.isLoading = false);
+    }
+  });
 }
 
   public submitDB(content: object) {
@@ -322,44 +244,28 @@ export class BasicFormsComponent {
       this.toastComp.doShow("Error", msg);
       this.toastComp.doShow("Error", "Check Invalid Fields: " + this.findInvalidControls());
       //this.showError("Check Invalid Fields: " + this.findInvalidControls());
-      return;
+      //return;
     }
 
-
     // TODO: Use EventEmitter with form value
-    this.mfData['userType'] = this.f['userType'].value
     this.mfData['name'] = this.f['name'].value
     this.mfData['mobile'] = this.f['mobile'].value
-    this.mfData['email'] = this.f['email'].value
-    this.mfData['countryCode'] = this.f['countryCode'].value
-    this.mfData['dob'] = this.f['dob'].value
+    this.mfData['country_code'] = this.f['country_code'].value
     this.mfData['gender'] = this.f['gender'].value
-    this.mfData['preferredLanguage'] = this.f['preferredLanguage'].value
-    this.mfData['verifiedEmail'] = this.f['verifiedEmail'].value
-    this.mfData['verifiedMobile'] = this.f['verifiedMobile'].value
-    this.mfData['forceChangePasswordFlag'] = this.f['forceChangePasswordFlag'].value
-    this.mfData['updateKYCFlag'] = this.f['updateKYCFlag'].value
+    this.mfData['dob'] = this.f['dob'].value
+    this.mfData['language'] = this.f['language'].value
     this.mfData['status'] = this.f['status'].value
 
     let formattedDob = new Date(this.mfData['dob']).toISOString().toString().substr(0, 10);
 
-    fd.append('userType',this.mfData['userType']);
-    fd.append('id',this.mfData['id']);
+    fd.append('userId',this.mfData['id']);
     fd.append('name',this.mfData['name']);
-    fd.append('email',this.mfData['email']);
-    fd.append('password',this.mfData['password']);
-    fd.append('salt',this.mfData['salt']);
     fd.append('mobile',this.mfData['mobile']);
-    fd.append('countryCode',this.mfData['countryCode']);
-    fd.append('dob',formattedDob);
+    fd.append('country_code',this.mfData['country_code']);
     fd.append('gender',this.mfData['gender']);
-    fd.append('preferredLanguage',this.mfData['preferredLanguage']);
-    fd.append('verifiedEmail',this.mfData['verifiedEmail']);
-    fd.append('verifiedMobile',this.mfData['verifiedMobile']);
-    fd.append('forceChangePasswordFlag',this.mfData['forceChangePasswordFlag']);
-    fd.append('updateKYCFlag',this.mfData['updateKYCFlag']);
+    fd.append('dob',formattedDob);
+    fd.append('language',this.mfData['language']);
     fd.append('status',this.mfData['status']);
-
 
     let headers = new Headers();
     headers.append('Content-Type','application/json');
@@ -372,25 +278,6 @@ export class BasicFormsComponent {
       error => {if (this.isUpdate) {this.isError = true;this.toastComp.doShow('Error', 'An error has occured in db, please check missing and try again');console.log(error);} else {this.isError = true;this.toastComp.doShow('Error', 'An error has occured in db, please check missing and try again');console.log(error);}},
     ).catch();
 
-    // this.http.post<any>(this.dbFunction, fd)
-    // .subscribe(
-    //   data => {if (this.isUpdate) {this.showSuccess('User updated');} else {this.showSuccess('User added')}},
-    //   error => {if (this.isUpdate) {this.isError = true;this.toastComp.doShow('Error', 'An error has occured in db, please check missing and try again');console.log(error);} else {this.isError = true;this.toastComp.doShow('Error', 'An error has occured in db, please check missing and try again');console.log(error);}},
-    // );
-    //this.showSuccess();
-     
-    //this.http.headers.post['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8';
-    //this.http.post('https://pangaeaclub.net/database.php', data);
-
-    //this.router.navigate(['basic-forms'], {state: {data: data}, relativeTo: this.route});
-  }
-  public getUserTypes()
-  {
-    this.httpService.post('getUserType', '', '')
-    .then(
-      data => {this.userTypes = data},
-      error => {if (this.isUpdate) {this.isError = true;this.toastComp.doShow('Error', 'An error has occured, please check missing and try again')} else {this.isError = true;this.toastComp.doShow('Error', 'An error has occured, please check missing and try again')}},
-    ).catch();
   }
 
   async delay(ms: number) {
@@ -414,6 +301,4 @@ export class BasicFormsComponent {
     this.isCollapsed = !this.isCollapsed;
     this.iconCollapse = this.isCollapsed ? 'icon-arrow-down' : 'icon-arrow-up';
   }
-
-
 }

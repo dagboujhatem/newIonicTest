@@ -52,6 +52,27 @@
             "Status": "الحالة",
             "StatusActive": "نشط",
             "StatusInActive": "غير نشط",
+
+
+            "customerName": "Customer Name",
+            "customerMobile": "Customer Mobile",
+            "startTime": "Start Time",
+            "endTime": "End Time",
+            "subTotalPrice": "Sub Total Price",
+            "addon": "Addon",
+            "tax": "Tax",
+            "totalPrice": "Total Price",
+            "paidAmount": "Paid Amount",
+            "ccy": "Currency",
+            "paymentStatus": "Payment Status",
+            "paidDate": "Paid Date",
+            "isReoccur": "Reoccur",
+            "cancelled": "Cancelled",
+            "cancelledDate": "Cancelled Date",
+            "Yes": "Yes",
+            "No": "No",
+
+
             "PrefLang": "Preffered Language",
             "PrefLangEnglish": "English",
             "PrefLangArabic": "Arabic",
@@ -103,6 +124,106 @@
                 "StartTime": "وقت الافتتاح",
                 "EndTime": "وقت الاغلاق",
                 "SaveBtn": "حفظ"
+            }
+        }
+    },
+    "Addon": {
+        "MainPage": 
+        {
+            "Title": "Addon",
+            "SearchBar": "Search by name",
+            "AddBtn": "New",
+            "DetailsBtn": "Details",
+            "Table": 
+            {
+                "Name": "Name",
+                "Email": "Email",
+                "Age": "Age",
+                "City": "City",
+                "Registered": "Registered",
+                "Actions": "Actions"
+            }
+        },
+        "DetailsPage": 
+        {
+            "BtnAlign": "pull-right",
+            "TextAlign": "pull-left",
+            "RadioAlign": "btnAlign",
+            "Title": "User Details",
+            "PrefBtn": "Preferences",
+            "SchBtn": "Schedule",
+            "Name": "Name",
+            "Mobile": "Mobile",
+            "Email": "Email",
+            "CountryCode": "Country Code",
+            "Dob": "Date of Birth",
+
+            "nameEn": "English Name",
+            "nameAr": "Arabic Name",
+            "price": "Price",
+            "ccy": "Currency",
+
+            "Gender": "Gender",
+            "GenderMale": "Male",
+            "GenderFemale": "Female",
+            "Status": "Status",
+            "StatusActive": "Active",
+            "StatusInActive": "In-active",
+            "Yes": "Yes",
+            "No": "No",
+            "preferredLanguage": "Preferred Language",
+            "preferredLanguageEnglish": "English",
+            "preferredLanguageArabic": "Arabic",
+            "VerifiedEmail": "Verified Email",
+            "VerifiedEmailTrue": "True",
+            "VerifiedEmailFalse": "False",
+            "VerifiedMobile": "Verified Mobile",
+            "VerifiedMobileTrue": "True",
+            "VerifiedMobileFalse": "False",
+            "forceChangePasswordFlag": "Force Password Change",
+            "forceChangePasswordFlagTrue": "True",
+            "forceChangePasswordFlagFalse": "False",
+            "updateKYCFlag": "Update KYC",
+            "updateKYCFlagTrue": "True",
+            "updateKYCFlagFalse": "False",
+            "ImgUpload": "Upload Image",
+            "ImgSelect": "No image selected",
+            "Img": "Image",
+            "ImgPH": "No image selected",
+            "SaveBtn": "Save",
+            "DeleteBtn": "Delete",
+            "Pref": 
+            {
+                "Title": "Preferences",
+                "SatOrders": "Saturday Orders Per Day",
+                "SunOrders": "Sunday Orders Per Day",
+                "MonOrders": "Monday Orders Per Day",
+                "TueOrders": "Tuesday Orders Per Day",
+                "WedOrders": "Wednesday Orders Per Day",
+                "ThuOrders": "Thursday Orders Per Day",
+                "FriOrders": "Friday Orders Per Day",
+                "Carriers": "No of Carriers",
+                "PayMethod": "Accpeted Payment Method",
+                "Status": "Status",
+                "PayMethodCash": "Cash",
+                "PayMethodPOS": "POS Machine",
+                "PayMethodBP": "BenefitPay",
+                "StatusActive": "Active",
+                "StatusInActive": "In-active"
+            },
+            "Schedule": 
+            {
+                "Title": "Schedule",
+                "Saturday": "Saturday",
+                "Sunday": "Sunday",
+                "Monday": "Monday",
+                "Tuesday": "Tuesday",
+                "Wednesday": "Wednesday",
+                "Thursday": "Thursday",
+                "Friday": "Friday",
+                "StartTime": "Start Time",
+                "EndTime": "End Time",
+                "SaveBtn": "Save"
             }
         }
     }

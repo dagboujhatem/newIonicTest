@@ -1,0 +1,396 @@
+<router-outlet>
+<div class="animated fade-in">
+  <c-card>
+    <c-card-header>
+      Bookings <c-badge color="info">Padel</c-badge>
+      <c-card-header-actions>
+        <!-- <a
+          href="https://fullcalendar.io/docs/angular"
+          target="_blank"
+          class="card-header-action"
+        >
+          <small class="text-muted">docs</small>
+        </a> -->
+      </c-card-header-actions>
+    </c-card-header>
+    <c-card-body>
+      <div class="loading-container" *ngIf="isLoading">
+        <c-spinner></c-spinner>
+      </div>
+      <full-calendar [options]="calendarOptions" #calendar *ngIf="!isLoading"></full-calendar>
+    </c-card-body>
+  </c-card>
+  <form [formGroup]="simpleForm"  method="post" enctype="multipart/form-data">
+  <c-modal id="openEventModal" #openEventModal color="primary">
+    <ng-template #modalHeader>
+      <h4 class="c-modal-title">Manage Booking</h4>
+      <button class="col-form-label" style="margin-left: 15px;" cButton color="secondary" (click)="goFullDetails(bookingId)">Full Details</button>
+    </ng-template>
+    <ng-template #modalBody>
+      <label for="court" class="col-form-label">Court</label>
+      <select class="form-control" id="court" name="court" formControlName="court" required
+      [ngClass]="{ 'is-invalid': submitted && f.court.errors, 'is-valid': f.court.touched && !f.court.errors }">
+      <option style="color: grey;" [value]="null" [selected]="true">--Select Court--</option>
+      <option class="form-control" [selected]="crt.id==court ? true : null" *ngFor="let crt of courts.content" [value]="crt.id">{{ crt.nameEn }}</option>
+      </select>
+
+      <label for="bookingName" class="col-form-label">Name</label>
+      <input type="text" name="bookingName" class="form-control" formControlName="bookingName" id="bookingName">
+
+      <label for="bookingMobile" class="col-form-label">Mobile</label>
+      <input type="text" name="bookingMobile" class="form-control" formControlName="bookingMobile" id="bookingMobile">
+
+      <label for="bookingCountryCode" class="col-form-label">Country Code</label>
+      <input type="text" name="bookingCountryCode" class="form-control" formControlName="bookingCountryCode" id="bookingCountryCode">
+
+      <label for="bookingDate" class="col-form-label">Date</label>
+      <input type="text" bsDatepicker [bsValue]="bookingDate"
+       id="bookingDate" name="bookingDate" class="form-control" formControlName="bookingDate" placeholder="01-JAN-2021">
+
+       <div class="form-group row">
+        <div class="col">
+        <label for="bookingStartTime" class="col-form-label">Start Time</label>
+          <timepicker formControlName="bookingStartTime"
+          (ngModelChange)="updatePriceForEdit()"
+          [hourStep]="1"
+          [minuteStep]="30"
+          [showMeridian]="ismeridian"> </timepicker>
+        </div>
+        <div class="col">
+          <label for="bookingEndTime" class="col-form-label">End Time</label>
+            <timepicker formControlName="bookingEndTime"
+            (ngModelChange)="updatePriceForEdit()"
+            [hourStep]="1"
+            [minuteStep]="30"
+            [showMeridian]="ismeridian"> </timepicker>
+          </div>
+      </div>
+
+      <div class="form-group row align-items-end">
+        <div class="col-md-6">
+          <label for="addon" class="col-form-label">Addons</label>
+          <select class="form-control" (change)="updateAddonForEdit()" id="addon" name="addon" formControlName="addon">
+          <option style="color: grey;" [value]="null" [selected]="true" disabled>Select Addon</option>
+          <option class="form-control" [selected]="ad.id==addon ? true : null" *ngFor="let ad of bookingAddons.content" [value]="ad.id + '|' + ad.nameEn + '|' + ad.price">{{ ad.nameEn + ' ' + ad.price + ' ' + ad.ccy}}</option>
+          </select>
+        </div>
+
+        <div class="col-md-3">
+          <label for="bookingAddonInstances" class="col-form-label">No.</label>
+          <input type="text" name="bookingAddonInstances" class="form-control" formControlName="bookingAddonInstances" id="bookingAddonInstances">
+        </div>
+
+        <div class="col-md-2">
+          <label for="bookingAddonInstances" class="col-form-label">&nbsp;</label>
+          <button class="btn btn-primary mr-1" (click)="addAddonForEdit()" name="addonBtn" id="addonBtn" [disabled]="!isAddonBtn" cButton color="primary">Add</button>
+        </div>
+
+      </div>
+
+        <div class="form-group row" *ngIf="bookingAddonsArray.length" style="margin-bottom: -10%;">
+          <div class="col-lg-12">
+            <table class="table table-striped" #mf="mfDataTable" [mfData]="bookingAddonsArray" [mfRowsOnPage]="3">
+              <thead>
+                <tr>
+                  <th scope="col">Name</th>
+                  <th scope="col">Count</th>
+                  <th scope="col">Price</th>
+                  <th scope="col">Remove</th>
+                </tr>
+              </thead>
+                <tbody>
+                  <tr *ngFor="let adm of mf.data;">
+                    <td>{{adm.name}}</td>
+                    <td>{{adm.count}}</td>
+                    <td>{{adm.price}}</td>
+                    <td><button class="btn-sm btn-danger" (click)="removeAddonForEdit(adm.id)" cButton color="danger"><i class="cil-delete"></i></button></td>
+                  </tr>
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td colspan="4">
+                      <mfBootstrapPaginator></mfBootstrapPaginator>
+                    </td>
+                  </tr>
+                </tfoot>
+            </table>
+          </div>
+        </div>
+       
+       <div class="form-group row">
+        <div class="col-md-3">
+          <label for="bookingPrice" class="col-form-label">Price</label>
+          <input type="text" name="bookingPrice" class="form-control" formControlName="bookingPrice" id="bookingPrice">
+        </div>
+        <div class="col-md-3">
+          <label for="bookingAddon" class="col-form-label">Addon</label>
+          <input type="text" (change)="updatePriceForEdit()" name="bookingAddon" class="form-control" formControlName="bookingAddon" id="bookingAddon">
+        </div>
+        <div class="col-md-3">
+          <label for="bookingVAT" class="col-form-label">VAT</label>
+          <input type="text" name="bookingVAT" class="form-control" formControlName="bookingVAT" id="bookingVAT">
+        </div>
+        <div class="col-md-3">
+          <label for="bookingTotal" class="col-form-label">Total</label>
+          <input type="text" name="bookingTotal" class="form-control" formControlName="bookingTotal" id="bookingTotal">
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <div class="col-md-3">
+          <label for="bookingPayAmount" class="col-form-label">Pay Amount</label>
+          <input type="text" name="bookingPayAmount" class="form-control" formControlName="bookingPayAmount" id="bookingPayAmount">
+        </div>
+        <div class="col-md-4">
+          <label for="bookingPayDate" class="col-form-label">Pay Date</label>
+          <input type="text" bsDatepicker [bsValue]="bookingPayDate"
+          id="bookingPayDate" name="bookingPayDate" class="form-control" formControlName="bookingPayDate" id="bookingPayDate">
+        </div>
+        <div class="col-md-4">
+          <label for="bookingPayStatus" class="col-form-label">Pay Status</label>
+          <input type="text" name="bookingPayStatus" class="form-control" formControlName="bookingPayStatus" id="bookingPayStatus">
+        </div>
+      </div>
+      
+      <br>
+      
+      <div class="form-group row">
+        <div class="col-md-3">
+          <label for="newBookingPrice" class="col-form-label">New Price</label>
+          <input type="text" name="newBookingPrice" class="form-control" formControlName="newBookingPrice" id="newBookingPrice">
+        </div>
+        <div class="col-md-3">
+          <label for="newBookingAddon" class="col-form-label">New Addon</label>
+          <input type="text" (change)="updatePriceForEdit()" name="newBookingAddon" class="form-control" formControlName="newBookingAddon" id="newBookingAddon">
+        </div>
+        <div class="col-md-3">
+          <label for="newBookingVAT" class="col-form-label">New VAT</label>
+          <input type="text" name="newBookingVAT" class="form-control" formControlName="newBookingVAT" id="newBookingVAT">
+        </div>
+        <div class="col-md-3">
+          <label for="newBookingTotal" class="col-form-label">New Total</label>
+          <input type="text" name="newBookingTotal" class="form-control" formControlName="newBookingTotal" id="newBookingTotal">
+        </div>
+      </div>
+      
+      <div class="form-group row">
+        <label class="col-md-4 col-form-label" for="text-input">Remaining Amount</label>
+        <div class="col-md-3">
+          <input type="text" id="totalRemainingAmount" name="totalRemainingAmount" class="form-control" formControlName="totalRemainingAmount" placeholder="0"
+          [ngClass]="{ 'is-invalid': submitted && f.totalRemainingAmount.errors, 'is-valid': f.totalRemainingAmount.touched && !f.totalRemainingAmount.errors }">
+          <div *ngIf="submitted && f['totalRemainingAmount'].errors" class="invalid-feedback">
+            <div *ngIf="f['totalRemainingAmount'].errors.required">Amount is required</div>
+            </div>
+        </div>
+      </div>
+
+      <!-- <div class="form-group">
+        <div class="col-md-12">
+          <br>
+          <label for="paymentMethod" class="col-form-label">Payment Method</label>
+          <select class="form-control" id="paymentMethod" name="paymentMethod" formControlName="paymentMethod" required
+          [ngClass]="{ 'is-invalid': submitted && f.paymentMethod.errors, 'is-valid': f.paymentMethod.touched && !f.paymentMethod.errors }">
+          <option style="color: grey;" [value]="null" [selected]="true">--Select Payment--</option>
+          <option class="form-control" *ngFor="let pmt of paymentMethods.content" [value]="pmt.code">{{ pmt.nameEn }}</option>
+          </select>
+        </div>
+      </div> -->
+
+      <br>
+    </ng-template>
+    <ng-template #modalFooter>
+      <button class="btn mr-auto" cButton color="danger" (click)="cancelBooking()">Cancel Booking</button>
+      <button class="btn" cButton color="secondary" (click)="closeModal()">Close</button>
+      <button class="btn btn-primary mr-1" (click)="updateBooking(bookingId)" cButton color="primary">Confirm Changes</button>
+    </ng-template>
+  </c-modal>
+  <c-modal id="addBookingModal" #addBookingModal size="xl" color="primary">
+    <ng-template #modalHeader>
+      <h4 class="c-modal-title">Add Booking</h4>
+    </ng-template>
+    <ng-template #modalBody style="padding-bottom: 0 !important;">
+
+      <div class="form-group row">
+      <!--Left hand side Column-->
+      <div class="col">
+        <label for="court" class="col-form-label">Court</label>
+        <select class="form-control" id="court" name="court" formControlName="court" required
+        [ngClass]="{ 'is-invalid': submitted && f.court.errors, 'is-valid': f.court.touched && !f.court.errors }">
+        <option style="color: grey;" [value]="null" [selected]="true">--Select Court--</option>
+        <option class="form-control" [selected]="crt.id==court ? true : null" *ngFor="let crt of courts.content" [value]="crt.id">{{ crt.nameEn }}</option>
+        </select>
+
+        <label for="bookingName" class="col-form-label">Name</label>
+        <input type="text" name="bookingName" class="form-control" formControlName="bookingName" id="bookingName">
+
+        <label for="bookingMobile" class="col-form-label">Mobile</label>
+        <input type="text" name="bookingMobile" class="form-control" formControlName="bookingMobile" id="bookingMobile">
+
+        <label for="bookingCountryCode" class="col-form-label">Country Code</label>
+        <input type="text" name="bookingCountryCode" class="form-control" formControlName="bookingCountryCode" id="bookingCountryCode">  
+
+        <label for="bookingDate" class="col-form-label">Date</label>
+        <input type="text" bsDatepicker [bsValue]="bookingDate"
+        id="bookingDate" name="bookingDate" (bsValueChange)="updateDate()" class="form-control" formControlName="bookingDate" placeholder="01-JAN-2021">
+        <br>
+        <div class="form-group row">
+          <div class="col">
+          <label for="bookingStartTime" class="col-form-label">Start Time</label>
+            <timepicker formControlName="bookingStartTime"
+            (ngModelChange)="updatePriceForAdd()"
+            [hourStep]="1"
+            [minuteStep]="30"
+            [showMeridian]="ismeridian"> </timepicker>
+          </div>
+          <div class="col">
+            <label for="bookingEndTime" class="col-form-label">End Time</label>
+              <timepicker formControlName="bookingEndTime"
+              (ngModelChange)="updatePriceForAdd()"
+              [hourStep]="1"
+              [minuteStep]="30"
+              [showMeridian]="ismeridian"> </timepicker>
+            </div>
+        </div>
+    </div>
+
+      <!--Right hand side Column-->
+
+      <div class="col">
+
+        <div class="form-group row align-items-end">
+          <div class="col-md-6">
+            <label for="addon" class="col-form-label">Addons</label>
+            <select class="form-control" (change)="updateAddon()" id="addon" name="addon" formControlName="addon">
+            <option style="color: grey;" [value]="null" [selected]="true" disabled>Select Addon</option>
+            <option class="form-control" [selected]="ad.id==addon ? true : null" *ngFor="let ad of bookingAddons.content" [value]="ad.id + '|' + ad.nameEn + '|' + ad.price">{{ ad.nameEn + ' ' + ad.price + ' ' + ad.ccy}}</option>
+            </select>
+          </div>
+
+          <div class="col-md-3">
+            <label for="bookingAddonInstances" class="col-form-label">No.</label>
+            <input type="text" name="bookingAddonInstances" class="form-control" formControlName="bookingAddonInstances" id="bookingAddonInstances">
+          </div>
+
+          <div class="col-md-2">
+            <label for="bookingAddonInstances" class="col-form-label">&nbsp;</label>
+            <button class="btn btn-primary mr-1" (click)="addAddon()" name="addonBtn" id="addonBtn" [disabled]="!isAddonBtn" cButton color="primary">Add</button>
+          </div>
+
+        </div>
+
+          <div class="form-group row" *ngIf="bookingAddonsArray.length" style="margin-bottom: -10%;">
+            <div class="col-lg-12">
+              <table class="table table-striped" #mf="mfDataTable" [mfData]="bookingAddonsArray" [mfRowsOnPage]="3">
+                <thead>
+                  <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Count</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Remove</th>
+                  </tr>
+                </thead>
+                  <tbody>
+                    <tr *ngFor="let adm of mf.data;">
+                      <td>{{adm.name}}</td>
+                      <td>{{adm.count}}</td>
+                      <td>{{adm.price}}</td>
+                      <td><button class="btn-sm btn-danger" (click)="removeAddon(adm.id)" cButton color="danger"><i class="cil-delete"></i></button></td>
+                    </tr>
+                  </tbody>
+                  <tfoot>
+                    <tr>
+                      <td colspan="4">
+                        <mfBootstrapPaginator></mfBootstrapPaginator>
+                      </td>
+                    </tr>
+                  </tfoot>
+              </table>
+            </div>
+          </div>
+
+        <br>
+
+        <!--REOCCUR - DISABLED TEMPORARY - START -->
+        <!-- <div class="container" style="padding-bottom: 25%;">
+          <div class="col-md-2">
+            <c-form-check class="mfe-1">
+              <input cInput (change)="updateReoccur()" inline type="checkbox" formControlName="bookingReOccur"
+              value="bookingReOccur" id="bookingReOccur" name="bookingReOccur">
+              <label cLabel variant="checkbox" for="bookingReOccur">
+                Reoccurance
+              </label>
+            </c-form-check>
+          </div>
+          
+          <div *ngIf="bookingReOccur" class="form-group row">
+            <div class="col-md-4" style="margin-left: 5%;">
+              <label for="bookingReOccurDays" class="col-form-label">Day</label>
+              <select cSelect custom formControlName="bookingReOccurDays" id="bookingReOccurDays" name="bookingReOccurDays" required>
+                <option [disabled]="true" [selected]="true">Please select</option>
+                <option class="form-control" value="0" [selected]="selectedReoccurDay=='0' ? true : null">Sunday</option>
+                <option class="form-control" value="1" [selected]="selectedReoccurDay=='1' ? true : null">Monday</option>
+                <option class="form-control" value="2" [selected]="selectedReoccurDay=='2' ? true : null">Tuesday</option>
+                <option class="form-control" value="3" [selected]="selectedReoccurDay=='3' ? true : null">Wednesday</option>
+                <option class="form-control" value="4" [selected]="selectedReoccurDay=='4' ? true : null">Thursday</option>
+                <option class="form-control" value="5" [selected]="selectedReoccurDay=='5' ? true : null">Friday</option>
+                <option class="form-control" value="6" [selected]="selectedReoccurDay=='6' ? true : null">Saturday</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <label for="bookingReOccurInstance" class="col-form-label">No. Instances</label>
+              <input type="text" name="bookingReOccurInstance" (keyup)="updatePrice()" class="form-control" formControlName="bookingReOccurInstance" id="bookingReOccurInstance">
+            </div>
+            <div *ngIf="bookingReOccur" class="col-md-3">
+              <label for="bookingTotalWithReoocur" class="col-form-label">Full total</label>
+              <input type="text" name="bookingTotalWithReoocur" class="form-control" formControlName="bookingTotalWithReoocur" id="bookingTotalWithReoocur">
+            </div>
+          </div>
+        </div> -->
+        <!--REOCCUR - DISABLED TEMPORARY - END -->
+        <br>
+
+          <div class="form-group row price-container">
+              <div class="col-md-3">
+                <label for="bookingPrice" class="col-form-label">Price</label>
+                <input type="text" name="bookingPrice" class="form-control" formControlName="bookingPrice" id="bookingPrice">
+              </div>
+              <div class="col-md-3">
+                <label for="bookingAddon" class="col-form-label">Addon</label>
+                <input type="text" (change)="updatePriceForAdd()" name="bookingAddon" class="form-control" formControlName="bookingAddon" id="bookingAddon">
+              </div>
+              <div class="col-md-3">
+                <label for="bookingVAT" class="col-form-label">VAT</label>
+                <input type="text" name="bookingVAT" class="form-control" formControlName="bookingVAT" id="bookingVAT">
+              </div>
+              <div class="col-md-3">
+                <label for="bookingTotal" class="col-form-label">Total</label>
+                <input type="text" name="bookingTotal" class="form-control" formControlName="bookingTotal" id="bookingTotal">
+              </div>
+          </div>
+          <div class="form-group row payment-container">
+            <div class="col-md-12">
+              <br>
+              <label for="paymentMethod" class="col-form-label">Payment Method</label>
+              <select class="form-control" id="paymentMethod" name="paymentMethod" formControlName="paymentMethod" required
+              [ngClass]="{ 'is-invalid': submitted && f.paymentMethod.errors, 'is-valid': f.paymentMethod.touched && !f.paymentMethod.errors }">
+              <option style="color: grey;" [value]="null" [selected]="true">--Select Payment--</option>
+              <option class="form-control" *ngFor="let pmt of paymentMethods.content" [value]="pmt.code">{{ pmt.nameEn }}</option>
+              </select>
+            </div>
+          </div>
+          <br>
+          <br>
+    </div>
+  </div>
+    </ng-template>
+    <ng-template #modalFooter>
+      <button class="btn" cButton color="secondary" (click)="closeModal()">Close</button>
+      <button class="btn btn-primary mr-1" (click)="updateBooking(bookingId)" cButton color="primary">Add Booking</button>
+    </ng-template>
+  </c-modal>
+
+  </form>
+
+  <app-toast></app-toast>
+</div>
+</router-outlet>

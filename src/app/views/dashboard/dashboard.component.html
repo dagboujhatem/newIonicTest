@@ -1,13 +1,124 @@
 <div class="fade-in">
-  <app-widgets-dropdown></app-widgets-dropdown>
-  <c-card>
+
+  <c-row *ngIf="data">
+    <c-col sm="6" lg="3">
+      <c-widget-dropdown
+        color="gradient-primary"
+        [header]="chart[0].total | number"
+        [text]="chart[0].title"
+      >
+        <div slot="footer">
+          <div
+            class="c-chart-wrapper mt-3 mx-3"
+            style="height: 70px;"
+            [@.disabled]="true"
+          >
+            <canvas
+              cNoZoneBaseChart
+              class="chart"
+              height="70"
+              [datasets]="chart[0].data"
+              [labels]="chart[0].labels"
+              [options]="chart[0].options"
+              [colors]="chart[0].colors"
+              [chartType]="chart[0].type"
+            >
+            </canvas>
+          </div>
+        </div>
+      </c-widget-dropdown>
+    </c-col>
+    <c-col sm="6" lg="3">
+      <c-widget-dropdown
+        color="gradient-warning"
+        [header]="chart[1].total | number"
+        [text]="chart[1].title"
+      >
+        <div slot="footer">
+          <div
+            class="c-chart-wrapper mt-3 mx-3"
+            style="height: 70px;"
+            [@.disabled]="true"
+          >
+            <canvas
+              cNoZoneBaseChart
+              class="chart"
+              height="70"
+              [datasets]="chart[1].data"
+              [labels]="chart[1].labels"
+              [options]="chart[1].options"
+              [colors]="chart[1].colors"
+              [chartType]="chart[1].type"
+            >
+            </canvas>
+          </div>
+        </div>
+      </c-widget-dropdown>
+    </c-col>
+    <c-col sm="6" lg="3">
+      <c-widget-dropdown
+        color="gradient-info"
+        [header]="chart[2].total | number"
+        [text]="chart[2].title"
+      >
+        <div slot="footer">
+          <div
+            class="c-chart-wrapper mt-3"
+            style="height: 70px;"
+            [@.disabled]="true"
+          >
+            <canvas
+              cNoZoneBaseChart
+              class="chart"
+              height="70"
+              [datasets]="chart[2].data"
+              [labels]="chart[2].labels"
+              [options]="chart[2].options"
+              [colors]="chart[2].colors"
+              [chartType]="chart[2].type"
+            >
+            </canvas>
+          </div>
+        </div>
+      </c-widget-dropdown>
+    </c-col>
+    <c-col sm="6" lg="3">
+      <c-widget-dropdown
+        color="gradient-danger"
+        [header]="chart[3].total | number"
+        [text]="chart[3].title"
+      >
+        <div slot="footer">
+          <div
+            class="c-chart-wrapper mt-3 mx-3"
+            style="height: 70px;"
+            [@.disabled]="true"
+          >
+            <canvas
+              cNoZoneBaseChart
+              class="chart"
+              height="70"
+              [datasets]="chart[3].data"
+              [labels]="chart[3].labels"
+              [options]="chart[3].options"
+              [colors]="chart[3].colors"
+              [chartType]="chart[3].type"
+            >
+            </canvas>
+          </div>
+        </div>
+      </c-widget-dropdown>
+    </c-col>
+  </c-row>
+  
+  <c-card  *ngIf="data">
     <c-card-body>
       <c-row>
         <c-col sm="5">
-          <h4 class="card-title mb-0">Orders</h4>
-          <div class="small text-muted">{{ currentDate }}</div>
+          <h4 class="card-title mb-0">Traffic</h4>
+          <div class="small text-muted">Last 30 days</div>
         </c-col>
-        <c-col sm="7" class="d-none d-md-block">
+        <!-- <c-col sm="7" class="d-none d-md-block">
           <c-button-toolbar class="float-right">
             <c-button-group class="mx-3">
               <button cButton color="secondary" variant="outline" [(ngModel)]="radioModel" btnRadio="Day" id="option1">Day</button>
@@ -18,7 +129,7 @@
               <c-icon name="cil-cloud-download"></c-icon>
             </button>
           </c-button-toolbar>
-        </c-col>
+        </c-col> -->
       </c-row>
       <div class="c-chart-wrapper" style="height:300px;margin-top:40px;"  [@.disabled]="true">
         <canvas cNoZoneBaseChart class="chart"
@@ -33,45 +144,35 @@
     <c-card-footer>
       <c-row class="text-center">
         <c-col sm="12" [md]="true" class="mb-sm-2 mb-0">
-          <div class="text-muted">Visits</div>
-          <strong>29.703 Users (40%)</strong>
+          <div class="text-muted">Bookings</div>
+          <strong>{{ data?.totalBookings }} ( {{(data?.totalBookings/(+data?.totalBookings + +data?.totalCancelledBookings)) * 100 | number:'1.0-0'}} %)</strong>
           <c-progress size="xs" class="mt-2">
-            <c-progress-bar color="success" [value]="40"></c-progress-bar>
+            <c-progress-bar color="info" [value]="(data?.totalBookings/(+data?.totalBookings + +data?.totalCancelledBookings)) * 100 | number"></c-progress-bar>
           </c-progress>
         </c-col>
+
         <c-col sm="12" [md]="true" class="mb-sm-2 mb-0">
-          <div class="text-muted">Unique</div>
-          <strong>24.093 Users (20%)</strong>
+          <div class="text-muted">Cancelled</div>
+          <strong>{{ data?.totalCancelledBookings }}  ( {{(data?.totalCancelledBookings/(+data?.totalBookings + +data?.totalCancelledBookings)) * 100 | number:'1.0-0'}} %)</strong>
           <c-progress size="xs" class="mt-2">
-            <c-progress-bar color="info" [value]="20"></c-progress-bar>
+            <c-progress-bar color="success" [value]="(data?.totalCancelledBookings/(+data?.totalBookings + +data?.totalCancelledBookings)) * 100 | number"></c-progress-bar>
           </c-progress>
         </c-col>
-        <c-col sm="12" [md]="true" class="mb-sm-2 mb-0">
-          <div class="text-muted">Pageviews</div>
-          <strong>78.706 Views (60%)</strong>
+
+
+        <!-- <c-col sm="12" [md]="true" class="mb-sm-2 mb-0">
+          <div class="text-muted">Cancelled</div>
+          <strong>{{ data?.totalTrafficVoid }}  ( {{(data?.totalTrafficVoid/(+data?.totalBookings + +data?.totalTrafficRefund)) * 100 | number:'1.0-0'}} %)</strong>
           <c-progress size="xs" class="mt-2">
-            <c-progress-bar color="warning" [value]="60"></c-progress-bar>
+            <c-progress-bar color="danger" [value]="(data?.totalTrafficVoid/(+data?.totalBookings + +data?.totalTrafficRefund)) * 100 | number"></c-progress-bar>
           </c-progress>
-        </c-col>
-        <c-col sm="12" [md]="true" class="mb-sm-2 mb-0">
-          <div class="text-muted">New Users</div>
-          <strong>22.123 Users (80%)</strong>
-          <c-progress size="xs" class="mt-2">
-            <c-progress-bar color="danger" [value]="80"></c-progress-bar>
-          </c-progress>
-        </c-col>
-        <c-col sm="12" [md]="true" class="mb-sm-2 mb-0">
-          <div class="text-muted">Bounce Rate</div>
-          <strong>40.15%</strong>
-          <c-progress size="xs" class="mt-2">
-            <c-progress-bar [value]="40"></c-progress-bar>
-          </c-progress>
-        </c-col>
+        </c-col> -->
+
       </c-row>
     </c-card-footer>
   </c-card>
-  <app-widgets-brand></app-widgets-brand>
-  <c-row>
+  <!-- <app-widgets-brand></app-widgets-brand> -->
+  <!-- <c-row>
     <c-col md="12">
       <c-card>
         <c-card-header>
@@ -516,7 +617,7 @@
               <tr>
                 <td class="text-center">
                   <div class="c-avatar">
-                    <img src="assets/img/avatars/6.jpg" class="c-avatar-img" alt="user@email.com">
+                    <img src="assets/img/default.png" class="c-avatar-img" alt="user@email.com">
                     <span class="c-avatar-status bg-danger"></span>
                   </div>
                 </td>
@@ -555,5 +656,5 @@
         </c-card-body>
       </c-card>
     </c-col>
-  </c-row>
+  </c-row> -->
 </div>

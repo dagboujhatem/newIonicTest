@@ -1,5 +1,5 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { CommonModule, } from '@angular/common';
 import { FullCalendarModule } from '@fullcalendar/angular'; // the main connector. must go first
 import dayGridPlugin from '@fullcalendar/daygrid'; // a plugin
 import timeGridPlugin from '@fullcalendar/timegrid';
@@ -24,5 +24,6 @@ FullCalendarModule.registerPlugins([
 @NgModule({
   declarations: [FullCalendarNgComponent],
     imports: [CommonModule, FullCalendarNgRoutingModule, FullCalendarModule, CardModule, BadgeModule],
+    schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
 })
 export class FullCalendarNgModule {}

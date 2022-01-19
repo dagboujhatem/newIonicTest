@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { getStyle, hexToRgba } from '@coreui/utils';
 import { customTooltips } from '@coreui/chartjs/dist/js/coreui-chartjs.js';
-import { HttpClient } from '@angular/common/http';
 
 export interface IChartProps {
   Data?: any;
@@ -20,30 +19,8 @@ export class DashboardChartsData {
   public mainChart: IChartProps = {};
   public widgetChart: Array<any> = [];
   public brandBoxChart: any = {};
-  public customerData: Array<any> = [];
-  public dbData?;
-  public customerCount?;
-  public customerHistoryTotal? = [];
-  public customerHistoryMonth? = [];
-  public facilityHistoryMonth? = [];
-  public facilityHistoryTotal? = [];
-  public branchHistoryMonth? = [];
-  public branchHistoryTotal? = [];
-  public revenueHistoryMonth? = [];
-  public revenueHistoryTotal? = [];
-  public dineInHistoryMonth? = [];
-  public dineInHistoryTotal? = [];
-  public pickupHistoryMonth? = [];
-  public pickupHistoryTotal? = [];
-  public deliveryHistoryMonth? = [];
-  public deliveryHistoryTotal? = [];
-  public elementSizeArray? = [];
-  public elementSize? = 0;
-  public chartMaxValueArray? = []
-  public chartMaxValue? = 1000;
 
-  constructor(private http: HttpClient) {
-    this.getDashboardStats();
+  constructor() {
     this.initWidgetCharts();
     this.initMainChart();
     this.initBrandCharts();
@@ -52,65 +29,10 @@ export class DashboardChartsData {
   public random(min: number, max: number) {
     return Math.floor(Math.random() * (max - min + 1) + min);
   }
-  public async getDashboardStats()
-  {
-    let headers = new Headers();
-    headers.append('Content-Type','application/json');
-    await this.http.post<any>('http://192.168.64.2/Lamenu-Admin-API/public/getDashboardStats/', {headers: headers})
-    .subscribe(
-      data => {
-        this.dbData = data;  
-        for (let i = 0; i <= this.dbData?.data.count; i++) 
-        {
-          if (this.dbData?.data.content[i].Entity == "Customer")
-          {
-            this.customerHistoryMonth.push(this.dbData?.data.content[i].Month);
-            this.customerHistoryTotal.push(this.dbData?.data.content[i].Total);
-          }
-          else if (this.dbData?.data.content[i].Entity == "Facility")
-          {
-            this.facilityHistoryMonth.push(this.dbData?.data.content[i].Month);
-            this.facilityHistoryTotal.push(this.dbData?.data.content[i].Total);
-          }
-          else if (this.dbData?.data.content[i].Entity == "Branch")
-          {
-            this.branchHistoryMonth.push(this.dbData?.data.content[i].Month);
-            this.branchHistoryTotal.push(this.dbData?.data.content[i].Total);
-          }
-          else if (this.dbData?.data.content[i].Entity == "Payments")
-          {
-            this.revenueHistoryMonth.push(this.dbData?.data.content[i].Month);
-            this.revenueHistoryTotal.push(this.dbData?.data.content[i].Total);
-          }
-          else if (this.dbData?.data.content[i].Entity == "dinein")
-          {
-            this.dineInHistoryMonth.push(this.dbData?.data.content[i].Month);
-            this.dineInHistoryTotal.push(this.dbData?.data.content[i].Total);
-          }
-          else if (this.dbData?.data.content[i].Entity == "pickup")
-          {
-            this.pickupHistoryMonth.push(this.dbData?.data.content[i].Month);
-            this.pickupHistoryTotal.push(this.dbData?.data.content[i].Total);
-          }
-          else if (this.dbData?.data.content[i].Entity == "delivery")
-          {
-            this.deliveryHistoryMonth.push(this.dbData?.data.content[i].Month);
-            this.deliveryHistoryTotal.push(this.dbData?.data.content[i].Total);
-          }
-        }
-        this.elementSizeArray.push(this.dineInHistoryMonth.length, this.pickupHistoryMonth.length, this.deliveryHistoryTotal.length); 
-        this.elementSize = Math.max(...this.elementSizeArray);
-        this.chartMaxValueArray = [...this.deliveryHistoryTotal, ...this.pickupHistoryTotal, ...this.dineInHistoryTotal];
-        this.chartMaxValue = Math.max(...this.chartMaxValueArray);
-      },
-      error => {console.log(error)},
-    );
-  }
 
   initWidgetCharts() {
-    // Customer
+    // chart 0
     this.widgetChart[0] = {};
-    var sf = Math.max.apply(null, this.customerHistoryTotal)+50;
     this.widgetChart[0].colors = [
       {
         backgroundColor: 'transparent',
@@ -122,11 +44,19 @@ export class DashboardChartsData {
     this.widgetChart[0].type = 'line';
     this.widgetChart[0].data = [
       {
-        data: this.customerHistoryTotal,
+        data: [65, 59, 84, 84, 51, 55, 40],
         label: 'Series A',
       },
     ];
-    this.widgetChart[0].labels = this.customerHistoryMonth;
+    this.widgetChart[0].labels = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+    ];
     this.widgetChart[0].options = {
       tooltips: {
         enabled: false,
@@ -156,8 +86,8 @@ export class DashboardChartsData {
             display: false,
             ticks: {
               display: false,
-              min: 0,
-              max: 150,
+              min: 40 - 5,
+              max: 84 + 5,
             },
           },
         ],
@@ -184,16 +114,15 @@ export class DashboardChartsData {
       custom: customTooltips,
     };
     this.widgetChart[1].options.elements.line.tension = 0.00001;
-    this.widgetChart[1].labels = this.facilityHistoryMonth;
     this.widgetChart[1].options.scales.yAxes = [
       {
         display: false,
-        ticks: { min: 1, max: 10 },
+        ticks: { min: 1 - 5, max: 34 + 5 },
       },
     ];
     this.widgetChart[1].data = [
       {
-        data: this.facilityHistoryTotal,
+        data: [1, 18, 9, 17, 34, 22, 11],
         label: 'Series A',
       },
     ];
@@ -207,7 +136,6 @@ export class DashboardChartsData {
 
     // chart 2
     this.widgetChart[2] = JSON.parse(JSON.stringify(this.widgetChart[0]));
-    this.widgetChart[2].labels = this.branchHistoryMonth;
     this.widgetChart[2].options.tooltips = {
       enabled: false,
       custom: customTooltips,
@@ -220,14 +148,13 @@ export class DashboardChartsData {
     this.widgetChart[2].options.scales.yAxes = [
       {
         display: false,
-        ticks: { min: 0, max: 12 },
       },
     ];
     this.widgetChart[2].options.elements.line.borderWidth = 2;
     this.widgetChart[2].options.elements.point.radius = 0;
     this.widgetChart[2].data = [
       {
-        data: this.branchHistoryTotal,
+        data: [78, 81, 80, 45, 34, 12, 40],
         label: 'Series A',
       },
     ];
@@ -241,7 +168,6 @@ export class DashboardChartsData {
 
     // chart 3
     this.widgetChart[3] = JSON.parse(JSON.stringify(this.widgetChart[0]));
-    this.widgetChart[3].labels = this.revenueHistoryMonth;
     this.widgetChart[3].options.tooltips = {
       enabled: false,
       custom: customTooltips,
@@ -254,15 +180,32 @@ export class DashboardChartsData {
     this.widgetChart[3].options.scales.yAxes = [
       {
         display: false,
-        ticks: { min: 50, max: 1200 },
       },
     ];
     this.widgetChart[3].data = [
       {
         barPercentage: 0.7,
-        data: this.revenueHistoryTotal,
+        data: [78, 81, 80, 45, 34, 12, 40, 85, 65, 23, 12, 98, 34, 84, 67, 82],
         label: 'Series A',
       },
+    ];
+    this.widgetChart[3].labels = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+      'January',
+      'February',
+      'March',
+      'April',
     ];
     this.widgetChart[3].colors = [
       {
@@ -282,68 +225,64 @@ export class DashboardChartsData {
     // console.log(brandInfo, brandInfoBg);
 
     // mainChart
-    this.mainChart.elements = this.elementSize;
-    this.mainChart.Data1 = this.pickupHistoryTotal;
-    this.mainChart.Data2 = this.dineInHistoryTotal;
-    this.mainChart.Data3 = this.deliveryHistoryTotal;
-
-    //console.log(this.pickupHistoryTotal.length, this.dineInHistoryTotal.length , this.deliveryHistoryTotal.length);
+    this.mainChart.elements = 27;
+    this.mainChart.Data1 = [];
+    this.mainChart.Data2 = [];
+    this.mainChart.Data3 = [];
 
     // generate random values for mainChart
-    // for (let i = 0; i <= this.mainChart.elements; i++) {
-    //   this.mainChart.Data1.push(this.random(50, 200));
-    //   this.mainChart.Data2.push(this.random(80, 100));
-    //   this.mainChart.Data3.push(65);
-    // }
+    for (let i = 0; i <= this.mainChart.elements; i++) {
+      this.mainChart.Data1.push(this.random(50, 200));
+      this.mainChart.Data2.push(this.random(80, 100));
+      this.mainChart.Data3.push(65);
+    }
 
     this.mainChart.Data = [
       {
         data: this.mainChart.Data1,
-        label: 'Pick-up',
+        label: 'Current',
       },
       {
         data: this.mainChart.Data2,
-        label: 'Dine-in',
+        label: 'Previous',
       },
       {
         data: this.mainChart.Data3,
-        label: 'Delivery',
+        label: 'BEP',
       },
     ];
     /* tslint:disable:max-line-length */
-    // this.mainChart.labels = [
-    //   'Monday',
-    //   'Tuesday',
-    //   'Wednesday',
-    //   'Thursday',
-    //   'Friday',
-    //   'Saturday',
-    //   'Sunday',
-    //   'Monday',
-    //   'Tuesday',
-    //   'Wednesday',
-    //   'Thursday',
-    //   'Friday',
-    //   'Saturday',
-    //   'Sunday',
-    //   'Monday',
-    //   'Tuesday',
-    //   'Wednesday',
-    //   'Thursday',
-    //   'Friday',
-    //   'Saturday',
-    //   'Sunday',
-    //   'Monday',
-    //   'Thursday',
-    //   'Wednesday',
-    //   'Thursday',
-    //   'Friday',
-    //   'Saturday',
-    //   'Sunday',
-    // ];
+    this.mainChart.labels = [
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
+      'Sunday',
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
+      'Sunday',
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
+      'Sunday',
+      'Monday',
+      'Thursday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
+      'Sunday',
+    ];
     /* tslint:enable:max-line-length */
-    this.mainChart.labels = this.pickupHistoryMonth;
-
     this.mainChart.options = {
       tooltips: {
         enabled: false,
@@ -385,7 +324,7 @@ export class DashboardChartsData {
               beginAtZero: true,
               maxTicksLimit: 5,
               stepSize: Math.ceil(250 / 5),
-              max: this.chartMaxValue,
+              max: 250,
             },
           },
         ],
@@ -516,4 +455,3 @@ export class DashboardChartsData {
     this.brandBoxChart.type = 'line';
   }
 }
-

@@ -1,6 +1,6 @@
 <li class="c-header-nav-item dropdown" dropdown placement="bottom">
   <a [routerLink] class="c-header-nav-link" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" dropdownToggle (click)="false">
-    <img src="assets/img/avatars/6.jpg" class="c-avatar" alt="admin@bootstrapmaster.com"/>
+    <img src="assets/img/avatars/icon.jpg" class="c-avatar" alt="admin@bootstrapmaster.com"/>
   </a>
   <div class="dropdown-menu dropdown-menu-right pt-0" *dropdownMenu aria-labelledby="account-dropdown">
     
@@ -29,16 +29,16 @@
     </a> -->
 
     <div class="dropdown-header text-center bg-light">
-      <strong>Settings</strong>
+      <strong>Profile</strong>
     </div>
-    <a [routerLink] class="dropdown-item">
+    <!-- <a [routerLink] class="dropdown-item">
       <c-icon name="cil-user" class="mfe-2"></c-icon>
       Profile
     </a>
     <a [routerLink] class="dropdown-item">
       <c-icon name="cil-settings" class="mfe-2"></c-icon>
       Setting
-    </a>
+    </a> -->
     <!-- <a [routerLink] class="dropdown-item">
       <c-icon name="cil-dollar" class="mfe-2"></c-icon>
       Payments
@@ -54,7 +54,7 @@
       <c-icon name="cil-shield-alt" class="mfe-2"></c-icon>
       Lock account
     </a> -->
-    <a [routerLink]="'/login'" class="dropdown-item">
+    <a [routerLink]="'/login'" (click)="logout()" class="dropdown-item">
       <c-icon name="cil-lock-locked" class="mfe-2"></c-icon>
       Logout
     </a>

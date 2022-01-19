@@ -10,7 +10,7 @@ import {TranslateService} from '@ngx-translate/core';
   selector: 'body',
   template: '<router-outlet></router-outlet>',
   providers: [IconSetService],
-  styleUrls: ['../scss/vendors/toastr/toastr.scss', "../../node_modules/ngx-bootstrap/datepicker/bs-datepicker.css",],
+  styleUrls: ["../../node_modules/ngx-bootstrap/datepicker/bs-datepicker.css",],
 
 })
 export class AppComponent implements OnInit {

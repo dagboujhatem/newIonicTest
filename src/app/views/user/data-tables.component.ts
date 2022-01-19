@@ -9,11 +9,14 @@ import { SpinkitComponent } from '@coreui/angular/lib/spinkit/spinkit.component'
 import { AppToastComponent as ToastComp } from '../../services/shared-service/toast-simple/toast.component'
 import { HttpService } from '../../services/http-service/http.service'
 import { ModalDirective } from 'ngx-bootstrap/modal';
+import { LocalInterfaceService } from '../../services/local-inteface-service/local-interface.service';
+import { ToastrService } from 'ngx-toastr';
+import { StorageService } from '../../services/storege-service/storage.service';
 
 @Component({
   selector: 'app-data-tables',
   templateUrl: './data-tables.component.html',
-  styleUrls: ['./data-tables.component.scss','../../../scss/vendors/toastr/toastr.scss'],
+  styleUrls: ['./data-tables.component.scss'],
   providers: [ DataTablesService ],
   encapsulation: ViewEncapsulation.None,
 })
@@ -31,8 +34,9 @@ export class DataTablesComponent {
   // //   tapToDismiss: true,
   // //   timeout: 5000
   // // });
+  public facilityId = '';
 
-  @ViewChild(ToastComp) toastComp: ToastComp;
+ 
 
   title = 'ng';
   langs = ['en', 'ar'];
@@ -50,51 +54,70 @@ export class DataTablesComponent {
     }
   }
 
-  constructor(private dataTableService: DataTablesService, public translateService: TranslateService, public titleService: Title, public router: Router, public route: ActivatedRoute, private http: HttpClient, private httpService: HttpService) {
+  constructor(
+    private dataTableService: DataTablesService, 
+    public translateService: TranslateService, 
+    public titleService: Title, 
+    public router: Router, 
+    public route: ActivatedRoute, 
+    private http: HttpClient, 
+    private toastr: ToastrService,
+    private httpService: HttpService,
+    private localInterfaceSrv: LocalInterfaceService,
+    private storageSrv: StorageService
+    ) {
     //this.toasterService = toasterService;
     this.isLoading = true;
-    this.getUsers();
-    //console.log(this.data);
-    // this.getUsers.getData().subscribe(
-    //   (data) => {
-    //     setTimeout(() => {
-    //       this.dbData = data; 
-    //     }, 1500);
-    //   }, // success path
-    //   (error) => (this.error = error) // error path
-    // );
+    this.route.queryParams.subscribe(async params => {
+      this.facilityId = this.storageSrv.getFacilityId();
+      await this.loadUsers(this.facilityId);
+  });
   }
 
-  public async getUsers()
-  {
-    //his.httpService.post('/getUsers', '', '');
-    return await this.httpService.post('getUsers', '', '')
-    .then(
-      data => {
-        setTimeout(() => {
-                this.isLoading = false;
-                this.dbData = data; 
-              }, 1500);
-      },
-      error => {console.log(error)},
-    ).catch();
-
-
-    // let headers = new Headers();
-    // headers.append('Content-Type','application/json');
-    
-    // return await this.http.post<any>('http://192.168.64.2/Lamenu-Admin-API/public/getUsers/', {headers: headers}).toPromise()
-    // .then(
-    //   data => {
-    //     setTimeout(() => {
-    //             this.isLoading = false;
-    //             this.dbData = data; 
-    //           }, 1500);
-    //   },
-    //   error => {console.log(error)},
-    // );
-  }
   @ViewChild('dangerModal', {static: false}) public dangerModal: ModalDirective;
+
+  loadUsers = (facilityId) => {
+    return new Promise<any>(async (resolve, reject) => {
+      this.isLoading = true;
+      this.localInterfaceSrv.getUsers(facilityId)
+      .then(res => {
+        this.dbData = res;
+        this.isLoading = false;
+        resolve(res);
+      })
+      .catch(err => { 
+        reject(err); 
+        console.log(err)
+        this.toastr.error(err.description, "Error");
+      })
+      .finally(() => this.isLoading = false);
+    });
+  }
+
+  deleteUser = (userId) => {
+    return new Promise<any>(async (resolve, reject) => {
+      this.isLoading = true;
+      const fields = {
+        userId: userId
+      };
+      this.localInterfaceSrv.deleteUser(userId)
+      .then(async res => {
+        resolve(res);
+        this.toastr.success("User Removed", "Success");
+        this.dangerModal.hide();
+        this.route.queryParams.subscribe(async params => {
+          await this.loadUsers(this.facilityId);
+      });
+        //window.location.reload()
+      })
+      .catch(err => { 
+        reject(err); 
+        this.toastr.error(err.description, "Error");
+        this.dangerModal.hide();
+      })
+      .finally(() => this.isLoading = false);
+    });
+  }
 
   public toInt(num: string) {
     return +num;
@@ -119,13 +142,19 @@ export class DataTablesComponent {
   public add() {
     this.router.navigate(['details'], {state: {createData: ''}, relativeTo: this.route});
   }
-  public async delete(content: object) {
-    return await this.httpService.post('deleteUser', '', '')
+  public async delete(content?) {
+    var fd = new FormData();
+
+    fd.append('userId',content.id);
+
+    return await this.httpService.post('deleteUsersTable', fd, '')
     .then(
-      data => {window.location.reload()},
+      data => {
+        //window.location.reload()
+      },
       error => {
         this.dangerModal.hide();
-        this.toastComp.doShow("Error", 'An error has occured, please try again later');
+        // this.toastComp.doShow("Error", 'An error has occured, please try again later');
       }
     ).catch();
   }
