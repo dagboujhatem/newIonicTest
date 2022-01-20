@@ -238,7 +238,7 @@
         </thead>
         <tbody>
           <tr [hidden]="!isLoading">
-            <td colspan="12">
+            <td colspan="13">
               <div [hidden]="!isLoading">
                 <c-spinkit name="fold"></c-spinkit>
               </div>
@@ -250,7 +250,7 @@
             <td>{{ item.courtName }}</td>
             <td>{{ item.TimeSlot + "mins" }}</td>
             <td>{{  item.ccy + " " + item.totalPrice }}</td>
-            <td>{{ item.startTime | date: short }}</td>
+            <td>{{ item.startTime }}</td>
             <td>{{ item.endTime }}</td>
             <td>{{ item.paymentMethod }}</td>
             <td><c-badge [color]="getChannelColor(item.channel)" class="mfs-auto">{{ item?.channel | titlecase }}</c-badge></td>
@@ -267,7 +267,7 @@
         </tbody>
         <tfoot>
           <tr>
-            <td colspan="12">
+            <td colspan="13">
               <mfBootstrapPaginator
                 [rowsOnPageSet]="[5, 10, 15]"
               ></mfBootstrapPaginator>
