@@ -248,14 +248,14 @@
             <td>{{ item.customerName }}</td>
             <td>{{ "+" + item.customerCountryCode + "-" + item.customerMobile }}</td>
             <td>{{ item.courtName }}</td>
-            <td>{{ item.TimeSlot + " mins" }}</td>
-            <td>{{ item.totalPrice + " " + item.ccy }}</td>
-            <td>{{ item.startTime }}</td>
+            <td>{{ item.TimeSlot + "mins" }}</td>
+            <td>{{  item.ccy + " " + item.totalPrice }}</td>
+            <td>{{ item.startTime | date: short }}</td>
             <td>{{ item.endTime }}</td>
             <td>{{ item.paymentMethod }}</td>
-            <td>{{ item.channel }}</td>
-            <td>{{ item.paymentStatus }}</td>
-            <td>{{ item.cancelledStatus }}</td>
+            <td><c-badge [color]="getChannelColor(item.channel)" class="mfs-auto">{{ item?.channel | titlecase }}</c-badge></td>
+            <td><c-badge [color]="getPaymentStatusColor(item.paymentStatus)" class="mfs-auto">{{ item?.paymentStatus | titlecase }}</c-badge></td>
+            <td><c-badge [color]="getBookingStatusColor(item.status)" class="mfs-auto">{{ item?.bookingStatus | titlecase }}</c-badge></td>
             <td>{{ item.log_date }}</td>
             <td style="text-align: right;">
               <button style="margin-right: 1px;" (click)="showEdit(item)" class="btn btn-outline-info btn-xs"><i class="cil-pencil"></i>  {{'Edit'}}</button>

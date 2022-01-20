@@ -45,7 +45,7 @@ export class AppToastComponent extends ToastComponent {
     this.show = true;
     this.title = title;
     this.description = description;
-    //this.element.show();
+    // this.element.show();
   }
   doHide(): void {
     this.show = false;

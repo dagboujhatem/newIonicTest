@@ -1,13 +1,9 @@
-import { ChangeDetectorRef, Component, ElementRef, OnInit, Renderer2, ViewChild, ViewEncapsulation,QueryList } from '@angular/core';
-import { ITableData, DataTablesService } from './data-tables.service';
-import { HttpClient } from '@angular/common/http';
+import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
+import { DataTablesService } from './data-tables.service';
 import { Router, ActivatedRoute } from '@angular/router';
-//import { ToasterModule, ToasterService, ToasterConfig } from 'angular2-toaster';
 import { TranslateService } from '@ngx-translate/core';
 import { Title } from '@angular/platform-browser';
-import { SpinkitComponent } from '@coreui/angular/lib/spinkit/spinkit.component';
-import { AppToastComponent as ToastComp } from '../../services/shared-service/toast-simple/toast.component'
-import { HttpService } from '../../services/http-service/http.service'
+import { HttpService } from '../../services/http-service/http.service';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { LocalInterfaceService } from '../../services/local-inteface-service/local-interface.service';
 import { ValidationService } from '../../services/validation-service/validation.service';
@@ -22,55 +18,46 @@ import { ToastrService } from 'ngx-toastr';
   encapsulation: ViewEncapsulation.None,
 })
 export class DataTablesComponent {
+
+  @ViewChild('dangerModal', {static: false}) public dangerModal: ModalDirective;
+
   error: any;
   public dbData?;
   public isLoading: boolean = true;
   public currentIndex = 0;
   public filterQuery = '';
   public btnLang: string;
-  public langDir: string = "ltr";
+  public langDir: string = 'ltr';
   public facilityId = '';
-  // public toasterService: ToasterService;
-  // // public toasterconfig: ToasterConfig =
-  // // new ToasterConfig({
-  // //   tapToDismiss: true,
-  // //   timeout: 5000
-  // // });
-
- 
 
   title = 'ng';
   langs = ['en', 'ar'];
 
-  public ngOnInit(): void {
-    let browserlang = this.translateService.getBrowserLang();
+  // tslint:disable-next-line:use-lifecycle-interface
+  ngOnInit(): void {
+    const browserlang = this.translateService.getBrowserLang();
     if (this.langs.indexOf(browserlang) > -1) {
       this.translateService.setDefaultLang(browserlang);
       this.btnLang = 'English';
       this.langDir = 'rtl';
     } else {
       this.translateService.setDefaultLang('en');
-      this.btnLang = "العربية";
+      this.btnLang = 'العربية';
       this.langDir = 'ltr';
     }
   }
-  @ViewChild('dangerModal', {static: false}) public dangerModal: ModalDirective;
 
   constructor(
-    private dataTableService: DataTablesService, 
-    public translateService: TranslateService, 
-    public titleService: Title, 
-    public router: Router, 
-    public route: ActivatedRoute, 
-    private http: HttpClient, 
-    private httpService: HttpService, 
+    public translateService: TranslateService,
+    public titleService: Title,
+    public router: Router,
+    public route: ActivatedRoute,
+    private httpService: HttpService,
     private storageSrv: StorageService,
     private localInterfaceSrv: LocalInterfaceService,
     private toastr: ToastrService,
-    private validationSrv : ValidationService,
-    ) 
-    {
-    
+    private validationSrv: ValidationService,
+  ) {
     this.validationSrv.validateAcess()
     .then(async () => {
       this.isLoading = true;
@@ -90,25 +77,24 @@ export class DataTablesComponent {
         this.isLoading = false;
         resolve(res);
       })
-      .catch(err => { 
-        reject(err); 
-        console.log(err)
-        //this.toastr.error(err.description, "Error");
+      .catch(err => {
+        reject(err);
+        console.log(err);
+        // this.toastr.error(err.description, "Error");
       })
       .finally(() => this.isLoading = false);
     });
   }
 
-
-  public toInt(num: string) {
+  toInt(num: string) {
     return +num;
   }
 
-  public sortByWordLength = (a: any) => {
+  sortByWordLength = (a: any) => {
     return a.name.length;
   }
 
-  public getDate(regDate: string) {
+  getDate(regDate: string) {
     const date = new Date(regDate);
     return date.toLocaleDateString('en-US', {
       year: 'numeric',
@@ -116,7 +102,7 @@ export class DataTablesComponent {
       day: '2-digit',
     });
   }
-  
+
   deleteBooking = (bookingId) => {
     return new Promise<any>(async (resolve, reject) => {
       this.isLoading = true;
@@ -126,36 +112,71 @@ export class DataTablesComponent {
       this.localInterfaceSrv.deleteBooking(bookingId)
       .then(async res => {
         resolve(res);
-        this.toastr.success("Booking Removed", "Success");
+        this.toastr.success('Booking Removed', 'Success');
         this.dangerModal.hide();
         this.route.queryParams.subscribe(async params => {
           await this.loadBookings(this.facilityId);
       });
-        //window.location.reload()
+        // window.location.reload()
       })
-      .catch(err => { 
-        reject(err); 
-        this.toastr.error(err.description, "Error");
+      .catch(err => {
+        reject(err);
+        this.toastr.error(err.description, 'Error');
         this.dangerModal.hide();
       })
       .finally(() => this.isLoading = false);
     });
   }
 
-  public showEdit(data: object) {
+  showEdit(data: object) {
     this.router.navigate(['details'], {state: {data: data}, relativeTo: this.route});
   }
-  public add() {
+
+  add() {
     this.router.navigate(['details'], {state: {createData: ''}, relativeTo: this.route});
   }
-  public async delete(content: object) {
+
+  async delete(content: object) {
     return await this.httpService.post('deleteUser', '', '')
     .then(
-      data => {window.location.reload()},
+      data => { window.location.reload(); },
       error => {
         this.dangerModal.hide();
         // this.toastComp.doShow("Error", 'An error has occured, please try again later');
       }
     ).catch();
   }
+
+
+  getBookingStatusColor = (val) => {
+    switch (val.toUpperCase()) {
+      case 'A':
+        return 'success';
+      case 'C':
+        return 'danger';
+      case 'T':
+        return 'warning';
+      default:
+        return 'secondary';
+    }
+  }
+
+  getPaymentStatusColor = (val) => {
+    switch (val.toLowerCase()) {
+      case 'paid':
+        return 'success';
+      default:
+        return 'warning';
+    }
+  }
+
+  getChannelColor = (val) => {
+    switch (val.toLowerCase()) {
+      case 'online':
+        return 'info';
+      default:
+        return 'secondary';
+    }
+  }
+
 }
