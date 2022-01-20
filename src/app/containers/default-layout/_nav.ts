@@ -30,11 +30,11 @@ export const navItems: INavData[] = [
     url: '/facilityAddon',
     icon: 'cil-layers',
   },
-  {
-    name: 'Users',
-    url: '/user',
-    icon: 'cil-user',
-  },
+  // {
+  //   name: 'Users',
+  //   url: '/user',
+  //   icon: 'cil-user',
+  // },
   // {
   //   name: 'Owners',
   //   url: '/owner',

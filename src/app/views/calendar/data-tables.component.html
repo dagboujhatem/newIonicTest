@@ -21,7 +21,7 @@
     </c-card-body>
   </c-card>
   <form [formGroup]="simpleForm"  method="post" enctype="multipart/form-data">
-  <c-modal id="openEventModal" #openEventModal color="primary">
+  <c-modal [config]="{ backdrop: 'static' }"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" id="openEventModal" #openEventModal color="primary">
     <ng-template #modalHeader>
       <h4 class="c-modal-title">Manage Booking</h4>
       <button class="col-form-label" style="margin-left: 15px;" cButton color="secondary" (click)="goFullDetails(bookingId)">Full Details</button>

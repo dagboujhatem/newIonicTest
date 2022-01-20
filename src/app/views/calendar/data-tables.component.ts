@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { CalendarOptions, FullCalendarComponent } from '@fullcalendar/angular'; // useful for typechecking
 import { HttpService } from '../../services/http-service/http.service'
-import { ModalDirective } from 'ngx-bootstrap/modal';
+import { ModalDirective, ModalOptions } from 'ngx-bootstrap/modal';
 import { FormGroup, FormBuilder, Validators, FormControl, AbstractControl, FormGroupName} from '@angular/forms';
 import { AppToastComponent as ToastComp } from '../../services/shared-service/toast-simple/toast.component'
 import { Router, ActivatedRoute } from '@angular/router';
@@ -9,6 +9,7 @@ import { ToastrService } from 'ngx-toastr';
 import { LocalInterfaceService } from '../../services/local-inteface-service/local-interface.service';
 import { ValidationService } from '../../services/validation-service/validation.service';
 import { StorageService } from '../../services/storege-service/storage.service';
+import * as moment from 'moment';
 
 import {
   startOfDay,
@@ -19,6 +20,7 @@ import { calendar } from 'ngx-bootstrap/chronos/moment/calendar';
 import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
 import { totalmem } from 'os';
 import { el } from 'date-fns/locale';
+import { ModalComponent } from '@coreui/angular/lib/modal/modal.component';
 
 
 @Component({
@@ -89,7 +91,7 @@ export class FullCalendarNgComponent implements OnInit, AfterViewInit {
   }
     
   @ViewChild('calendar') calendarComponent!: FullCalendarComponent;
-  @ViewChild('openEventModal', {static: false}) public openEventModal: ModalDirective;
+  @ViewChild('openEventModal', {static: false},) public openEventModal: ModalDirective;
   @ViewChild('addBookingModal', {static: false}) public addBookingModal: ModalDirective;
   @ViewChild(ToastComp) toastComp: ToastComp;
   
@@ -504,10 +506,21 @@ export class FullCalendarNgComponent implements OnInit, AfterViewInit {
     this.simpleForm.get('paymentMethod').clearValidators();
     this.simpleForm.get('paymentMethod').updateValueAndValidity();
     this.bookingId = info.event.id;
+    
+    // var options: ModalOptions = {      
+    //   backdrop : 'static',
+    //   keyboard : false,
+    //   ignoreBackdropClick : true
+    // }
+    // this.openEventModal.config = options;
     this.openEventModal.show();
-        // const calendarApi = this.calendarComponent.getApi();
-    // var event = calendarApi.getEventById("11");
-    //console.log(this.dbData);
+    this.openEventModal.dismissReason = 'backdrop-click';
+    // this.openEventModal.config = options;
+    // this.openEventModal.config.ignoreBackdropClick = true;
+    // this.openEventModal.config.backdrop = 'static';
+    //this.modalService.config = options;
+    //this.modalService.show(this.openEventModal, options);
+
   }
   public updateBooking(content: object) 
   { 
@@ -607,14 +620,20 @@ export class FullCalendarNgComponent implements OnInit, AfterViewInit {
     this.bookingTotalWithReoocur = this.f['bookingTotalWithReoocur'].value
     this.totalRemainingAmount = this.f['totalRemainingAmount'].value
 
-    let formattedDate = new Date(this.bookingDate).toISOString().toString().substr(0, 10);
+    let formattedDate = (moment(new Date(this.f['bookingDate'].value))).format('YYYY-MM-DD')
+
     let startTimeDT = new Date(this.bookingStartTime);
     let endTimeDT = new Date(this.bookingEndTime)
     let formattedStartTime = startTimeDT.toTimeString().toString().substr(0, 8);
     let formattedEndTime = endTimeDT.toTimeString().toString().substr(0, 8);
 
+    if (endTimeDT < startTimeDT) {
+      endTimeDT.setDate(endTimeDT.getDate() + 1);
+      }  
+
     const duration = (endTimeDT.getTime() - startTimeDT.getTime())/60000;
     console.log("duration__" + duration)
+    console.log("formattedDate" + formattedDate);
 
     var mobileCheck = /^\d+$/.test(this.bookingMobile);
 
@@ -692,6 +711,7 @@ export class FullCalendarNgComponent implements OnInit, AfterViewInit {
     fd.append('bookingDate',formattedDate);
     fd.append('bookingStartTime',startDate);
     fd.append('bookingEndTime',endTime);
+    fd.append('bookingDuration',duration.toString());
     fd.append('bookingPrice', this.bookingPrice);
     fd.append('bookingAddon', this.bookingAddon);
     fd.append('bookingVAT',this.bookingVAT);
@@ -706,6 +726,7 @@ export class FullCalendarNgComponent implements OnInit, AfterViewInit {
     console.log('startDate: ' + startDate);
     console.log('endTime: ' + endTime);
     console.log('isReoccur: ' + String(this.isReoccur));
+    console.log("calendarDate22" + new Date(this.f['bookingDate'].value));
 
 
     let headers = new Headers();
@@ -1050,7 +1071,18 @@ export class FullCalendarNgComponent implements OnInit, AfterViewInit {
     var startDate = new Date(this.f['bookingStartTime'].value);
     var endDate = new Date(this.f['bookingEndTime'].value);
     this.isReoccur = this.f['bookingReOccur'].value;
-    const duration = (endDate.getTime() - startDate.getTime())/60000;
+
+    let startTimeDT = new Date(this.f['bookingStartTime'].value);
+    let endTimeDT = new Date(this.f['bookingEndTime'].value)
+
+    if (endTimeDT < startTimeDT) {
+      endTimeDT.setDate(endTimeDT.getDate() + 1);
+      }  
+
+    const duration = (endTimeDT.getTime() - startTimeDT.getTime())/60000;
+    console.log("duration__" + duration)
+
+    //const duration = (endDate.getTime() - startDate.getTime())/60000;
 
     // if (duration > 120)
     // {
@@ -1204,7 +1236,17 @@ export class FullCalendarNgComponent implements OnInit, AfterViewInit {
     var startDate = new Date(this.f['bookingStartTime'].value);
     var endDate = new Date(this.f['bookingEndTime'].value);
     this.isReoccur = this.f['bookingReOccur'].value;
-    const duration = (endDate.getTime() - startDate.getTime())/60000;
+
+    
+    let startTimeDT = new Date(this.f['bookingStartTime'].value);
+    let endTimeDT = new Date(this.f['bookingEndTime'].value)
+
+    if (endTimeDT < startTimeDT) {
+      endTimeDT.setDate(endTimeDT.getDate() + 1);
+      }  
+
+    const duration = (endTimeDT.getTime() - startTimeDT.getTime())/60000;
+    console.log("duration__" + duration)
 
     // if (duration > 120)
     // {

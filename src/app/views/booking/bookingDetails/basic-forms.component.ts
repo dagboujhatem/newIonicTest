@@ -17,6 +17,7 @@ import { LocalInterfaceService } from '../../../services/local-inteface-service/
 import { ToastrService } from 'ngx-toastr';
 import { StorageService } from '../../../services/storege-service/storage.service';
 import { ValidationService } from '../../../services/validation-service/validation.service';
+import * as moment from 'moment';
 
 @Component({
   //selector: 'app-toasters',
@@ -530,13 +531,20 @@ export class BasicFormsComponent {
     this.bookingTotalWithReoocur = this.f['bookingTotalWithReoocur'].value
     this.totalRemainingAmount = this.f['totalRemainingAmount'].value
 
-    let formattedDate = new Date(this.bookingDate).toISOString().toString().substr(0, 10);
+    let formattedDate = (moment(new Date(this.f['bookingDate'].value))).format('YYYY-MM-DD')
+
+    //let formattedDate = new Date(this.bookingDate).toISOString().toString().substr(0, 10);
+
     let startTimeDT = new Date(this.startTime);
     let endTimeDT = new Date(this.endTime)
     let formattedStartTime = startTimeDT.toTimeString().toString().substr(0, 8);
     let formattedEndTime = endTimeDT.toTimeString().toString().substr(0, 8);
 
-    const duration = this.roundTo((endTimeDT.getTime() - startTimeDT.getTime())/60000,0);
+    if (endTimeDT < startTimeDT) {
+      endTimeDT.setDate(endTimeDT.getDate() + 1);
+      }  
+
+    const duration = this.roundTo((endTimeDT.getTime() - startTimeDT.getTime())/60000, 0);
     console.log("duration__" + duration)
 
     var mobileCheck = /^\d+$/.test(this.customerMobile);
@@ -619,6 +627,7 @@ export class BasicFormsComponent {
     fd.append('bookingDate',formattedDate);
     fd.append('bookingStartTime',startDate);
     fd.append('bookingEndTime',endTime);
+    fd.append('bookingDuration',duration.toString());
     fd.append('bookingPrice', this.subTotalPrice);
     fd.append('bookingAddon', this.bookingAddon);
     fd.append('bookingVAT',this.tax);
