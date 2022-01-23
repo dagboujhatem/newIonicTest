@@ -92,13 +92,6 @@ export const routes: Routes = [
           ),
       },
       {
-        path: 'dashboard2',
-        loadChildren: () =>
-          import('./views/dashboard2/dashboard.module').then(
-            (m) => m.DashboardModule
-          ),
-      },
-      {
         path: 'calendar',
         component: calendarComp,
         data: {

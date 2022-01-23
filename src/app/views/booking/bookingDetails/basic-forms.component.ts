@@ -94,6 +94,10 @@ export class BasicFormsComponent {
   public courtPrice60min = 0.0;
   public courtPrice90min = 0.0;
   public courtPrice120min = 0.0;
+  public courtOfferPrice30min = 0.0;
+  public courtOfferPrice60min = 0.0;
+  public courtOfferPrice90min = 0.0;
+  public courtOfferPrice120min = 0.0;
   public taxPercentage = 0;
   public existingBookingAddonArray;
   paymentMethod?: string;
@@ -193,6 +197,7 @@ export class BasicFormsComponent {
     }
     else
     {
+      this.bookingId = '';
       this.dbFunction = '/addBooking';
       this.court = this.court == null ? null : this.court;
       //this.user = null;
@@ -258,6 +263,7 @@ export class BasicFormsComponent {
   // Validators.pattern('^[0-9]{4}[\/][1-9]|1[012][\/][0-9]{2}$')]
   createForm() {
     this.simpleForm = this.fb.group({
+      bookingId: {value: this.bookingId, disabled: true},
       court: [this.court, [Validators.required]],
       //user: [this.user, [Validators.required]],
       addon: [this.addon],

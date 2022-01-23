@@ -147,6 +147,7 @@ export class FullCalendarNgComponent implements OnInit, AfterViewInit {
 
   createForm() {
       this.simpleForm = this.fb.group({
+      bookingId: {value: this.bookingId, disabled:true},
       court: [this.court, [Validators.required]],
       paymentMethod: [this.paymentMethod, [Validators.required]],
       addon: [this.addon],
@@ -401,6 +402,7 @@ export class FullCalendarNgComponent implements OnInit, AfterViewInit {
     console.log((duration));
     console.log(JSON.stringify(this.courts.content));
     this.simpleForm.patchValue({court: selectedCourtId});
+    this.simpleForm.patchValue({bookingCountryCode: '973'});
     this.simpleForm.patchValue({bookingDate: selectedBooking.start});
     this.simpleForm.patchValue({bookingStartTime: selectedBooking.start});
     this.simpleForm.patchValue({bookingEndTime: selectedBooking.end});
@@ -486,8 +488,9 @@ export class FullCalendarNgComponent implements OnInit, AfterViewInit {
     {
       addon = info.event.extendedProps.addon;
     }
-    console.log(addon);
+    this.bookingId = info.event.id;
     this.totalRemainingAmount = this.roundTo(parseFloat(info.event.extendedProps.totalPrice) - parseFloat(info.event.extendedProps.paidAmount), 3);
+    this.simpleForm.patchValue({bookingId: this.bookingId});
     this.simpleForm.patchValue({court: resourceId});
     this.simpleForm.patchValue({bookingName: info.event.title});
     this.simpleForm.patchValue({bookingMobile: info.event.extendedProps.customerMobile});
@@ -505,7 +508,6 @@ export class FullCalendarNgComponent implements OnInit, AfterViewInit {
     this.simpleForm.patchValue({totalRemainingAmount: this.totalRemainingAmount});
     this.simpleForm.get('paymentMethod').clearValidators();
     this.simpleForm.get('paymentMethod').updateValueAndValidity();
-    this.bookingId = info.event.id;
 
     // var options: ModalOptions = {      
     //   backdrop : 'static',

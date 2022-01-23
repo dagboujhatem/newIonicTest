@@ -12,6 +12,13 @@
           </div>
         </div>
         <div class="card-body">
+          <div *ngIf="this.isUpdate" class="form-group row">
+            <label class="col-md-4 col-form-label" for="text-input">{{'Booking.DetailsPage.bookingId' | translate}}</label>
+            <div class="col-md-6">
+              <input type="text" id="bookingId" name="bookingId" formControlName="bookingId" class="form-control" placeholder=""
+              [ngClass]="{ 'is-invalid': submitted && f.bookingId.errors, 'is-valid': f.bookingId.touched && !f.bookingId.errors }">
+            </div>
+          </div>
           <div class="form-group row">
             <label class="col-md-4 col-form-label" for="courts">Court</label>
             <div class="col-md-6">
@@ -350,7 +357,7 @@
                 <td>{{ item.nameEn }}</td>
                 <td>{{ item.amount + ' ' + item.ccy }}</td>
                 <td>{{ item.paidDate | date:'dd/MM/yyyy hh:mm:ss a' }}</td>
-                <td *ngIf="item.paymentChannel != 'ONLINE'"><button class="btn-sm btn-danger" (click)="dangerModal.show();selectedId = item.id" cButton color="danger"><i class="cil-delete"></i></button></td>
+                <td *ngIf="item.paymentChannel != 'online'"><button class="btn-sm btn-danger" (click)="dangerModal.show();selectedId = item.id" cButton color="danger"><i class="cil-delete"></i></button></td>
               </tr>
             </tbody>
             <tfoot>
@@ -564,6 +571,7 @@
       </div>
       <div class="form-group row">
         <div class="col-md-8">
+          <br>
           <br>
           <label for="paymentMethod" class="col-form-label">Payment Method</label>
           <select class="form-control" (change)="updateSelectedPayment($event.target.value)" id="paymentMethod" name="paymentMethod" formControlName="paymentMethod" required

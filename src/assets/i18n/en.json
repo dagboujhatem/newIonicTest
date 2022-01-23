@@ -72,6 +72,7 @@
             "bookingDate": "Booking Date",
             "notes": "Notes",
             "customerCountryCode": "Country Code",
+            "bookingId": "Booking ID",
 
             "Gender": "Gender",
             "GenderMale": "رفع الصورة",

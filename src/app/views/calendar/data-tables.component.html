@@ -27,6 +27,9 @@
       <button class="col-form-label" style="margin-left: 15px;" cButton color="secondary" (click)="goFullDetails(bookingId)">Full Details</button>
     </ng-template>
     <ng-template #modalBody>
+      <label for="bookingId" class="col-form-label">Booking ID</label>
+      <input type="text" name="bookingId" class="form-control" formControlName="bookingId" id="bookingId">
+
       <label for="court" class="col-form-label">Court</label>
       <select class="form-control" id="court" name="court" (change)="this.updatePriceForEdit()" formControlName="court" required
       [ngClass]="{ 'is-invalid': submitted && f.court.errors, 'is-valid': f.court.touched && !f.court.errors }">
@@ -103,7 +106,7 @@
                     <td>{{adm.name}}</td>
                     <td>{{adm.count}}</td>
                     <td>{{adm.price}}</td>
-                    <td><button class="btn-sm btn-danger" (click)="removeAddonForEdit(adm.id)" cButton color="danger"><i class="cil-delete"></i></button></td>
+                    <td><button class="btn-sm btn-danger" *ngIf= (click)="removeAddonForEdit(adm.id)" cButton color="danger"><i class="cil-delete"></i></button></td>
                   </tr>
                 </tbody>
                 <tfoot>
@@ -369,6 +372,7 @@
           </div>
           <div class="form-group row payment-container">
             <div class="col-md-12">
+              <br>
               <br>
               <label for="paymentMethod" class="col-form-label">Payment Method</label>
               <select class="form-control" id="paymentMethod" name="paymentMethod" formControlName="paymentMethod" required
