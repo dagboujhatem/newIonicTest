@@ -161,7 +161,6 @@ export class BasicFormsComponent {
       {
         this.mfData = this.router.getCurrentNavigation().extras.state?.data;
       }
-      console.log("MDFFFFF" + this.resData['transactions']);
       this.bookingId = this.mfData['id'];
       this.court = this.mfData['courtId'];
       this.channel = this.mfData['channel'];
@@ -223,22 +222,6 @@ export class BasicFormsComponent {
       this.paidOfflineAmount = '';
     }
     this.simpleForm = this.fb.group({});
-    // this.route.queryParams.subscribe(async params => {
-    //   this.facilityId = this.storageSrv.getFacilityId();
-    //   await this.loadCourts(this.facilityId);
-    //   //await this.getUsers();
-    //   await this.updateCourtId(this.court);
-    //   await this.loadAddons(this.facilityId);
-    //   await this.loadPaymentMethods(this.facilityId);
-    //   await this.createForm();
-    //   this.initialValue = this.simpleForm.value;
-    //   this.simpleForm.valueChanges.subscribe(value => {
-    //     this.formChanged = Object.keys(this.initialValue).some(key => this.simpleForm.value[key] != 
-    //                       this.initialValue[key])
-    //   });
-    //   console.log("ADDON: " + this.bookingAddon);
-    //   console.log("paymentMethod: " + this.paymentMethod);
-    // });
   }
 
 
@@ -287,11 +270,11 @@ export class BasicFormsComponent {
       startTime: [this.startTime],
       endTime: [this.endTime],
       bookingDate: [this.bookingDate, [Validators.required]],
-      subTotalPrice:{value: this.subTotalPrice, disabled:true},
+      subTotalPrice:{value: this.subTotalPrice, disabled:this.isUpdate ? true : false},
       bookingAddon: {value: this.bookingAddon, disabled:true},
       tax:  {value: this.tax, disabled:true},
       totalPrice: {value: this.totalPrice, disabled:true},
-      newBookingPrice: {value: this.subTotalPrice, disabled:true},
+      newBookingPrice: {value: this.subTotalPrice, disabled:this.isUpdate ? false : true },
       newBookingAddon: {value: this.bookingAddon, disabled:true},
       newBookingVAT: {value: this.tax, disabled:true},
       newBookingTotal: {value: this.totalPrice, disabled:true},
@@ -448,26 +431,6 @@ export class BasicFormsComponent {
     var bookingAddons;
     var newAddons;
     var addonsUpdated = false;
-    // if (this.bookingAddonsArray.length > 0)
-    // {
-    //   if (this.existingBookingAddonArray != null)
-    //   {
-    //     if (this.existingBookingAddonArray.length > 0)
-    //     {
-    //       newAddons = this.bookingAddonsArray.filter(item => this.existingBookingAddonArray.indexOf(item) < 0);
-    //       bookingAddons = newAddons;
-    //       addonsUpdated = true;
-    //     }
-    //     else
-    //     {
-    //       bookingAddons = this.bookingAddonsArray;
-    //     }
-    //   }
-    //   else
-    //   {
-    //     bookingAddons = this.bookingAddonsArray;
-    //   }
-    // }
 
     if (this.bookingAddonsArray.length != this.existingBookingAddonArray.length)
     {
@@ -802,7 +765,6 @@ export class BasicFormsComponent {
     this.updateData['nameEn'] = name;
   }
  
-
   expanded(event: any): void {
     // console.log(event);
   }
@@ -1000,7 +962,7 @@ export class BasicFormsComponent {
     }   
     this.simpleForm.markAsDirty();  
   }
-  public updatePriceForAdd()
+  public updatePriceForAddPrice()
   {
     var subTotalPrice;
     var addon;
@@ -1008,17 +970,10 @@ export class BasicFormsComponent {
     var total;
     var totalReoccur;
     var addonTotalPrice = 0.0;
-    var startDate = new Date(this.f['startTime'].value);
-    var endDate = new Date(this.f['endTime'].value);
-    this.isReoccur = this.f['isReoccur'].value;
+    var startDate = new Date(this.simpleForm.controls['startTime'] ? this.f['startTime'].value : '');
+    var endDate = new Date(this.simpleForm.controls['endTime'] ? this.f['endTime'].value : '');
+    this.isReoccur = this.simpleForm.controls['isReoccur'] ? this.f['isReoccur'].value : '';
     const duration = this.roundTo(((endDate.getTime() - startDate.getTime())/60000),0);
-
-    // if (duration > 120)
-    // {
-    //   var minutesToAdd=30;
-    //   var futureDate = new Date(startDate.getTime() + minutesToAdd*60000);
-    //   this.simpleForm.patchValue({bookingStartTime: futureDate});
-    // }
 
     var reoccurInstances;
     if (this.isReoccur == "1")
@@ -1033,12 +988,130 @@ export class BasicFormsComponent {
       }
     }
 
-    var existingSubTotalPrice = parseFloat(this.f['subTotalPrice'].value);
-    var existingAddonPrice = parseFloat(this.f['bookingAddon'].value);
-    var existingVATPrice = parseFloat(this.f['tax'].value);
-    var existingTotalPrice = parseFloat(this.f['totalPrice'].value);
+    var existingSubTotalPrice = parseFloat(this.simpleForm.controls['subTotalPrice'] ? this.f['subTotalPrice'].value : 0);
+    var existingAddonPrice = parseFloat(this.simpleForm.controls['bookingAddon'] ? this.f['bookingAddon'].value : 0);
+    var existingVATPrice = parseFloat(this.simpleForm.controls['tax'] ? this.f['tax'].value : 0);
+    var existingTotalPrice = parseFloat(this.simpleForm.controls['totalPrice'] ? this.f['totalPrice'].value : 0);
 
-    var newSubTotalPrice = 0.0;
+    var newSubTotalPrice = parseFloat(this.simpleForm.controls['subTotalPrice'] ? this.f['subTotalPrice'].value : 0);
+    var newAddonPrice = 0.0;
+    var newVATPrice = 0.0;
+    var newTotalPrice = 0.0;
+
+    if (duration == 30)
+    {
+      this.courtPrice = this.courtPrice30min;
+    }
+    else if (duration == 60)
+    {
+      this.courtPrice = this.courtPrice60min;
+    }
+    else if (duration == 90)
+    {
+      this.courtPrice = this.courtPrice90min;
+    }
+    else if (duration == 120)
+    {
+      this.courtPrice = this.courtPrice120min;
+    }
+    else
+    {
+      this.courtPrice = this.courtPrice120min;
+    }
+    if (duration == null)
+    {
+      this.courtPrice = this.courtPrice30min;
+    }
+
+    subTotalPrice = this.courtPrice;
+
+    //1
+    //newSubTotalPrice = this.courtPrice;
+
+    for (let addonItem of this.bookingAddonsArray)
+    {
+      var addonItemPrice = addonItem.price * addonItem.count;
+      addonTotalPrice = addonTotalPrice + addonItemPrice;
+    }
+
+    //2
+    newAddonPrice = addonTotalPrice;
+
+    //3
+    var totalPriceWithAddon = (newSubTotalPrice + newAddonPrice);
+    vat = totalPriceWithAddon * this.taxPercentage;
+    newVATPrice = vat;
+
+    //4
+    newTotalPrice = newSubTotalPrice + newAddonPrice + vat;
+
+
+    var finalSubTotalPrice = 0.0;
+    var finalAddonPrice = 0.0;
+    var finalVATPrice = 0.0;
+    var finalTotalPrice = 0.0;
+    
+
+    if (this.isReoccur == "1")
+    {
+      //var subTotalPriceR = subTotalPrice * reoccurInstances;
+      //var vatR = vat * reoccurInstances;
+      totalReoccur = total * reoccurInstances;
+    }
+
+    console.log('duration ' + duration);
+    console.log('courtPrice ' + this.courtPrice);
+    console.log('subTotalPrice ' + newSubTotalPrice);
+    console.log('vat ' + newVATPrice);
+    console.log('addon ' + newAddonPrice);
+    console.log('total ' + newTotalPrice);
+    console.log('totalReoccur ' + totalReoccur);
+
+    //this.simpleForm.patchValue({subTotalPrice: this.roundTo(newSubTotalPrice, 3), disabled:true});
+    this.simpleForm.patchValue({bookingAddon: this.roundTo(newAddonPrice, 3)});
+    this.simpleForm.patchValue({tax: this.roundTo(newVATPrice, 3), disabled:true});
+    this.simpleForm.patchValue({totalPrice: this.roundTo(newTotalPrice, 3)});
+    this.simpleForm.patchValue({bookingTotalWithReoocur: this.roundTo(totalReoccur, 3)});
+  
+    var existingTotalPrice = parseFloat(this.simpleForm.controls['totalPrice'] ? this.f['totalPrice'].value : 0);
+    var newTotalPrice = parseFloat(this.simpleForm.controls['newBookingTotal'] ? this.f['newBookingTotal'].value : 0);
+    var diff = (newTotalPrice - existingTotalPrice);
+    this.simpleForm.patchValue({totalRemainingAmount: this.roundTo(diff, 3)});
+
+  }
+  public updatePriceForEditPrice()
+  {
+    var subTotalPrice;
+    var addon;
+    var vat;
+    var total;
+    var totalReoccur;
+    var addonTotalPrice = 0.0;
+    var startDate = new Date(this.simpleForm.controls['startTime'] ? this.f['startTime'].value : '');
+    var endDate = new Date(this.simpleForm.controls['endTime'] ? this.f['endTime'].value : '');
+    this.isReoccur = this.simpleForm.controls['isReoccur'] ? this.f['isReoccur'].value : '';
+    const duration = (endDate.getTime() - startDate.getTime())/60000;
+
+    var reoccurInstances;
+    if (this.isReoccur)
+    {
+      if (this.f['bookingReOccurInstance'].value == '' || this.f['bookingReOccurInstance'].value == null || this.f['bookingReOccurInstance'].value == '0')
+      {
+        reoccurInstances = 1;
+      }
+      else
+      {
+        reoccurInstances = parseInt(this.f['bookingReOccurInstance'].value);
+      }
+    }
+
+
+    var existingSubTotalPrice = parseFloat(this.simpleForm.controls['subTotalPrice'] ? this.f['subTotalPrice'].value : 0);
+    var existingAddonPrice = parseFloat(this.simpleForm.controls['bookingAddon'] ? this.f['bookingAddon'].value : 0);
+    var existingVATPrice = parseFloat(this.simpleForm.controls['tax'] ? this.f['tax'].value : 0);
+    var existingTotalPrice = parseFloat(this.simpleForm.controls['totalPrice'] ? this.f['totalPrice'].value : 0);
+
+    var newSubTotalPrice = parseFloat(this.simpleForm.controls['newBookingPrice'] ? this.f['newBookingPrice'].value : 0);
     var newAddonPrice = 0.0;
     var newVATPrice = 0.0;
     var newTotalPrice = 0.0;
@@ -1055,6 +1128,170 @@ export class BasicFormsComponent {
     // {
     //   addon = addonTotalPrice;
     // }
+
+    if (duration == 30)
+    {
+      this.courtPrice = this.courtPrice30min;
+    }
+    else if (duration == 60)
+    {
+      this.courtPrice = this.courtPrice60min;
+    }
+    else if (duration == 90)
+    {
+      this.courtPrice = this.courtPrice90min;
+    }
+    else if (duration == 120)
+    {
+      this.courtPrice = this.courtPrice120min;
+    }
+    else
+    {
+      this.courtPrice = this.courtPrice120min;
+    }
+
+    subTotalPrice = this.courtPrice;
+
+    //1
+    //newSubTotalPrice = this.courtPrice;
+
+    if (this.bookingAddonsArray.length > 0)
+    {
+      if (this.existingBookingAddonArray != null)
+      {
+        if (this.bookingAddonsArray.length >= this.existingBookingAddonArray.length)
+        {
+          for (let addonItem of this.bookingAddonsArray)
+          {
+            var addonItemPrice = addonItem.price * addonItem.count;
+            addonTotalPrice = addonTotalPrice + addonItemPrice;
+          }
+          newAddonPrice = addonTotalPrice;
+        }
+        else if (this.bookingAddonsArray.length < this.existingBookingAddonArray.length)
+        {
+          for (let addonItem of this.bookingAddonsArray)
+          {
+            var addonItemPrice = addonItem.price * addonItem.count;
+            addonTotalPrice = addonTotalPrice - addonItemPrice;
+          }
+          newAddonPrice = addonTotalPrice * -1;
+        }
+        else
+        {
+          newAddonPrice = existingAddonPrice;
+        }
+      }
+      else
+      {
+        newAddonPrice = existingAddonPrice;
+      }
+    }
+    else if (this.bookingAddonsArray.length == 0)
+    {
+      newAddonPrice = 0;
+    }
+    else
+    {
+      newAddonPrice = existingAddonPrice;
+    }
+
+
+    console.log('addonTotalPrice ' + addonTotalPrice);
+    console.log('existingAddonPrice ' + existingAddonPrice);
+
+    //2
+
+    //3
+    var totalPriceWithAddon = (newSubTotalPrice + newAddonPrice);
+    vat = totalPriceWithAddon * this.taxPercentage;
+    newVATPrice = vat;
+
+    //4
+    newTotalPrice = newSubTotalPrice + newAddonPrice + newVATPrice;
+
+
+    var finalSubTotalPrice = 0.0;
+    var finalAddonPrice = 0.0;
+    var finalVATPrice = 0.0;
+    var finalTotalPrice = 0.0;
+    
+
+  
+    if (this.isReoccur)
+    {
+      //var subTotalPriceR = subTotalPrice * reoccurInstances;
+      //var vatR = vat * reoccurInstances;
+      totalReoccur = total * reoccurInstances;
+    }
+
+    console.log('duration ' + duration);
+    console.log('courtPrice ' + this.courtPrice);
+    console.log('this.taxPercentage ' + this.taxPercentage);
+    console.log('newSubTotalPrice ' + newSubTotalPrice);
+    console.log('newVATPrice ' + newVATPrice);
+    console.log('newAddonPrice ' + newAddonPrice);
+    console.log('newTotalPrice ' + newTotalPrice);
+    console.log('totalReoccur ' + totalReoccur);
+
+    //this.simpleForm.patchValue({newBookingPrice: this.roundTo(newSubTotalPrice, 3), disabled:true});
+    this.simpleForm.patchValue({newBookingAddon: this.roundTo(newAddonPrice, 3)});
+    this.simpleForm.patchValue({newBookingVAT: this.roundTo(newVATPrice, 3), disabled:true});
+    this.simpleForm.patchValue({newBookingTotal: this.roundTo(newTotalPrice, 3)});
+    this.simpleForm.patchValue({bookingTotalWithReoocur: this.roundTo(totalReoccur, 3)});
+
+    var existingTotalPrice = parseFloat(this.simpleForm.controls['totalPrice'] ? this.f['totalPrice'].value : 0);
+    var newTotalPrice = parseFloat(this.simpleForm.controls['totalPrice'] ? this.f['newBookingTotal'].value: 0);
+    var diff = (newTotalPrice - existingTotalPrice);
+    this.simpleForm.patchValue({totalRemainingAmount: this.roundTo(diff, 3)});
+  }
+  public updatePriceForPrice()
+  {
+    if (this.isUpdate)
+    {
+      this.updatePriceForEditPrice();
+    }
+    else
+    {
+      this.updatePriceForAddPrice();
+    }
+    this.simpleForm.markAsDirty();
+  }
+  public updatePriceForAdd()
+  {
+    var subTotalPrice;
+    var addon;
+    var vat;
+    var total;
+    var totalReoccur;
+    var addonTotalPrice = 0.0;
+    var startDate = new Date(this.simpleForm.controls['startTime'] ? this.f['startTime'].value : '');
+    var endDate = new Date(this.simpleForm.controls['endTime'] ? this.f['endTime'].value : '');
+    this.isReoccur = this.simpleForm.controls['isReoccur'] ? this.f['isReoccur'].value : '';
+    const duration = this.roundTo(((endDate.getTime() - startDate.getTime())/60000),0);
+
+    var reoccurInstances;
+    if (this.isReoccur == "1")
+    {
+      if (this.f['bookingReOccurInstance'].value == '' || this.f['bookingReOccurInstance'].value == null || this.f['bookingReOccurInstance'].value == '0')
+      {
+        reoccurInstances = 1;
+      }
+      else
+      {
+        reoccurInstances = parseInt(this.f['bookingReOccurInstance'].value);
+      }
+    }
+
+    var existingSubTotalPrice = parseFloat(this.simpleForm.controls['subTotalPrice'] ? this.f['subTotalPrice'].value : 0);
+    var existingAddonPrice = parseFloat(this.simpleForm.controls['bookingAddon'] ? this.f['bookingAddon'].value : 0);
+    var existingVATPrice = parseFloat(this.simpleForm.controls['tax'] ? this.f['tax'].value : 0);
+    var existingTotalPrice = parseFloat(this.simpleForm.controls['totalPrice'] ? this.f['totalPrice'].value : 0);
+
+    var newSubTotalPrice = 0.0;
+    var newAddonPrice = 0.0;
+    var newVATPrice = 0.0;
+    var newTotalPrice = 0.0;
 
     if (duration == 30)
     {
@@ -1110,27 +1347,6 @@ export class BasicFormsComponent {
     var finalTotalPrice = 0.0;
     
 
-    // if (this.f['bookingVAT'].value == '')
-    // {
-    //   vat = 0.0;
-    // }
-    // else if (parseFloat(this.f['bookingVAT'].value) > 0)
-    // {
-    //   vat = parseFloat(this.f['bookingVAT'].value);
-    // }
-    // else
-    // {
-    //   addon = addonTotalPrice;
-    // }
-
-    //var totalPriceWithAddon = (subTotalPrice + addonTotalPrice);
-    //vat = totalPriceWithAddon * this.taxPercentage;
-    //var totalPriceWithVAT = totalPriceWithAddon + vat;
-    //total = totalPriceWithVAT;
-
-    //vat = (subTotalPrice + addon) * 0.05;
-    //total = subTotalPrice + addon + vat;
-
     if (this.isReoccur == "1")
     {
       //var subTotalPriceR = subTotalPrice * reoccurInstances;
@@ -1152,8 +1368,8 @@ export class BasicFormsComponent {
     this.simpleForm.patchValue({totalPrice: this.roundTo(newTotalPrice, 3)});
     this.simpleForm.patchValue({bookingTotalWithReoocur: this.roundTo(totalReoccur, 3)});
   
-    var existingTotalPrice = parseFloat(this.f['totalPrice'].value);
-    var newTotalPrice = parseFloat(this.f['newBookingTotal'].value);
+    var existingTotalPrice = parseFloat(this.simpleForm.controls['totalPrice'] ? this.f['totalPrice'].value : 0);
+    var newTotalPrice = parseFloat(this.simpleForm.controls['newBookingTotal'] ? this.f['newBookingTotal'].value : 0);
     var diff = (newTotalPrice - existingTotalPrice);
     this.simpleForm.patchValue({totalRemainingAmount: this.roundTo(diff, 3)});
 
@@ -1166,20 +1382,10 @@ export class BasicFormsComponent {
     var total;
     var totalReoccur;
     var addonTotalPrice = 0.0;
-    var startDate = new Date(this.f['startTime'].value);
-    var endDate = new Date(this.f['endTime'].value);
-    this.isReoccur = this.f['isReoccur'].value;
+    var startDate = new Date(this.simpleForm.controls['startTime'] ? this.f['startTime'].value : '');
+    var endDate = new Date(this.simpleForm.controls['endTime'] ? this.f['endTime'].value : '');
+    this.isReoccur = this.simpleForm.controls['isReoccur'] ? this.f['isReoccur'].value : '';
     const duration = (endDate.getTime() - startDate.getTime())/60000;
-
-    // if (duration > 120)
-    // {
-    //   var minutesToAdd=30;
-    //   var futureDate = new Date(startDate.getTime() + minutesToAdd*60000);
-    //   this.simpleForm.patchValue({bookingStartTime: futureDate});
-    // }
-
-    //FOR TESTING TO BE REMOVED
-    //this.isReoccur = false;
 
     var reoccurInstances;
     if (this.isReoccur)
@@ -1195,10 +1401,10 @@ export class BasicFormsComponent {
     }
 
 
-    var existingSubTotalPrice = parseFloat(this.f['subTotalPrice'].value);
-    var existingAddonPrice = parseFloat(this.f['bookingAddon'].value);
-    var existingVATPrice = parseFloat(this.f['tax'].value);
-    var existingTotalPrice = parseFloat(this.f['totalPrice'].value);
+    var existingSubTotalPrice = parseFloat(this.simpleForm.controls['subTotalPrice'] ? this.f['subTotalPrice'].value : 0);
+    var existingAddonPrice = parseFloat(this.simpleForm.controls['bookingAddon'] ? this.f['bookingAddon'].value : 0);
+    var existingVATPrice = parseFloat(this.simpleForm.controls['tax'] ? this.f['tax'].value : 0);
+    var existingTotalPrice = parseFloat(this.simpleForm.controls['totalPrice'] ? this.f['totalPrice'].value : 0);
 
     var newSubTotalPrice = 0.0;
     var newAddonPrice = 0.0;
@@ -1306,27 +1512,7 @@ export class BasicFormsComponent {
     var finalTotalPrice = 0.0;
     
 
-    // if (this.f['bookingVAT'].value == '')
-    // {
-    //   vat = 0.0;
-    // }
-    // else if (parseFloat(this.f['bookingVAT'].value) > 0)
-    // {
-    //   vat = parseFloat(this.f['bookingVAT'].value);
-    // }
-    // else
-    // {
-    //   addon = addonTotalPrice;
-    // }
-
-    //var totalPriceWithAddon = (subTotalPrice + addonTotalPrice);
-    //vat = totalPriceWithAddon * this.taxPercentage;
-    //var totalPriceWithVAT = totalPriceWithAddon + vat;
-    //total = totalPriceWithVAT;
-
-    //vat = (subTotalPrice + addon) * 0.05;
-    //total = subTotalPrice + addon + vat;
-
+  
     if (this.isReoccur)
     {
       //var subTotalPriceR = subTotalPrice * reoccurInstances;
@@ -1349,8 +1535,8 @@ export class BasicFormsComponent {
     this.simpleForm.patchValue({newBookingTotal: this.roundTo(newTotalPrice, 3)});
     this.simpleForm.patchValue({bookingTotalWithReoocur: this.roundTo(totalReoccur, 3)});
 
-    var existingTotalPrice = parseFloat(this.f['totalPrice'].value);
-    var newTotalPrice = parseFloat(this.f['newBookingTotal'].value);
+    var existingTotalPrice = parseFloat(this.simpleForm.controls['totalPrice'] ? this.f['totalPrice'].value : 0);
+    var newTotalPrice = parseFloat(this.simpleForm.controls['totalPrice'] ? this.f['newBookingTotal'].value: 0);
     var diff = (newTotalPrice - existingTotalPrice);
     this.simpleForm.patchValue({totalRemainingAmount: this.roundTo(diff, 3)});
   }
@@ -1441,6 +1627,7 @@ export class BasicFormsComponent {
         }
       }
     }
+    this.updatePrice();
   }
   public updateCancelled()
   {
@@ -1467,7 +1654,7 @@ export class BasicFormsComponent {
       this.localInterfaceSrv.deleteTransaction(paymentId, this.bookingId)
       .then(async res => {
         resolve(res);
-        this.toastr.success("Transaction Removed", "Success");
+        this.toastr.success("Payment Removed", "Success");
         this.dangerModal.hide();
         this.route.queryParams.subscribe(async params => {
           await this.loadBookingsById(this.bookingId);
@@ -1517,7 +1704,7 @@ export class BasicFormsComponent {
       this.localInterfaceSrv.addNewPayment(facilityId, courtId, bookingId, ccy, paidAmount, paymentCode)
       .then(async res => {
         resolve(res);
-        this.toastr.success("Transaction Added", "Success");
+        this.toastr.success("Payment Added", "Success");
         this.addNewPaymentModal.hide();
         this.route.queryParams.subscribe(async params => {
           await this.loadBookingsById(this.bookingId);

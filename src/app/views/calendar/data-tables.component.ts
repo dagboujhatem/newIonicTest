@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { CalendarOptions, FullCalendarComponent } from '@fullcalendar/angular'; // useful for typechecking
+import { CalendarContent, CalendarOptions, FullCalendarComponent } from '@fullcalendar/angular'; // useful for typechecking
 import { HttpService } from '../../services/http-service/http.service'
 import { ModalDirective, ModalOptions } from 'ngx-bootstrap/modal';
 import { FormGroup, FormBuilder, Validators, FormControl, AbstractControl, FormGroupName} from '@angular/forms';
@@ -70,6 +70,7 @@ export class FullCalendarNgComponent implements OnInit, AfterViewInit {
   //public bookingAddonsObject :object = [];
   public existingBookingAddonArray;
   totalRemainingAmount = 0.0
+  public calendarCurrentDate = new Date();
 
   simpleForm: FormGroup;
   isUpdate: boolean = false;
@@ -96,7 +97,7 @@ export class FullCalendarNgComponent implements OnInit, AfterViewInit {
   @ViewChild(ToastComp) toastComp: ToastComp;
   
   calendarOptions: CalendarOptions = {
-    initialDate: this.todayStr,
+    initialDate: this.calendarCurrentDate,
     weekNumberCalculation: 'ISO',
     height: 'auto',
     contentHeight: 'auto',
@@ -156,12 +157,12 @@ export class FullCalendarNgComponent implements OnInit, AfterViewInit {
       bookingDate: [this.bookingDate, [Validators.required]],
       bookingStartTime: [this.bookingStartTime, [Validators.required]],
       bookingEndTime: [this.bookingEndTime, [Validators.required]],
-      bookingPrice: {value: this.bookingPrice, disabled:true},
+      bookingPrice: {value: this.bookingPrice},
       bookingAddon: {value: this.bookingAddon, disabled:true},
       bookingVAT: {value: this.bookingVAT, disabled:true},
       bookingTotal: {value: this.bookingTotal, disabled:true},
       totalRemainingAmount: {value: this.totalRemainingAmount, disabled:true},
-      newBookingPrice: {value: this.bookingPrice, disabled:true},
+      newBookingPrice: [this.bookingPrice],
       newBookingAddon: {value: this.bookingAddon, disabled:true},
       newBookingVAT: {value: this.bookingVAT, disabled:true},
       newBookingTotal: {value: this.bookingTotal, disabled:true},
@@ -180,6 +181,7 @@ export class FullCalendarNgComponent implements OnInit, AfterViewInit {
     this.validationSrv.validateAcess()
     .then(async () => {
       this.route.queryParams.subscribe(async params => {
+        
         this.facilityId = this.storageSrv.getFacilityId();
         this.ownerId = this.storageSrv.getUser();
 
@@ -193,27 +195,23 @@ export class FullCalendarNgComponent implements OnInit, AfterViewInit {
         await this.ngAfterViewInit();
         console.log("ADDON: " + this.bookingAddon);
         this.isLoading = false;
+        this.calendarOptions.initialDate = this.calendarCurrentDate;
     });
     });
-
-    // this.getCourts();
-    // this.getAddons();
-    // this.getBookings();
-    // this.createForm();
-
-
-    // this.getCourts();
-    // this.getBookings();
-    // this.getBookingsCourt();
-    // this.getDisabled();
-    //this.calendarOptions.loading(true);
   }
 
-
+  checkViewDate() {
+    let calendarApi = this.calendarComponent?.getApi();
+    this.calendarCurrentDate = calendarApi?.getDate();
+    console.log(this.calendarOptions.initialDate);
+    //calendarApi?.gotoDate(this.calendarCurrentDate);
+  }
 
   ngAfterViewInit() {
     const calendarApi = this.calendarComponent?.getApi();
+    //console.log(calendarApi.getCurrentData());
     //this.calendarOptions.events = this.dbData;
+    //this.calendarOptions.initialDate = ''
     setTimeout(() => {
       calendarApi?.updateSize();
     }, 1000);
@@ -326,6 +324,7 @@ export class FullCalendarNgComponent implements OnInit, AfterViewInit {
 
   public addBooking(selectedBooking)
   {
+    this.checkViewDate();
     this.isUpdate = false;
     this.bookingReOccur = false;
     this.bookingReOccurInstance = 1;
@@ -416,6 +415,7 @@ export class FullCalendarNgComponent implements OnInit, AfterViewInit {
   }
   public manageBooking(info)
   {
+    this.checkViewDate();
     this.isUpdate = true;
     
     var resources = info.event.getResources();
@@ -506,7 +506,7 @@ export class FullCalendarNgComponent implements OnInit, AfterViewInit {
     this.simpleForm.get('paymentMethod').clearValidators();
     this.simpleForm.get('paymentMethod').updateValueAndValidity();
     this.bookingId = info.event.id;
-    
+
     // var options: ModalOptions = {      
     //   backdrop : 'static',
     //   keyboard : false,
@@ -552,9 +552,16 @@ export class FullCalendarNgComponent implements OnInit, AfterViewInit {
       {
         msg = 'An error has occured, please check missing fields and try again';
       }
-      this.toastr.error(msg, "Error");
-      this.toastr.error("Check Invalid Fields: " + this.findInvalidControls(), "Error");
+      this.toastr.warning(msg, "Error");
+      this.toastr.warning("Check Invalid Fields: " + this.findInvalidControls(), "Error");
       //this.showError("Check Invalid Fields: " + this.findInvalidControls());
+      return;
+    }
+    console.log("this.f['court'].value" + this.f['court'].value);
+    if (this.f['court'].value == 'null' || this.f['court'].value == 0 || this.f['court'].value == null)
+    {
+      msg = "Please select a court";
+      this.toastr.warning(msg, "Error");
       return;
     }
 
@@ -823,8 +830,13 @@ export class FullCalendarNgComponent implements OnInit, AfterViewInit {
   async showSuccess(msg) {
 
     await this.toastr.success(msg, 'Success');
-    this.delay(2000).then(any=>{
-      window.location.reload();
+    this.delay(1000).then(any=>{
+      this.addBookingModal.hide();
+      this.openEventModal.hide();
+      this.simpleForm.patchValue({bookingName: ''});
+      this.closeModal();
+      this.ngOnInit();
+      //window.location.reload();
     });  
   }
   //Function 4
@@ -1082,14 +1094,6 @@ export class FullCalendarNgComponent implements OnInit, AfterViewInit {
     const duration = (endTimeDT.getTime() - startTimeDT.getTime())/60000;
     console.log("duration__" + duration)
 
-    //const duration = (endDate.getTime() - startDate.getTime())/60000;
-
-    // if (duration > 120)
-    // {
-    //   var minutesToAdd=30;
-    //   var futureDate = new Date(startDate.getTime() + minutesToAdd*60000);
-    //   this.simpleForm.patchValue({bookingStartTime: futureDate});
-    // }
 
     var reoccurInstances;
     if (this.isReoccur)
@@ -1176,6 +1180,313 @@ export class FullCalendarNgComponent implements OnInit, AfterViewInit {
     var finalAddonPrice = 0.0;
     var finalVATPrice = 0.0;
     var finalTotalPrice = 0.0;
+
+
+    if (this.isReoccur)
+    {
+      //var subTotalPriceR = subTotalPrice * reoccurInstances;
+      //var vatR = vat * reoccurInstances;
+      totalReoccur = total * reoccurInstances;
+    }
+
+    console.log('duration ' + duration);
+    console.log('courtPrice ' + this.courtPrice);
+    console.log('subTotalPrice ' + newSubTotalPrice);
+    console.log('vat ' + newVATPrice);
+    console.log('addon ' + newAddonPrice);
+    console.log('total ' + newTotalPrice);
+    console.log('totalReoccur ' + totalReoccur);
+
+    this.simpleForm.patchValue({bookingPrice: this.roundTo(newSubTotalPrice, 3), disabled:true});
+    this.simpleForm.patchValue({bookingAddon: this.roundTo(newAddonPrice, 3)});
+    this.simpleForm.patchValue({bookingVAT: this.roundTo(newVATPrice, 3), disabled:true});
+    this.simpleForm.patchValue({bookingTotal: this.roundTo(newTotalPrice, 3)});
+    this.simpleForm.patchValue({bookingTotalWithReoocur: this.roundTo(totalReoccur, 3)});
+
+    var existingTotalPrice = parseFloat(this.f['bookingTotal'].value);
+    var newTotalPrice = parseFloat(this.f['newBookingTotal'].value);
+    var diff = (newTotalPrice - existingTotalPrice);
+    this.simpleForm.patchValue({totalRemainingAmount: this.roundTo(diff, 3)});
+  }
+  public updatePriceForAddPrice()
+  {
+    var subTotalPrice;
+    var addon;
+    var vat;
+    var total;
+    var totalReoccur;
+    var addonTotalPrice = 0.0;
+    var startDate = new Date(this.f['bookingStartTime'].value);
+    var endDate = new Date(this.f['bookingEndTime'].value);
+    this.isReoccur = this.f['bookingReOccur'].value;
+
+    let startTimeDT = new Date(this.f['bookingStartTime'].value);
+    let endTimeDT = new Date(this.f['bookingEndTime'].value)
+
+    if (endTimeDT < startTimeDT) {
+      endTimeDT.setDate(endTimeDT.getDate() + 1);
+      }  
+
+    const duration = (endTimeDT.getTime() - startTimeDT.getTime())/60000;
+    console.log("duration__" + duration)
+
+
+    var reoccurInstances;
+    if (this.isReoccur)
+    {
+      if (this.f['bookingReOccurInstance'].value == '' || this.f['bookingReOccurInstance'].value == null || this.f['bookingReOccurInstance'].value == '0')
+      {
+        reoccurInstances = 1;
+      }
+      else
+      {
+        reoccurInstances = parseInt(this.f['bookingReOccurInstance'].value);
+      }
+    }
+
+
+    var existingSubTotalPrice = parseFloat(this.f['bookingPrice'].value);
+    var existingAddonPrice = parseFloat(this.f['bookingAddon'].value);
+    var existingVATPrice = parseFloat(this.f['bookingVAT'].value);
+    var existingTotalPrice = parseFloat(this.f['bookingTotal'].value);
+
+    var newSubTotalPrice = parseFloat(this.f['bookingPrice'].value);
+    var newAddonPrice = 0.0;
+    var newVATPrice = 0.0;
+    var newTotalPrice = 0.0;
+
+    // if (this.f['bookingAddon'].value == '')
+    // {
+    //   addon = 0.0;
+    // }
+    // else if (parseFloat(this.f['bookingAddon'].value) > 0)
+    // {
+    //   addon = parseFloat(this.f['bookingAddon'].value);
+    // }
+    // else
+    // {
+    //   addon = addonTotalPrice;
+    // }
+
+    if (duration == 30)
+    {
+      this.courtPrice = this.courtPrice30min;
+    }
+    else if (duration == 60)
+    {
+      this.courtPrice = this.courtPrice60min;
+    }
+    else if (duration == 90)
+    {
+      this.courtPrice = this.courtPrice90min;
+    }
+    else if (duration == 120)
+    {
+      this.courtPrice = this.courtPrice120min;
+    }
+    else
+    {
+      this.courtPrice = this.courtPrice120min;
+    }
+
+    //subTotalPrice = this.courtPrice;
+
+    //1
+    //newSubTotalPrice = this.courtPrice;
+
+    for (let addonItem of this.bookingAddonsArray)
+    {
+      var addonItemPrice = addonItem.price * addonItem.count;
+      addonTotalPrice = addonTotalPrice + addonItemPrice;
+    }
+
+    //2
+    newAddonPrice = addonTotalPrice;
+
+    //3
+    var totalPriceWithAddon = (newSubTotalPrice + newAddonPrice);
+    vat = totalPriceWithAddon * this.taxPercentage;
+    newVATPrice = vat;
+
+    //4
+    newTotalPrice = newSubTotalPrice + newAddonPrice + vat;
+
+
+    var finalSubTotalPrice = 0.0;
+    var finalAddonPrice = 0.0;
+    var finalVATPrice = 0.0;
+    var finalTotalPrice = 0.0;
+
+
+    if (this.isReoccur)
+    {
+      //var subTotalPriceR = subTotalPrice * reoccurInstances;
+      //var vatR = vat * reoccurInstances;
+      totalReoccur = total * reoccurInstances;
+    }
+
+    console.log('duration ' + duration);
+    console.log('courtPrice ' + this.courtPrice);
+    console.log('subTotalPrice ' + newSubTotalPrice);
+    console.log('vat ' + newVATPrice);
+    console.log('addon ' + newAddonPrice);
+    console.log('total ' + newTotalPrice);
+    console.log('totalReoccur ' + totalReoccur);
+
+    //this.simpleForm.patchValue({bookingPrice: this.roundTo(newSubTotalPrice, 3), disabled:true});
+    this.simpleForm.patchValue({bookingAddon: this.roundTo(newAddonPrice, 3)});
+    this.simpleForm.patchValue({bookingVAT: this.roundTo(newVATPrice, 3), disabled:true});
+    this.simpleForm.patchValue({bookingTotal: this.roundTo(newTotalPrice, 3)});
+    this.simpleForm.patchValue({bookingTotalWithReoocur: this.roundTo(totalReoccur, 3)});
+
+    var existingTotalPrice = parseFloat(this.f['bookingTotal'].value);
+    var newTotalPrice = parseFloat(this.f['newBookingTotal'].value);
+    var diff = (newTotalPrice - existingTotalPrice);
+    this.simpleForm.patchValue({totalRemainingAmount: this.roundTo(diff, 3)});
+  }
+  public updatePriceForEditPrice()
+  {
+    var subTotalPrice;
+    var addon;
+    var vat;
+    var total;
+    var totalReoccur;
+    var addonTotalPrice = 0.0;
+    var startDate = new Date(this.f['bookingStartTime'].value);
+    var endDate = new Date(this.f['bookingEndTime'].value);
+    this.isReoccur = this.f['bookingReOccur'].value;
+
+    
+    let startTimeDT = new Date(this.f['bookingStartTime'].value);
+    let endTimeDT = new Date(this.f['bookingEndTime'].value)
+
+    if (endTimeDT < startTimeDT) {
+      endTimeDT.setDate(endTimeDT.getDate() + 1);
+      }  
+
+    const duration = (endTimeDT.getTime() - startTimeDT.getTime())/60000;
+    console.log("duration__" + duration)
+
+    // if (duration > 120)
+    // {
+    //   var minutesToAdd=30;
+    //   var futureDate = new Date(startDate.getTime() + minutesToAdd*60000);
+    //   this.simpleForm.patchValue({bookingStartTime: futureDate});
+    // }
+
+    //FOR TESTING TO BE REMOVED
+    //this.isReoccur = false;
+
+    var reoccurInstances;
+    if (this.isReoccur)
+    {
+      if (this.f['bookingReOccurInstance'].value == '' || this.f['bookingReOccurInstance'].value == null || this.f['bookingReOccurInstance'].value == '0')
+      {
+        reoccurInstances = 1;
+      }
+      else
+      {
+        reoccurInstances = parseInt(this.f['bookingReOccurInstance'].value);
+      }
+    }
+
+
+    var existingSubTotalPrice = parseFloat(this.f['bookingPrice'].value);
+    var existingAddonPrice = parseFloat(this.f['bookingAddon'].value);
+    var existingVATPrice = parseFloat(this.f['bookingVAT'].value);
+    var existingTotalPrice = parseFloat(this.f['bookingTotal'].value);
+
+    var newSubTotalPrice = parseFloat(this.f['newBookingPrice'].value);
+    var newAddonPrice = 0.0;
+    var newVATPrice = 0.0;
+    var newTotalPrice = 0.0;
+
+    if (duration == 30)
+    {
+      this.courtPrice = this.courtPrice30min;
+    }
+    else if (duration == 60)
+    {
+      this.courtPrice = this.courtPrice60min;
+    }
+    else if (duration == 90)
+    {
+      this.courtPrice = this.courtPrice90min;
+    }
+    else if (duration == 120)
+    {
+      this.courtPrice = this.courtPrice120min;
+    }
+    else
+    {
+      this.courtPrice = this.courtPrice120min;
+    }
+
+    subTotalPrice = this.courtPrice;
+
+    //1
+    //newSubTotalPrice = this.courtPrice;
+
+    if (this.bookingAddonsArray.length > 0)
+    {
+      if (this.existingBookingAddonArray != null)
+      {
+        if (this.bookingAddonsArray.length >= this.existingBookingAddonArray.length)
+        {
+          for (let addonItem of this.bookingAddonsArray)
+          {
+            var addonItemPrice = addonItem.price * addonItem.count;
+            addonTotalPrice = addonTotalPrice + addonItemPrice;
+          }
+          newAddonPrice = addonTotalPrice;
+        }
+        else if (this.bookingAddonsArray.length < this.existingBookingAddonArray.length)
+        {
+          for (let addonItem of this.bookingAddonsArray)
+          {
+            var addonItemPrice = addonItem.price * addonItem.count;
+            addonTotalPrice = addonTotalPrice - addonItemPrice;
+          }
+          newAddonPrice = addonTotalPrice * -1;
+        }
+        else
+        {
+          newAddonPrice = existingAddonPrice;
+        }
+      }
+      else
+      {
+        newAddonPrice = existingAddonPrice;
+      }
+    }
+    else if (this.bookingAddonsArray.length == 0)
+    {
+      newAddonPrice = 0;
+    }
+    else
+    {
+      newAddonPrice = existingAddonPrice;
+    }
+
+
+    console.log('addonTotalPrice ' + addonTotalPrice);
+    console.log('existingAddonPrice ' + existingAddonPrice);
+
+    //2
+
+    //3
+    var totalPriceWithAddon = (newSubTotalPrice + newAddonPrice);
+    vat = totalPriceWithAddon * this.taxPercentage;
+    newVATPrice = vat;
+
+    //4
+    newTotalPrice = newSubTotalPrice + newAddonPrice + newVATPrice;
+
+
+    var finalSubTotalPrice = 0.0;
+    var finalAddonPrice = 0.0;
+    var finalVATPrice = 0.0;
+    var finalTotalPrice = 0.0;
     
 
     // if (this.f['bookingVAT'].value == '')
@@ -1208,16 +1519,17 @@ export class FullCalendarNgComponent implements OnInit, AfterViewInit {
 
     console.log('duration ' + duration);
     console.log('courtPrice ' + this.courtPrice);
-    console.log('subTotalPrice ' + newSubTotalPrice);
-    console.log('vat ' + newVATPrice);
-    console.log('addon ' + newAddonPrice);
-    console.log('total ' + newTotalPrice);
+    console.log('this.taxPercentage ' + this.taxPercentage);
+    console.log('newSubTotalPrice ' + newSubTotalPrice);
+    console.log('newVATPrice ' + newVATPrice);
+    console.log('newAddonPrice ' + newAddonPrice);
+    console.log('newTotalPrice ' + newTotalPrice);
     console.log('totalReoccur ' + totalReoccur);
 
-    this.simpleForm.patchValue({bookingPrice: this.roundTo(newSubTotalPrice, 3), disabled:true});
-    this.simpleForm.patchValue({bookingAddon: this.roundTo(newAddonPrice, 3)});
-    this.simpleForm.patchValue({bookingVAT: this.roundTo(newVATPrice, 3), disabled:true});
-    this.simpleForm.patchValue({bookingTotal: this.roundTo(newTotalPrice, 3)});
+    //this.simpleForm.patchValue({newBookingPrice: this.roundTo(newSubTotalPrice, 3), disabled:true});
+    this.simpleForm.patchValue({newBookingAddon: this.roundTo(newAddonPrice, 3)});
+    this.simpleForm.patchValue({newBookingVAT: this.roundTo(newVATPrice, 3), disabled:true});
+    this.simpleForm.patchValue({newBookingTotal: this.roundTo(newTotalPrice, 3)});
     this.simpleForm.patchValue({bookingTotalWithReoocur: this.roundTo(totalReoccur, 3)});
 
     var existingTotalPrice = parseFloat(this.f['bookingTotal'].value);
@@ -1281,19 +1593,6 @@ export class FullCalendarNgComponent implements OnInit, AfterViewInit {
     var newAddonPrice = 0.0;
     var newVATPrice = 0.0;
     var newTotalPrice = 0.0;
-
-    // if (this.f['bookingAddon'].value == '')
-    // {
-    //   addon = 0.0;
-    // }
-    // else if (parseFloat(this.f['bookingAddon'].value) > 0)
-    // {
-    //   addon = parseFloat(this.f['bookingAddon'].value);
-    // }
-    // else
-    // {
-    //   addon = addonTotalPrice;
-    // }
 
     if (duration == 30)
     {

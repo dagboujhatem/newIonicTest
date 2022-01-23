@@ -28,7 +28,7 @@
     </ng-template>
     <ng-template #modalBody>
       <label for="court" class="col-form-label">Court</label>
-      <select class="form-control" id="court" name="court" formControlName="court" required
+      <select class="form-control" id="court" name="court" (change)="this.updatePriceForEdit()" formControlName="court" required
       [ngClass]="{ 'is-invalid': submitted && f.court.errors, 'is-valid': f.court.touched && !f.court.errors }">
       <option style="color: grey;" [value]="null" [selected]="true">--Select Court--</option>
       <option class="form-control" [selected]="crt.id==court ? true : null" *ngFor="let crt of courts.content" [value]="crt.id">{{ crt.nameEn }}</option>
@@ -157,7 +157,7 @@
       <div class="form-group row">
         <div class="col-md-3">
           <label for="newBookingPrice" class="col-form-label">New Price</label>
-          <input type="text" name="newBookingPrice" class="form-control" formControlName="newBookingPrice" id="newBookingPrice">
+          <input type="text" name="newBookingPrice" (change)="updatePriceForEditPrice()" class="form-control" formControlName="newBookingPrice" id="newBookingPrice">
         </div>
         <div class="col-md-3">
           <label for="newBookingAddon" class="col-form-label">New Addon</label>
@@ -214,7 +214,7 @@
       <!--Left hand side Column-->
       <div class="col">
         <label for="court" class="col-form-label">Court</label>
-        <select class="form-control" id="court" name="court" formControlName="court" required
+        <select class="form-control" id="court" name="court" (change)="this.updatePriceForAdd()" formControlName="court" required
         [ngClass]="{ 'is-invalid': submitted && f.court.errors, 'is-valid': f.court.touched && !f.court.errors }">
         <option style="color: grey;" [value]="null" [selected]="true">--Select Court--</option>
         <option class="form-control" [selected]="crt.id==court ? true : null" *ngFor="let crt of courts.content" [value]="crt.id">{{ crt.nameEn }}</option>
@@ -352,7 +352,7 @@
           <div class="form-group row price-container">
               <div class="col-md-3">
                 <label for="bookingPrice" class="col-form-label">Price</label>
-                <input type="text" name="bookingPrice" class="form-control" formControlName="bookingPrice" id="bookingPrice">
+                <input type="text" name="bookingPrice" (change)="updatePriceForAddPrice()" class="form-control" formControlName="bookingPrice" id="bookingPrice">
               </div>
               <div class="col-md-3">
                 <label for="bookingAddon" class="col-form-label">Addon</label>

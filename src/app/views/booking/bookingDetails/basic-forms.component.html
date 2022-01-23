@@ -8,7 +8,7 @@
           <strong class="{{'Booking.DetailsPage.TextAlign' | translate}}"> {{'Booking.DetailsPage.Title' | translate}}</strong>
           <div class="{{'Booking.DetailsPage.BtnAlign' | translate}}" >
           <!--  <button (click)="showPref()" class="btn btn-primary btn-xs"><i class="fa fa-sliders"></i> {{'Booking.DetailsPage.PrefBtn' | translate}}</button>
-            <button (click)="showSchdule()" class="btn btn-primary btn-xs"><i class="fa fa-calendar"></i> {{'Booking.DetailsPage.SchBtn' | translate}}</button> -->
+            <button (click)="showSchdule()" class="btn btn-primary btn-xs"><i class="fa fa-calendar"></i> {{'Booking.DetailsPage.SchBtn' | translate}}</button> (change)="updateCourtId(court.value)"  -->
           </div>
         </div>
         <div class="card-body">
@@ -380,7 +380,7 @@
           <div class="form-group row">
             <label class="col-md-4 col-form-label" for="text-input">{{'Booking.DetailsPage.subTotalPrice' | translate}}</label>
             <div class="col-md-5">
-              <input type="text" id="subTotalPrice" name="subTotalPrice" class="form-control" formControlName="subTotalPrice" required placeholder="0"
+              <input type="text" id="subTotalPrice" name="subTotalPrice" (change)="updatePriceForPrice()" class="form-control" formControlName="subTotalPrice" required placeholder="0"
               [ngClass]="{ 'is-invalid': submitted && f.subTotalPrice.errors, 'is-valid': f.subTotalPrice.touched && !f.subTotalPrice.errors }">
               <div *ngIf="submitted && f['subTotalPrice'].errors" class="invalid-feedback">
                 <div *ngIf="f['subTotalPrice'].errors.required">SubTotalPrice is required</div>
@@ -421,7 +421,7 @@
           <div class="form-group row">
             <label class="col-md-4 col-form-label" for="text-input">New {{'Booking.DetailsPage.subTotalPrice' | translate}}</label>
             <div class="col-md-5">
-              <input type="text" id="newBookingPrice" name="newBookingPrice" class="form-control" formControlName="newBookingPrice" required placeholder="0"
+              <input type="text" id="newBookingPrice" name="newBookingPrice" (change)="updatePriceForPrice()" class="form-control" formControlName="newBookingPrice" required placeholder="0"
               [ngClass]="{ 'is-invalid': submitted && f.newBookingPrice.errors, 'is-valid': f.newBookingPrice.touched && !f.newBookingPrice.errors }">
               <div *ngIf="submitted && f['newBookingPrice'].errors" class="invalid-feedback">
                 <div *ngIf="f['newBookingPrice'].errors.required">newBookingPrice is required</div>
