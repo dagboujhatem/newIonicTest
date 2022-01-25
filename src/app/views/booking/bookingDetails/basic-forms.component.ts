@@ -106,7 +106,7 @@ export class BasicFormsComponent {
   isError: boolean = false;
   formChanged: boolean = false;
   public selectedId?;
-  totalRemainingAmount = 0.0
+  totalRemainingAmount = 0.0;
 
   simpleForm: FormGroup;
   submitted = false;
@@ -117,6 +117,7 @@ export class BasicFormsComponent {
   
   @ViewChild(ToastComp) toastComp: ToastComp;
   @ViewChild('dangerModal', {static: false}) public dangerModal: ModalDirective;
+  @ViewChild('cancelBookingModal', {static: false}) public cancelBookingModal: ModalDirective;
   @ViewChild('addNewPaymentModal', {static: false}) public addNewPaymentModal: ModalDirective;
 
   public paddingStyle: Object = { 'padding-right': '20px'};
@@ -176,8 +177,8 @@ export class BasicFormsComponent {
       this.subTotalPrice = this.mfData['subTotalPrice'];
       this.bookingAddon = this.mfData['addOn'] == null ? '0' : this.mfData['addOn'];
       this.tax = this.mfData['taxPrice'];
-      this.totalPrice = this.mfData['totalPrice'];
-      this.paidAmount = this.mfData['paidAmount'];
+      this.totalPrice = this.mfData['totalPrice'] == null ? '0' : this.mfData['totalPrice'];
+      this.paidAmount = this.mfData['paidAmount'] == null ? '0' : this.mfData['paidAmount'];
       this.ccy = this.storageSrv.getFacilityCcy();
       this.notes = this.mfData['notes'] != null ? this.mfData['notes'] : '';
       // this.paymentMethod = this.mfData['paymentMethod'] == null ? null : this.mfData['paymentMethod'];
@@ -291,7 +292,7 @@ export class BasicFormsComponent {
       isReoccur: [this.isReoccur],
       notes:  [this.notes],
       cancelled: [this.cancelled],
-      cancelledDate: [this.cancelledDate],
+      cancelledDate: {value: this.cancelledDate, disabled:true},
       //bookingAddon: {value: this.bookingAddon},
       bookingAddonInstances: {value: this.bookingAddonInstances, disabled:true},
       bookingReOccur: {value: this.bookingReOccur},
@@ -741,7 +742,7 @@ export class BasicFormsComponent {
         this.isReoccur = this.resData['isReoccur'];
         this.notes = this.resData['notes'];
         this.cancelled = this.resData['cancelled'];
-        this.cancelledDate = this.resData['cancelledDate'] == null ? null : new Date(this.resData['cancelledDate']);
+        this.cancelledDate = new Date(this.resData['cancelledDate']);
         this.bookingDate = this.resData['startTime'] != null ? new Date(this.resData['startTime']) : this.resData['startTime'];
         this.bookingAddonsArray = this.resData["addons"];
         this.trnData = this.resData["transactions"];
@@ -1672,6 +1673,31 @@ export class BasicFormsComponent {
         reject(err); 
         this.toastr.error(err.description, "Error");
         this.dangerModal.hide();
+      })
+      .finally(() => this.isLoading = false);
+    });
+  }
+  cancelBooking = (bookingId) => {
+    return new Promise<any>(async (resolve, reject) => {
+      //this.isLoading = true;
+      const fields = {
+        bookingId: bookingId
+      };
+      this.localInterfaceSrv.deleteBooking(bookingId)
+      .then(async res => {
+        resolve(res);
+        this.toastr.success("Booking Cancelled", "Success");
+        this.cancelBookingModal.hide();
+        this.route.queryParams.subscribe(async params => {
+          await this.loadBookingsById(bookingId);
+          await this.ngOnInit();
+      });
+        //window.location.reload()
+      })
+      .catch(err => { 
+        reject(err); 
+        this.toastr.error(err.desc, "Error");
+        this.cancelBookingModal.hide();
       })
       .finally(() => this.isLoading = false);
     });

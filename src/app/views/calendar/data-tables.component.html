@@ -202,7 +202,7 @@
       <br>
     </ng-template>
     <ng-template #modalFooter>
-      <button class="btn mr-auto" cButton color="danger" (click)="cancelBooking()">Cancel Booking</button>
+      <!-- <button class="btn mr-auto" cButton color="danger" (click)="cancelBooking()">Cancel Booking</button> -->
       <button class="btn" cButton color="secondary" (click)="closeModal()">Close</button>
       <button class="btn btn-primary mr-1" (click)="updateBooking(bookingId)" cButton color="primary">Confirm Changes</button>
     </ng-template>
@@ -375,9 +375,8 @@
               <br>
               <br>
               <label for="paymentMethod" class="col-form-label">Payment Method</label>
-              <select class="form-control" id="paymentMethod" name="paymentMethod" formControlName="paymentMethod" required
-              [ngClass]="{ 'is-invalid': submitted && f.paymentMethod.errors, 'is-valid': f.paymentMethod.touched && !f.paymentMethod.errors }">
-              <option style="color: grey;" [value]="null" [selected]="true">--Select Payment--</option>
+              <select class="form-control" id="paymentMethod" name="paymentMethod" formControlName="paymentMethod">
+              <option style="color: grey;" [value]="null" [selected]="true">Not Paid</option>
               <option class="form-control" *ngFor="let pmt of paymentMethods.content" [value]="pmt.code">{{ pmt.nameEn }}</option>
               </select>
             </div>

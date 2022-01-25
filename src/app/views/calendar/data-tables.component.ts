@@ -149,7 +149,7 @@ export class FullCalendarNgComponent implements OnInit, AfterViewInit {
       this.simpleForm = this.fb.group({
       bookingId: {value: this.bookingId, disabled:true},
       court: [this.court, [Validators.required]],
-      paymentMethod: [this.paymentMethod, [Validators.required]],
+      paymentMethod: [this.paymentMethod],
       addon: [this.addon],
       bookingAddonInstances: {value: this.bookingAddonInstances, disabled:true},
       bookingName: [this.bookingName, [Validators.required]],
@@ -489,7 +489,7 @@ export class FullCalendarNgComponent implements OnInit, AfterViewInit {
       addon = info.event.extendedProps.addon;
     }
     this.bookingId = info.event.id;
-    this.totalRemainingAmount = this.roundTo(parseFloat(info.event.extendedProps.totalPrice) - parseFloat(info.event.extendedProps.paidAmount), 3);
+    this.totalRemainingAmount = this.roundTo(parseFloat(info.event.extendedProps.totalPrice == null ? '0' : info.event.extendedProps.totalPrice) - parseFloat(info.event.extendedProps.paidAmount == null ? '0' : info.event.extendedProps.paidAmount), 3);
     this.simpleForm.patchValue({bookingId: this.bookingId});
     this.simpleForm.patchValue({court: resourceId});
     this.simpleForm.patchValue({bookingName: info.event.title});
@@ -501,8 +501,8 @@ export class FullCalendarNgComponent implements OnInit, AfterViewInit {
     this.simpleForm.patchValue({bookingPrice: info.event.extendedProps.subTotalPrice});
     this.simpleForm.patchValue({bookingAddon: addon});
     this.simpleForm.patchValue({bookingVAT: info.event.extendedProps.tax});
-    this.simpleForm.patchValue({bookingTotal: info.event.extendedProps.totalPrice});
-    this.simpleForm.patchValue({bookingPayAmount: info.event.extendedProps.paidAmount});
+    this.simpleForm.patchValue({bookingTotal: info.event.extendedProps.totalPrice == null ? '0' : info.event.extendedProps.totalPrice});
+    this.simpleForm.patchValue({bookingPayAmount: info.event.extendedProps.paidAmount == null ? '0' : info.event.extendedProps.paidAmount});
     this.simpleForm.patchValue({bookingPayStatus: payStatus});
     this.simpleForm.patchValue({bookingPayDate: paidDate});
     this.simpleForm.patchValue({totalRemainingAmount: this.totalRemainingAmount});
